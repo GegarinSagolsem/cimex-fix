@@ -7,6 +7,23 @@
   --text: #e8eaf0;
   --muted: #8b93a5;
   --accent: #4589ff;
+  --success: #42be65;
+  --danger: #fa4d56;
+  --warning: #f1c21b;
+  --agent: #a56eff;
+}
+
+.light {
+  --bg: #ffffff;
+  --surface: #f4f4f4;
+  --border: #e0e0e0;
+  --text: #161616;
+  --muted: #525252;
+  --accent: #0f62fe;
+  --success: #198038;
+  --danger: #da1e28;
+  --warning: #b28600;
+  --agent: #8a3ffc;
 }
 
 @theme inline {
@@ -16,6 +33,10 @@
   --color-text: var(--text);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-agent: var(--agent);
   --font-sans: var(--font-plex-sans);
   --font-mono: var(--font-plex-mono);
 }
@@ -24,4 +45,24 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-plex-sans), system-ui, sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
