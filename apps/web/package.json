@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prebuild": "cd ../../packages/shared && npm run build",
+    "pretypecheck": "cd ../../packages/shared && npm run build",
+    "predev": "cd ../../packages/shared && npm run build"
   },
   "dependencies": {
     "@bugproof/shared": "*",
