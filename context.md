@@ -39,6 +39,7 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
   `packages/mcp` = stub only (README + package.json), per Plan.md — not implemented (Bob builds it).
   Root `npm run build` and `npm run typecheck` both pass. Private GitHub repo created and pushed.
   Wrote `docs/specs/demo-app.md` and `docs/specs/ui-shell.md` for the two cloud sessions.
+- ✅ **UI shell merged** (PR #1, cloud session B): /cases board + /cases/[id] live case view on mock data; build + typecheck pass. Claude GitHub App installed on both repos.
 - ➕ **Added:** `.claude/agents/{scout,reviewer}.md`, `docs/specs/{demo-app,ui-shell}.md`.
 - ➖ **Removed / cut:** create-next-app's default `AGENTS.md`/`CLAUDE.md` in `apps/web` (root ones are
   the source of truth).
