@@ -66,6 +66,13 @@ export const CaseCulprit = z.object({
 });
 export type CaseCulprit = z.infer<typeof CaseCulprit>;
 
+export const PlainSummary = z.object({
+  text: z.string(),
+  model: z.string(),
+  generatedAt: z.string(), // ISO 8601
+});
+export type PlainSummary = z.infer<typeof PlainSummary>;
+
 export const Case = z.object({
   id: z.string(),
   repo: z.string(),
@@ -79,8 +86,38 @@ export const Case = z.object({
   culprit: CaseCulprit.optional(),
   metrics: CaseMetrics.optional(),
   summary: z.string().optional(), // plain-English proof summary, set by POST /api/cases/[id]/publish
+  // Granite-generated plain-English "what broke / why / what changed" summary
+  // for a non-technical manager (Plan.md §4.4). Set by POST /api/cases/[id]/publish.
+  plainSummary: PlainSummary.optional(),
 });
 export type Case = z.infer<typeof Case>;
+
+/**
+ * /api/triage (Plan.md §4.4) — Granite turns a messy bug report into
+ * structured JSON. Shared so the API route, the /triage page and the
+ * recorded-examples file all agree on the shape.
+ */
+export const TriageSuggestedIntake = z.enum(["issue", "log", "screenshot", "pdf"]);
+export type TriageSuggestedIntake = z.infer<typeof TriageSuggestedIntake>;
+
+export const TriageResult = z.object({
+  severity: CaseSeverity,
+  component: z.string(),
+  expected: z.string(),
+  actual: z.string(),
+  stepsToReproduce: z.array(z.string()),
+  missingInfo: z.array(z.string()),
+  suggestedIntake: TriageSuggestedIntake,
+});
+export type TriageResult = z.infer<typeof TriageResult>;
+
+export const TriageExampleRecord = z.object({
+  input: z.string(),
+  result: TriageResult,
+  model: z.string(),
+  recordedAt: z.string(), // ISO 8601
+});
+export type TriageExampleRecord = z.infer<typeof TriageExampleRecord>;
 
 export const Event = z.object({
   caseId: z.string(),
