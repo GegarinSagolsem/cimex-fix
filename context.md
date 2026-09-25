@@ -6,10 +6,10 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 - **Project:** BugProof — "No fix without proof." IBM Bob reproduces a bug with a failing test, finds
   the culprit commit, fixes it (the Fixer can't touch tests) and publishes a Proof of Fix. A web
   "Mission Control" shows it live.
-- **Hackathon:** IBM Bob 2.0 (lablab.ai). Deadline **Sun 27 Sep 2026, 20:30 IST** · our target **18:30 IST**.
+- **Hackathon:** IBM Bob 2.0 (lablab.ai). Deadline **Sun 27 Sep 2026, 19:30 IST** (10:00 AM ET per IBM form; guide said 11 AM ET — use the earlier) · our target **18:30 IST**.
 - **Team:** solo · 30+ h · Claude Pro + $100 cloud-session credit · 40 Bobcoins.
 - **Phase:** 0 (Setup) — mostly done (0.1 watsonx request and 0.5 cloud sessions still open). Plan: `Plan.md` §7.
-- **Links:** repo https://github.com/GegarinSagolsem/bugproof (private) · live URL _TBD_ (Vercel not yet imported) · demo repo _TBD_ (spec written, not launched)
+- **Links:** repo https://github.com/GegarinSagolsem/bugproof (private) · live URL _TBD_ (Vercel not yet imported) · demo repo https://github.com/GegarinSagolsem/bugproof-demo-shoplite (private, contains only `docs/SPEC.md`; cloud session A builds it)
 
 ## Decisions (and why)
 | When | Decision | Why |
@@ -23,6 +23,9 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 | 09-25 | GitHub private until submission; MIT license | protect the idea; MIT-compliance required |
 | 09-25 | Every claimed number must come from `docs/benchmark.md` or a cited source | credibility with judges |
 | 09-25 | Default Claude model Sonnet/medium; cloud sessions for big jobs; no Fable | Pro limits + $100 credit |
+| 09-25 | Deadline = 19:30 IST (10 AM ET) | IBM account form states 10 AM ET; earlier of two sources |
+| 09-25 | Cache every watsonx/Granite output at generation time; `/triage` falls back to recorded results | IBM Cloud account closes Sep 27 10 AM ET — live Granite dies before judging |
+| 09-25 | Demo repo pre-created (private) with SPEC; cloud session A runs inside it | cloud sessions can't create new repos reliably |
 
 ## Change log
 - ✅ **Done:** researched May 2026 winners + Bob 2.2 features; created Plan.md, context.md, model.md, CLAUDE.md.
@@ -41,15 +44,15 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 - 🔁 **Changed vs plan:** none — scaffold matches Plan.md §4–§6 as specified.
 
 ## Next steps (in order)
-1. 👤 Request the IBM Cloud hackathon account (watsonx): https://www.ibm.com/account/reg/us-en/signup?formid=urx-54436 (same email as lablab).
+1. ✅ IBM Cloud/watsonx account requested (activation ≤ 1 h, check spam).
 2. 👤 Import `C:\dev\bugproof` → Vercel (root dir `apps/web`), deploy the hello page, confirm the live URL.
 3. 👤 In this repo, run `/web-setup` once (enables cloud sessions to reach GitHub).
-4. ☁ Launch cloud session **A**: `claude --cloud "Implement docs/specs/demo-app.md exactly..."` (new repo `bugproof-demo-shoplite`).
+4. ☁ Launch cloud session **A** from `C:\devugproof-demo-shoplite`: `claude --cloud "Implement docs/SPEC.md exactly..."`.
 5. ☁ Launch cloud session **B**: `claude --cloud "Implement docs/specs/ui-shell.md exactly. Work only inside apps/web..."`.
 6. 🅱 Bob Task 01: open `C:\dev\bugproof` in Bob → `/init` → AGENTS.md (add "read context.md first").
 
 ## Waiting on you 👤
-- IBM Cloud / watsonx account approval.
+- IBM Cloud / watsonx account activation email.
 - GitHub + Vercel logins confirmed (`gh auth status`).
 - Lablab team name (for screenshot file names) — default `bugproof`.
 - Voiceover choice by Sunday noon: your own voice or Watson Text-to-Speech.
@@ -72,3 +75,5 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 
 ## Session log (one line per session)
 - 09-25 22:00–22:45 · Claude Opus 5.5 (max) · research + planning docs
+- 09-25 22:50–23:35 · Claude Sonnet 5 (subagent) · Phase 0 scaffold
+- 09-25 23:40 · Claude Opus 5.5 · demo repo created; deadline + watsonx-closure decisions

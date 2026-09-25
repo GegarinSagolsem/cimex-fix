@@ -9,7 +9,7 @@
 | | |
 |---|---|
 | Event | IBM Bob 2.0 Hackathon · lablab.ai · online · 48 h |
-| Hard deadline | **Sun 27 Sep 2026, 20:30 IST** (11:00 AM ET) |
+| Hard deadline | **Sun 27 Sep 2026, 19:30 IST** (10:00 AM ET per IBM form; guide said 11 AM ET — trust the earlier) |
 | Our deadline | **Sun 27 Sep 2026, 18:30 IST** (2 h buffer for upload problems) |
 | Team | Solo · 30+ h · 40 Bobcoins · Claude Pro + $100 cloud-session credit |
 | Live state | `context.md` (read first) · model & token rules: `model.md` |
@@ -220,6 +220,7 @@ backdating) so `git bisect` works. Each bug lands in its own plausible commit.
 - `/triage`: Granite turns a messy report into JSON `{severity, component, expected, actual, steps, missingInfo}`.
 - Proof page: Granite writes the plain-English "what broke / why / what changed" summary.
 - Model: the best Granite instruct model offered in Prompt Lab (pick in Phase 3); region + project ID from the account.
+- ⚠️ The IBM Cloud account **closes Sep 27, 10 AM ET** (= submission deadline) → every Granite output is stored with the case when generated; `/triage` falls back to recorded results after closure (labelled honestly). Show the live call in the video.
 - Optional: Watson Text-to-Speech for the voiceover; watsonx Orchestrate "BugProof Dispatcher" agent (stretch).
 - Access: request at https://www.ibm.com/account/reg/us-en/signup?formid=urx-54436 with your lablab email.
 
