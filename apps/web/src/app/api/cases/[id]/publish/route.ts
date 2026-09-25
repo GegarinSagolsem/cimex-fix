@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { Case } from "@bugproof/shared";
 import { store } from "@/lib/store";
 import { getMergedCaseDetail } from "@/lib/data/merge";
+import { generatePlainSummary } from "@/lib/proofSummary";
 
 /**
  * POST /api/cases/[id]/publish — Plan.md §4.2. Bearer-token-protected.
@@ -41,11 +42,25 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   }
 
   const provenAt = new Date().toISOString();
+
+  // Best-effort Granite plain-English summary (Plan.md §4.4): generated once
+  // and cached on the case; skipped silently if it already exists or Granite
+  // is unavailable — never blocks or fails the publish.
+  let plainSummary = detail.case.plainSummary;
+  if (!plainSummary) {
+    try {
+      plainSummary = (await generatePlainSummary(detail.case, detail.evidence)) ?? undefined;
+    } catch {
+      plainSummary = undefined;
+    }
+  }
+
   const updated: Case = Case.parse({
     ...detail.case,
     status,
     provenAt,
     summary: typeof summary === "string" ? summary : detail.case.summary,
+    plainSummary,
   });
 
   await store.upsertCase(updated);
