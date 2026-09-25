@@ -78,6 +78,7 @@ export const Case = z.object({
   provenAt: z.string().optional(),
   culprit: CaseCulprit.optional(),
   metrics: CaseMetrics.optional(),
+  summary: z.string().optional(), // plain-English proof summary, set by POST /api/cases/[id]/publish
 });
 export type Case = z.infer<typeof Case>;
 
