@@ -1,0 +1,87 @@
+[
+  {
+    "input": "# Cart total is ₹0.01 lower than it should be for some products\r\n\r\n**Labels:** `checkout`, `money`\r\n\r\n## Description\r\n\r\nFor some carts the GST line — and therefore the order total — is one paisa short of 18% of the\r\nsubtotal. Finance noticed it while reconciling invoices: our invoice generator (which computes GST\r\nfrom the subtotal) disagrees with the amount we charged by ₹0.01 on a handful of orders.\r\n\r\nIt does not happen for every product, which is why nobody caught it in review.\r\n\r\n## Steps to reproduce\r\n\r\n1. Open the shop and add **Cast Iron Tawa** (₹1,049.25) to an empty cart, quantity 1.\r\n2. Look at the cart summary.\r\n\r\n## Expected\r\n\r\n- Subtotal: ₹1,049.25\r\n- GST (18%): **₹188.87** (18% of ₹1,049.25 is ₹188.865, which rounds half-up to ₹188.87)\r\n- Shipping: Free\r\n- Total: **₹1,238.12**\r\n\r\n## Actual\r\n\r\n- Subtotal: ₹1,049.25\r\n- GST (18%): **₹188.86**\r\n- Shipping: Free\r\n- Total: **₹1,238.11**\r\n\r\n## Notes\r\n\r\n- Carts with whole-rupee prices look fine.\r\n- The standalone GST helper gives the right answer for the same amount, so the difference seems\r\n  to come from how the cart adds things up.\r\n- The charged amount matches the (wrong) cart total, so customers are under-charged by ₹0.01.",
+    "result": {
+      "severity": "medium",
+      "component": "checkout/tax",
+      "expected": "Subtotal: ₹1,049.25, GST (18%): ₹188.87, Shipping: Free, Total: ₹1,238.12",
+      "actual": "Subtotal: ₹1,049.25, GST (18%): ₹188.86, Shipping: Free, Total: ₹1,238.11",
+      "stepsToReproduce": [
+        "Open the shop and add **Cast Iron Tawa** (₹1,049.25) to an empty cart, quantity 1.",
+        "Look at the cart summary."
+      ],
+      "missingInfo": [
+        "Whether the issue occurs with other products or quantities",
+        "If the bug reproduces on staging or production",
+        "Order IDs or transaction logs where the under‑charge happened"
+      ],
+      "suggestedIntake": "issue"
+    },
+    "model": "ibm/granite-4-h-small",
+    "recordedAt": "2026-09-25T20:46:00.169Z"
+  },
+  {
+    "input": "# Last product never shows up in the catalog\r\n\r\n**Labels:** `catalog`, `ui`\r\n\r\n## Description\r\n\r\nWe have 25 products but I can only ever page through 24 of them in the storefront. The **Wool\r\nPashmina Shawl** is in the catalog data, shows up when you search for it, and can be added to a\r\ncart, but it never appears when browsing the product grid.\r\n\r\n## Steps to reproduce\r\n\r\n1. Open the shop with an empty search box (6 products per page).\r\n2. Click **Next ›** until the button is disabled.\r\n\r\n## Expected\r\n\r\n25 products at 6 per page is 5 pages. Page 5 shows the Wool Pashmina Shawl and the footer says\r\n**Page 5 of 5 · Showing 25–25 of 25**.\r\n\r\n## Actual\r\n\r\nThe pager stops at **Page 4 of 4 · Showing 19–24 of 25** and **Next ›** is disabled. The footer\r\nitself says there are 25 products, but only 24 can be reached.\r\n\r\n## Notes\r\n\r\n- Searching \"Shawl\" finds it (a single page of results), so the product data is fine.\r\n- Looks like it only bites when the last page would hold exactly one product; when we had 23\r\n  products nobody noticed.",
+    "result": {
+      "severity": "medium",
+      "component": "catalog/search",
+      "expected": "25 products at 6 per page is 5 pages. Page 5 shows the Wool Pashmina Shawl and the footer says \"Page 5 of 5 · Showing 25–25 of 25\".",
+      "actual": "The pager stops at \"Page 4 of 4 · Showing 19–24 of 25\" and \"Next ›\" is disabled. The footer itself says there are 25 products, but only 24 can be reached.",
+      "stepsToReproduce": [
+        "Open the shop with an empty search box (6 products per page).",
+        "Click **Next ›** until the button is disabled."
+      ],
+      "missingInfo": [
+        "Browser and OS details of the client where the issue was observed.",
+        "Version of the storefront code or platform release when the problem was encountered.",
+        "Any recent code changes or deployments that preceded the bug appearance."
+      ],
+      "suggestedIntake": "issue"
+    },
+    "model": "ibm/granite-4-h-small",
+    "recordedAt": "2026-09-25T20:46:02.744Z"
+  },
+  {
+    "input": "# Search is case-sensitive now\r\n\r\n**Labels:** `catalog`, `regression`\r\n\r\n## Description\r\n\r\nProduct search used to ignore case. Since the latest deploy it only matches when the capitalisation\r\nis exactly the same as the product name, so most real searches (people type in lowercase on\r\nmobile) come back empty.\r\n\r\n## Steps to reproduce\r\n\r\n1. Open the shop.\r\n2. Type `mug` in the search box.\r\n\r\n## Expected\r\n\r\n**Ceramic Coffee Mug** is listed (same as searching `Mug`).\r\n\r\n## Actual\r\n\r\n\"No products match “mug”.\"\r\n\r\n## More examples\r\n\r\n| Query         | Before  | Now       |\r\n| ------------- | ------- | --------- |\r\n| `Mug`         | 1 result | 1 result |\r\n| `mug`         | 1 result | 0 results |\r\n| `KITCHEN`     | 5 results | 0 results |\r\n| `bluetooth`   | 1 result | 0 results |\r\n\r\n## Notes\r\n\r\nThis is a regression — it definitely worked last sprint. Nothing about search was mentioned in\r\nthe release notes.",
+    "result": {
+      "severity": "high",
+      "component": "catalog/search",
+      "expected": "search returns results regardless of case, same as before last deploy",
+      "actual": "search only returns results when query matches product name case exactly",
+      "stepsToReproduce": [
+        "Open the shop.",
+        "Type 'mug' in the search box."
+      ],
+      "missingInfo": [
+        "Exact version number (or git commit hash) of the deploy when the regression was introduced",
+        "Full search query strings used in the examples column (e.g. was the query exactly 'Mug' or did it include other whitespace or punctuation?)"
+      ],
+      "suggestedIntake": "issue"
+    },
+    "model": "ibm/granite-4-h-small",
+    "recordedAt": "2026-09-25T20:46:04.464Z"
+  },
+  {
+    "input": "2026-09-18T14:01:52.113Z info  [http] GET /api/products?page=3&pageSize=6 200 4ms ua=\"Mozilla/5.0 (Linux; Android 14)\" ip=10.12.4.88\r\n2026-09-18T14:01:58.407Z info  [http] POST /api/carts 201 3ms cartId=cart-8841\r\n2026-09-18T14:02:03.921Z info  [http] POST /api/carts/cart-8841/items 200 6ms body={\"productId\":\"p14\",\"quantity\":\"1\"}\r\n2026-09-18T14:02:03.922Z debug [cart] addItem cartId=cart-8841 productId=p14 quantity=1 lines=1\r\n2026-09-18T14:02:09.664Z info  [http] PATCH /api/carts/cart-8841/items/p14 200 5ms body={\"quantity\":\"-3\"}\r\n2026-09-18T14:02:09.665Z debug [cart] setQuantity cartId=cart-8841 productId=p14 quantity=-3\r\n2026-09-18T14:02:09.667Z debug [cart] totals cartId=cart-8841 itemCount=-3 subtotal=-3897 discount=0 tax=-701.46 shipping=49 total=-4549.46\r\n2026-09-18T14:02:13.402Z info  [http] POST /api/orders 202 2ms cartId=cart-8841 requestId=req_7f2c91\r\n2026-09-18T14:02:13.404Z info  [orders] placing order cartId=cart-8841 lines=1 total=-4549.46\r\n2026-09-18T14:02:13.405Z info  [payments] charge requested reference=cart-8841 amount=-4549.46 currency=INR\r\n2026-09-18T14:02:14.188Z warn  [payments] gateway accepted charge with non-positive amount reference=cart-8841 amount=-4549.46 paymentId=pay_104233\r\n2026-09-18T14:02:14.190Z info  [orders] order placed id=ORD-5521 cartId=cart-8841 items=[{\"productId\":\"p14\",\"name\":\"Power Bank 10000mAh\",\"unitPrice\":1299,\"quantity\":-3}] subtotal=-3897 tax=-701.46 shipping=49 total=-4549.46 estimatedDelivery=2026-09-22\r\n2026-09-18T14:02:14.191Z info  [http] POST /api/orders 201 789ms requestId=req_7f2c91 orderId=ORD-5521\r\n2026-09-18T14:02:31.550Z info  [http] GET /api/orders 200 2ms count=1\r\n2026-09-18T14:05:02.019Z error [reconciliation] settlement mismatch orderId=ORD-5521 paymentId=pay_104233 expected>0 got=-4549.46 action=flag_for_review",
+    "result": {
+      "severity": "critical",
+      "component": "payments/settlement",
+      "expected": "Payment amount to be positive and order settlement to succeed without review",
+      "actual": "Payment amount was negative (-4549.46) and settlement triggered a reconciliation error flagging the order for review",
+      "stepsToReproduce": [
+        "Create a cart with a product priced at 1299 INR",
+        "Add three of the product to the cart (quantity -3)",
+        "Submit the cart to create an order",
+        "Complete the order placement flow"
+      ],
+      "missingInfo": [
+        "Product pricing details (is negative quantity allowed?)",
+        "Why the payment gateway accepted a negative amount",
+        "Business rule for handling negative order totals"
+      ],
+      "suggestedIntake": "issue"
+    },
+    "model": "ibm/granite-4-h-small",
+    "recordedAt": "2026-09-25T20:46:06.494Z"
+  }
+]
