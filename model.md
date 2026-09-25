@@ -7,8 +7,8 @@
    planning, Sonnet while executing).
 3. **Haiku 4.5 for small stuff:** renames, copy text, formatting, quick lookups, updating context.md.
 4. **Never Fable 5.1** — and never `/model best` (it picks Fable, which bills usage credits).
-5. **Big, well-specified build jobs → cloud sessions** (`claude --cloud "..."`) so they use the
-   $100 credit first instead of your Pro limits. Launch them before you sleep.
+5. **Cloud sessions ($100 credit) are the BACKUP only:** use them when the Pro 5-hour limit is almost
+   used up or already hit AND the reset is still far away. Otherwise work in local sessions.
 6. Every session starts from `context.md` (CLAUDE.md makes this automatic). Use graphify; never ask
    Claude to "read the whole codebase".
 7. `/clear` between unrelated tasks · `/compact <what to keep>` when a session gets long · `/context`

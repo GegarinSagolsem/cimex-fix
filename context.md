@@ -23,6 +23,7 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 | 09-25 | GitHub private until submission; MIT license | protect the idea; MIT-compliance required |
 | 09-25 | Every claimed number must come from `docs/benchmark.md` or a cited source | credibility with judges |
 | 09-25 | Default Claude model Sonnet/medium; cloud sessions for big jobs; no Fable | Pro limits + $100 credit |
+| 09-26 | Cloud sessions only as backup when Pro limit is near/hit and reset is far | user preference (save the $100 credit) |
 | 09-25 | Deadline = 19:30 IST (10 AM ET) | IBM account form states 10 AM ET; earlier of two sources |
 | 09-25 | Cache every watsonx/Granite output at generation time; `/triage` falls back to recorded results | IBM Cloud account closes Sep 27 10 AM ET — live Granite dies before judging |
 | 09-25 | Demo repo pre-created (private) with SPEC; cloud session A runs inside it | cloud sessions can't create new repos reliably |
