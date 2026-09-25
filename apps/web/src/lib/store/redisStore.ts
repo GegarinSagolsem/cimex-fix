@@ -15,6 +15,11 @@ const evidenceKey = (id: string) => `${PREFIX}evidence:${id}`;
 
 export function createRedisStore(redis: Redis): CaseStore {
   return {
+    async deleteCase(id) {
+      await redis.del(caseKey(id), eventsKey(id), evidenceKey(id));
+      await redis.zrem(casesIndexKey, id);
+    },
+
     async listCases() {
       const ids = await redis.zrange<string[]>(casesIndexKey, 0, -1, { rev: true });
       if (!ids || ids.length === 0) return [];

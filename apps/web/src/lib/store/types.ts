@@ -15,4 +15,5 @@ export interface CaseStore {
   getEvents(caseId: string, afterTs?: string): Promise<Event[]>;
   putEvidence(caseId: string, evidence: Evidence): Promise<void>;
   getEvidence(caseId: string): Promise<Evidence[]>;
+  deleteCase(id: string): Promise<void>;
 }

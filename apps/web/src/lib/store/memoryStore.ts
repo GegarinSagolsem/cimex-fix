@@ -21,6 +21,12 @@ export function createMemoryStore(): CaseStore {
       return cases.get(id) ?? null;
     },
 
+    async deleteCase(id) {
+      cases.delete(id);
+      events.delete(id);
+      evidence.delete(id);
+    },
+
     async upsertCase(c) {
       const parsed = Case.parse(c);
       cases.set(parsed.id, parsed);
