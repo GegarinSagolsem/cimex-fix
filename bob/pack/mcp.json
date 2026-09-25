@@ -4,7 +4,8 @@
       "command": "node",
       "args": ["C:/dev/bugproof/packages/mcp/dist/index.js"],
       "env": {
-        "BUGPROOF_ENV_FILE": "C:/dev/bugproof/.env.local"
+        "BUGPROOF_ENV_FILE": "C:/dev/bugproof/.env.local",
+        "BUGPROOF_REPO": "__TARGET_REPO__"
       }
     }
   }

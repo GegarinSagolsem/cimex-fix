@@ -17,3 +17,16 @@
 - **MCP calls are mandatory gates.** `open_case` before any work; `bisect` after REPRO_READY;
   `publish_proof` only after APPROVE. Skipping a gate is not permitted even if the result seems
   obvious.
+
+- **Evidence is mandatory — the Proof of Fix page is built only from it.** After each step, attach
+  evidence with the MCP `evidence` tool (always pass `caseId`):
+  - after the subagents return: `triage` `{expected, actual, stepsToReproduce, source}` and
+    `blast` `{files, callers, notes}` from the Locator;
+  - `red` and `culprit` are attached automatically by `run_tests` (expect "red") and `bisect`;
+  - after the fix: `diff` `{files, diff}` (output of `git diff -- src`), then make sure the
+    Fixer ran `run_tests` on the repro file with expect "green" and the full suite (`suite`);
+  - after review: `critic` `{verdict, reasons}`.
+- **Record a milestone for every agent.** Use `record` with the agent's own name: kind `spawn`
+  when a subagent/subtask starts and kind `milestone` when it finishes, with a one-line result.
+- **Always call `bisect`** with the repro test file once it is RED — never skip it, even when
+  the cause seems obvious. The culprit commit is part of the proof.

@@ -5,7 +5,7 @@
 //
 // Usage: node scripts/install-bob-pack.mjs <targetRepo>
 
-import { existsSync, mkdirSync, readdirSync, statSync, copyFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, statSync, copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -57,7 +57,13 @@ function main() {
     const rel = path.relative(PACK_DIR, src);
     const dest = path.join(bobDir, rel);
     mkdirSync(path.dirname(dest), { recursive: true });
-    copyFileSync(src, dest);
+    if (rel === "mcp.json") {
+      // Point the MCP server at the target repo (Bob may start it from another folder).
+      const repo = path.resolve(bobDir, "..").split(path.sep).join("/");
+      writeFileSync(dest, readFileSync(src, "utf8").replaceAll("__TARGET_REPO__", repo), "utf8");
+    } else {
+      copyFileSync(src, dest);
+    }
     console.log(`  ${rel}`);
   }
   console.log(`Done — copied ${files.length} file(s).`);

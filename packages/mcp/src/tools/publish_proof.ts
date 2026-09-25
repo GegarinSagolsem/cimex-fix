@@ -1,6 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { z } from "zod";
+import { readActiveCaseId, resolveRepoPath, writeActiveCaseId } from "../session.js";
 import type { Config } from "../config.js";
 
 export const publishProofInput = z.object({
@@ -12,16 +13,9 @@ export const publishProofInput = z.object({
 
 export type PublishProofInput = z.infer<typeof publishProofInput>;
 
-function readActiveCaseId(repoPath: string): string | undefined {
-  try {
-    return fs.readFileSync(path.join(repoPath, ".bugproof", "active-case"), "utf8").trim();
-  } catch {
-    return undefined;
-  }
-}
 
 export async function publishProof(cfg: Config, input: PublishProofInput) {
-  const repoPath = input.repoPath ?? process.cwd();
+  const repoPath = resolveRepoPath(input.repoPath);
   const caseId = input.caseId ?? readActiveCaseId(repoPath);
 
   if (!caseId) {

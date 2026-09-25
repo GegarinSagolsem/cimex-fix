@@ -8,6 +8,7 @@ import { record, recordInput } from "./tools/record.js";
 import { runTests, runTestsInput } from "./tools/run_tests.js";
 import { bisect, bisectInput } from "./tools/bisect.js";
 import { publishProof, publishProofInput } from "./tools/publish_proof.js";
+import { evidence } from "./tools/evidence.js";
 
 const cfg = loadConfig();
 
@@ -130,6 +131,27 @@ server.registerTool(
     return {
       content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
     };
+  }
+);
+
+// ── evidence ─────────────────────────────────────────────────────────────────
+server.registerTool(
+  "evidence",
+  {
+    description:
+      "Attach evidence to the active (or specified) case so it appears on the Proof of Fix page. " +
+      "kind: triage (expected vs actual), diff (fix diff), critic (verdict + reasons), blast (blast radius), " +
+      "red/green/suite/culprit are normally recorded automatically by run_tests and bisect.",
+    inputSchema: {
+      kind: z.enum(["triage", "red", "culprit", "diff", "green", "suite", "blast", "critic"]).describe("Evidence kind"),
+      data: z.record(z.string(), z.unknown()).describe("Evidence payload, e.g. {expected, actual} or {diff} or {verdict, reasons}"),
+      caseId: z.string().optional().describe("Case ID (defaults to the active case)"),
+      repoPath: z.string().optional().describe("Repository path (defaults to BUGPROOF_REPO)"),
+    },
+  },
+  async (input) => {
+    const result = await evidence(cfg, input);
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
 

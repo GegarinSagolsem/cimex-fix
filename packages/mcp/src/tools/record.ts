@@ -1,6 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { z } from "zod";
+import { readActiveCaseId, resolveRepoPath, writeActiveCaseId } from "../session.js";
 import { AgentName, EventKind } from "@bugproof/shared";
 import type { Config } from "../config.js";
 import { postIngest } from "../ingest.js";
@@ -16,16 +17,9 @@ export const recordInput = z.object({
 
 export type RecordInput = z.infer<typeof recordInput>;
 
-function readActiveCaseId(repoPath: string): string | undefined {
-  try {
-    return fs.readFileSync(path.join(repoPath, ".bugproof", "active-case"), "utf8").trim();
-  } catch {
-    return undefined;
-  }
-}
 
 export async function record(cfg: Config, input: RecordInput) {
-  const repoPath = input.repoPath ?? process.cwd();
+  const repoPath = resolveRepoPath(input.repoPath);
   const caseId = input.caseId ?? readActiveCaseId(repoPath);
 
   if (!caseId) {

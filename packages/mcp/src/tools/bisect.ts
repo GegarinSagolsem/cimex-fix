@@ -3,6 +3,7 @@ import * as path from "node:path";
 import * as os from "node:os";
 import * as child_process from "node:child_process";
 import { z } from "zod";
+import { readActiveCaseId, resolveRepoPath, writeActiveCaseId } from "../session.js";
 import type { Config } from "../config.js";
 import { postIngest } from "../ingest.js";
 
@@ -29,13 +30,6 @@ function run(cmd: string, args: string[], cwd: string): { stdout: string; stderr
   };
 }
 
-function readActiveCaseId(repoPath: string): string | undefined {
-  try {
-    return fs.readFileSync(path.join(repoPath, ".bugproof", "active-case"), "utf8").trim();
-  } catch {
-    return undefined;
-  }
-}
 
 function getRootCommit(repoPath: string): string {
   const r = run("git", ["rev-list", "--max-parents=0", "HEAD"], repoPath);
@@ -43,7 +37,7 @@ function getRootCommit(repoPath: string): string {
 }
 
 export async function bisect(cfg: Config, input: BisectInput) {
-  const repoPath = input.repoPath ?? process.cwd();
+  const repoPath = resolveRepoPath(input.repoPath);
   const caseId = input.caseId ?? readActiveCaseId(repoPath);
   const bad = input.bad ?? "HEAD";
 
