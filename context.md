@@ -47,7 +47,7 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 1. ✅ IBM Cloud/watsonx account requested (activation ≤ 1 h, check spam).
 2. 👤 Import `C:\dev\bugproof` → Vercel (root dir `apps/web`), deploy the hello page, confirm the live URL.
 3. 👤 In this repo, run `/web-setup` once (enables cloud sessions to reach GitHub).
-4. ☁ Launch cloud session **A** from `C:\devugproof-demo-shoplite`: `claude --cloud "Implement docs/SPEC.md exactly..."`.
+4. ☁ Launch cloud session **A** from `C:/dev/bugproof-demo-shoplite`: `claude --cloud "Implement docs/SPEC.md exactly..."`.
 5. ☁ Launch cloud session **B**: `claude --cloud "Implement docs/specs/ui-shell.md exactly. Work only inside apps/web..."`.
 6. 🅱 Bob Task 01: open `C:\dev\bugproof` in Bob → `/init` → AGENTS.md (add "read context.md first").
 
