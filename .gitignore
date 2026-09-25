@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# build outputs
+.next/
+dist/
+out/
+build/
+
+# env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# vercel
+.vercel/
+
+# bugproof runtime
+.bugproof/
+
+# hackathon guides (private, not for the repo)
+docs/hackathon/
+
+# misc
+.DS_Store
+*.log
+coverage/
+graphify-out/cache/

@@ -1,0 +1,10 @@
+{
+  "name": "bugproof-mcp",
+  "version": "0.0.0",
+  "private": true,
+  "description": "MCP server for the BugProof Bob pack (open_case, get_issue, run_tests, bisect, record, publish_proof).",
+  "scripts": {
+    "build": "echo \"bugproof-mcp: not implemented yet\"",
+    "typecheck": "echo \"bugproof-mcp: not implemented yet\""
+  }
+}
