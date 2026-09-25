@@ -1,5 +1,7 @@
 # AGENTS.md
 
+Read context.md first — it is the live project state.
+
 This file provides guidance to agents when working with code in this repository.
 
 **Read `context.md` first** — it is the living project state. Read `Plan.md` one section at a time (`grep -n "^## " Plan.md`). `model.md` = model, effort and token-budget rules.

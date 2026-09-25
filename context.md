@@ -78,7 +78,7 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 ## Bob task log (→ `bob_sessions/` screenshots)
 | # | Date | Task | Workspace | Bobcoins | Screenshot |
 |---|---|---|---|---|---|
-| 01 | 09-25 | `/init` → AGENTS.md ✅ | bugproof | ? (fill in) | `bugproof_task01_init_agents_md_summary.png` |
+| 01 | 09-25 | `/init` → AGENTS.md ✅ | bugproof | 1.13 | `bugproof_task01_init_agents_md_summary.png` |
 
 ## Session log (one line per session)
 - 09-25 22:00–22:45 · Claude Opus 5.5 (max) · research + planning docs
