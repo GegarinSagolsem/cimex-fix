@@ -21,7 +21,7 @@ const RATE_LIMIT = 10;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 
 const FALLBACK_NOTE =
-  "Live Granite endpoint closed after the hackathon — showing a recorded result.";
+  "Live IBM Granite is unavailable right now (the hackathon watsonx account closes after judging starts) — showing a recorded Granite result.";
 
 function recordedFallback(text: string) {
   const examples = loadTriageExamples();
