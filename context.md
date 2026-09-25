@@ -40,6 +40,7 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
   Root `npm run build` and `npm run typecheck` both pass. Private GitHub repo created and pushed.
   Wrote `docs/specs/demo-app.md` and `docs/specs/ui-shell.md` for the two cloud sessions.
 - ✅ **UI shell merged** (PR #1, cloud session B): /cases board + /cases/[id] live case view on mock data; build + typecheck pass. Claude GitHub App installed on both repos.
+- ✅ **Demo app merged** into bugproof-demo-shoplite main (36 commits, author GegarinSagolsem): 104 tests pass, all 8 seeded bugs confirmed by probes. Answer key + probes + history script moved to `bugproof/docs/answer-key/` (Bob must never see them). Run probes: copy bug-probes.test.ts + vitest.probes.config.ts into the demo repo's docs/ temporarily. Screenshots for bugs #1 and #8 still to capture (see intake/README.md).
 - ➕ **Added:** `.claude/agents/{scout,reviewer}.md`, `docs/specs/{demo-app,ui-shell}.md`.
 - ➖ **Removed / cut:** create-next-app's default `AGENTS.md`/`CLAUDE.md` in `apps/web` (root ones are
   the source of truth).
