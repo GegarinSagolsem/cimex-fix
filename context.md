@@ -51,6 +51,12 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 5. ☁ Launch cloud session **B**: `claude --cloud "Implement docs/specs/ui-shell.md exactly. Work only inside apps/web..."`.
 6. 🅱 Bob Task 01: open `C:\dev\bugproof` in Bob → `/init` → AGENTS.md (add "read context.md first").
 
+## Cloud sessions
+- A demo app (repo bugproof-demo-shoplite): https://claude.ai/code/session_01813RZXrFBUVqNAxKFpd1CY
+- B UI shell (repo bugproof): https://claude.ai/code/session_01Wk2MS9kLR1PMtUwaRALHkT
+- Launched 09-25 ~23:59 IST. /web-setup not yet run; check PRs in the morning.
+- Old setup commits keep author SagolsemHironika + AI trailers (rewrite skipped so cloud PRs don't break).
+
 ## Waiting on you 👤
 - IBM Cloud / watsonx account activation email.
 - GitHub + Vercel logins confirmed (`gh auth status`).
@@ -71,7 +77,7 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 ## Bob task log (→ `bob_sessions/` screenshots)
 | # | Date | Task | Workspace | Bobcoins | Screenshot |
 |---|---|---|---|---|---|
-| 01 | | `/init` → AGENTS.md | bugproof | | `bugproof_task01_init_agents_md_summary.png` |
+| 01 | 09-25 | `/init` → AGENTS.md ✅ | bugproof | ? (fill in) | `bugproof_task01_init_agents_md_summary.png` |
 
 ## Session log (one line per session)
 - 09-25 22:00–22:45 · Claude Opus 5.5 (max) · research + planning docs
