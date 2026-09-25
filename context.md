@@ -42,6 +42,7 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 - ✅ **UI shell merged** (PR #1, cloud session B): /cases board + /cases/[id] live case view on mock data; build + typecheck pass. Claude GitHub App installed on both repos.
 - ✅ **Demo app merged** into bugproof-demo-shoplite main (36 commits, author GegarinSagolsem): 104 tests pass, all 8 seeded bugs confirmed by probes. Answer key + probes + history script moved to `bugproof/docs/answer-key/` (Bob must never see them). Run probes: copy bug-probes.test.ts + vitest.probes.config.ts into the demo repo's docs/ temporarily. Screenshots for bugs #1 and #8 still to capture (see intake/README.md).
 - ✅ **Real backend wired up** (Plan.md §4.2): `CaseStore` (`apps/web/src/lib/store/`) with Upstash Redis + in-memory fallback, static replays in `apps/web/data/cases/*.json` (hero case seeded, store+static merged on read, static never overwritten), `/api/ingest` (bearer token, handles event/events/case/evidence/raw Bob hook payloads, never 500s), `/api/cases` + `/api/cases/[id]` (with `?after=`) + `/api/cases/[id]/publish`, live case page now polls every 1 s until proven/unproven. `scripts/install-bob-pack.mjs` and `scripts/send-test-events.mjs` added; smoke-tested locally end to end. To go live on Vercel: set `BUGPROOF_INGEST_TOKEN` and either `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` or (via the Marketplace Upstash integration) `KV_REST_API_URL`/`KV_REST_API_TOKEN` in the project's env vars — without them it silently runs on the in-memory store (fine for the hero-case replay, but live cases won't survive a cold start).
+- ✅ **MCP server verified** against demo bug #1: run_tests expect=red → `AssertionError: expected NaN to be 460.82`; bisect found the true culprit `refactor(coupons): extract coupon rule parser` in ~41 s. Claude fixed Bob's bisect (ran twice, npx, 120 s timeout, didn't parse git 2.55 "first 'bad' commit").
 - ➕ **Added:** `.claude/agents/{scout,reviewer}.md`, `docs/specs/{demo-app,ui-shell}.md`.
 - ➖ **Removed / cut:** create-next-app's default `AGENTS.md`/`CLAUDE.md` in `apps/web` (root ones are
   the source of truth).
@@ -84,6 +85,7 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 | 01 | 09-25 | `/init` → AGENTS.md ✅ | bugproof | 1.13 | `bugproof_task01_init_agents_md_summary.png` |
 | 02 | 09-26 | Custom modes + rules (Plan→Agent) ✅ | bugproof | 0.40 | `bugproof_task02_custom_modes_rules_summary.png` |
 | 03 | 09-26 | Skills: repro-test, root-cause, proof-of-fix ✅ | bugproof | ? | `bugproof_task03_skills_summary.png` |
+| 04 | 09-26 | MCP server (open_case, record, run_tests, bisect, publish_proof) ✅ | bugproof | ? | `bugproof_task04_mcp_server_summary.png` |
 
 ## Session log (one line per session)
 - 09-25 22:00–22:45 · Claude Opus 5.5 (max) · research + planning docs
