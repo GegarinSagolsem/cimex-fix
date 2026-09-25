@@ -9,7 +9,7 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 - **Hackathon:** IBM Bob 2.0 (lablab.ai). Deadline **Sun 27 Sep 2026, 19:30 IST** (10:00 AM ET per IBM form; guide said 11 AM ET — use the earlier) · our target **18:30 IST**.
 - **Team:** solo · 30+ h · Claude Pro + $100 cloud-session credit · 40 Bobcoins.
 - **Phase:** 0 (Setup) — mostly done (0.1 watsonx request and 0.5 cloud sessions still open). Plan: `Plan.md` §7.
-- **Links:** repo https://github.com/GegarinSagolsem/bugproof (private) · live URL _TBD_ (Vercel not yet imported) · demo repo https://github.com/GegarinSagolsem/bugproof-demo-shoplite (private, contains only `docs/SPEC.md`; cloud session A builds it)
+- **Links:** repo https://github.com/GegarinSagolsem/bugproof (private) · live URL https://bugproof-web.vercel.app (hello page, auto-deploys from main) · demo repo https://github.com/GegarinSagolsem/bugproof-demo-shoplite (private, contains only `docs/SPEC.md`; cloud session A builds it)
 
 ## Decisions (and why)
 | When | Decision | Why |
