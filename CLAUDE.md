@@ -16,4 +16,6 @@
   Bob — Claude reviews and integrates them only.
 - Never commit secrets: `.env*` stays in `.gitignore` and `.bobignore`; document names in `.env.example`.
 - Every number we claim must exist in `docs/benchmark.md` or have a cited source.
+- Commits: author = GitHub account `GegarinSagolsem` (repo git config is set). Message = one short,
+  clean, meaningful sentence. **No Co-Authored-By lines, no AI/Claude/Bob names** in commits or PRs.
 - Windows machine: the Bash tool is Git Bash. Repo lives at `C:\dev\bugproof` (not OneDrive).

@@ -1,6 +1,7 @@
 {
   "model": "sonnet",
   "effortLevel": "medium",
+  "includeCoAuthoredBy": false,
   "permissions": {
     "deny": [
       "Read(./node_modules/**)",
