@@ -81,6 +81,7 @@ _Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold s
 | # | Date | Task | Workspace | Bobcoins | Screenshot |
 |---|---|---|---|---|---|
 | 01 | 09-25 | `/init` → AGENTS.md ✅ | bugproof | 1.13 | `bugproof_task01_init_agents_md_summary.png` |
+| 02 | 09-26 | Custom modes + rules (Plan→Agent) ✅ | bugproof | 0.40 | `bugproof_task02_custom_modes_rules_summary.png` |
 
 ## Session log (one line per session)
 - 09-25 22:00–22:45 · Claude Opus 5.5 (max) · research + planning docs
