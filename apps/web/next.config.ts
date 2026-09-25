@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/cases/**": ["./data/cases/**"],
     "/cases/**": ["./data/cases/**"],
+    // apps/web/src/lib/triage.ts reads this via fs at runtime for the
+    // recorded-fallback path, same tracing gap as the case replay files.
+    "/api/triage/**": ["./data/triage-examples.json"],
   },
 };
 
