@@ -134,7 +134,7 @@ export function EvidenceTabs({ evidence }: { evidence: Evidence[] }) {
         ))}
       </TabsList>
       {present.map((kind) => {
-        const item = evidence.find((e) => e.kind === kind);
+        const item = evidence.findLast((e) => e.kind === kind);
         if (!item) return null;
         return (
           <TabsContent key={kind} value={kind}>

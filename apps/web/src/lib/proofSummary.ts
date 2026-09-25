@@ -19,19 +19,19 @@ function truncate(value: string, max: number): string {
 function describeEvidence(evidence: Evidence[]): string[] {
   const lines: string[] = [];
 
-  const red = evidence.find((e) => e.kind === "red");
+  const red = evidence.findLast((e) => e.kind === "red");
   if (red) lines.push(`Failing test before the fix: ${truncate(JSON.stringify(red.data), 400)}`);
 
-  const culprit = evidence.find((e) => e.kind === "culprit");
+  const culprit = evidence.findLast((e) => e.kind === "culprit");
   if (culprit) lines.push(`Commit that introduced the bug: ${truncate(JSON.stringify(culprit.data), 400)}`);
 
-  const diff = evidence.find((e) => e.kind === "diff");
+  const diff = evidence.findLast((e) => e.kind === "diff");
   if (diff) lines.push(`Code change (diff): ${truncate(JSON.stringify(diff.data), 600)}`);
 
-  const green = evidence.find((e) => e.kind === "green");
+  const green = evidence.findLast((e) => e.kind === "green");
   if (green) lines.push(`Passing test after the fix: ${truncate(JSON.stringify(green.data), 400)}`);
 
-  const suite = evidence.find((e) => e.kind === "suite");
+  const suite = evidence.findLast((e) => e.kind === "suite");
   if (suite) lines.push(`Full test suite result: ${truncate(JSON.stringify(suite.data), 300)}`);
 
   return lines;

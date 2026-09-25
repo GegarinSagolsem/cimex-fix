@@ -39,7 +39,8 @@ function getRootCommit(repoPath: string): string {
 export async function bisect(cfg: Config, input: BisectInput) {
   const repoPath = resolveRepoPath(input.repoPath);
   const caseId = input.caseId ?? readActiveCaseId(repoPath);
-  const bad = input.bad ?? "HEAD";
+  // Always search the whole history: agents passing their own good/bad refs produced wrong culprits.
+  const bad = "HEAD";
 
   // Read the test file contents into memory
   let testFileContent: string;
@@ -97,7 +98,7 @@ process.exit(125);
       "utf8",
     );
 
-    const goodCommit = input.good ?? getRootCommit(repoPath);
+    const goodCommit = getRootCommit(repoPath);
     run("git", ["bisect", "start", bad, goodCommit], worktreeDir);
     const bisectRun = child_process.spawnSync("git", ["bisect", "run", process.execPath, runnerScript], {
       cwd: worktreeDir,
@@ -114,6 +115,10 @@ process.exit(125);
     try { run("git", ["bisect", "reset"], worktreeDir); } catch { /* ignore */ }
     try { run("git", ["worktree", "remove", "--force", worktreeDir], repoPath); } catch { /* ignore */ }
     try { fs.rmSync(worktreeDir, { recursive: true, force: true }); } catch { /* ignore */ }
+  }
+
+  if (firstBadSha && getRootCommit(repoPath).startsWith(firstBadSha.slice(0, 7))) {
+    firstBadSha = undefined; // the root commit is the assumed-good baseline, never a real culprit
   }
 
   if (!firstBadSha) {
