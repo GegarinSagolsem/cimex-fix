@@ -1,6 +1,6 @@
 # context.md — living project state (read this FIRST every session)
 
-_Last updated: Fri 25 Sep 2026 ~22:45 IST · Claude Opus 5.5 (planning session)_
+_Last updated: Fri 25 Sep 2026 ~23:35 IST · Claude Sonnet 5 (Phase 0 scaffold session)_
 
 ## Snapshot
 - **Project:** BugProof — "No fix without proof." IBM Bob reproduces a bug with a failing test, finds
@@ -8,8 +8,8 @@ _Last updated: Fri 25 Sep 2026 ~22:45 IST · Claude Opus 5.5 (planning session)_
   "Mission Control" shows it live.
 - **Hackathon:** IBM Bob 2.0 (lablab.ai). Deadline **Sun 27 Sep 2026, 20:30 IST** · our target **18:30 IST**.
 - **Team:** solo · 30+ h · Claude Pro + $100 cloud-session credit · 40 Bobcoins.
-- **Phase:** 0 (Setup) — not started. Plan: `Plan.md` §7. Model rules: `model.md`.
-- **Links:** repo _TBD_ · live URL _TBD_ · demo repo _TBD_
+- **Phase:** 0 (Setup) — mostly done (0.1 watsonx request and 0.5 cloud sessions still open). Plan: `Plan.md` §7.
+- **Links:** repo https://github.com/GegarinSagolsem/bugproof (private) · live URL _TBD_ (Vercel not yet imported) · demo repo _TBD_ (spec written, not launched)
 
 ## Decisions (and why)
 | When | Decision | Why |
@@ -26,16 +26,27 @@ _Last updated: Fri 25 Sep 2026 ~22:45 IST · Claude Opus 5.5 (planning session)_
 
 ## Change log
 - ✅ **Done:** researched May 2026 winners + Bob 2.2 features; created Plan.md, context.md, model.md, CLAUDE.md.
-- ➕ **Added:** —
-- ➖ **Removed / cut:** —
-- 🔁 **Changed vs plan:** —
+  Phase 0 scaffold: `C:\dev\bugproof` created, docs copied, git init, MIT LICENSE, `.gitignore` +
+  `.bobignore`, `.env.example`, README stub, `.claude/settings.json` + `agents/scout.md` +
+  `agents/reviewer.md`. npm workspaces monorepo (`apps/web`, `packages/shared`, `packages/mcp`).
+  `apps/web` = Next.js (TS, Tailwind v4, App Router, src dir) with a dark "hello" landing (IBM Plex
+  fonts, Mission Control tokens). `packages/shared` = `@bugproof/shared` (zod schemas for
+  Case/Event/Evidence + `mockCase` fixture: hero bug #1, 30 events, 7 evidence kinds).
+  `packages/mcp` = stub only (README + package.json), per Plan.md — not implemented (Bob builds it).
+  Root `npm run build` and `npm run typecheck` both pass. Private GitHub repo created and pushed.
+  Wrote `docs/specs/demo-app.md` and `docs/specs/ui-shell.md` for the two cloud sessions.
+- ➕ **Added:** `.claude/agents/{scout,reviewer}.md`, `docs/specs/{demo-app,ui-shell}.md`.
+- ➖ **Removed / cut:** create-next-app's default `AGENTS.md`/`CLAUDE.md` in `apps/web` (root ones are
+  the source of truth).
+- 🔁 **Changed vs plan:** none — scaffold matches Plan.md §4–§6 as specified.
 
 ## Next steps (in order)
 1. 👤 Request the IBM Cloud hackathon account (watsonx): https://www.ibm.com/account/reg/us-en/signup?formid=urx-54436 (same email as lablab).
-2. 👤 Claude Code: `/model sonnet` and `/effort medium`.
-3. 🅲 Plan.md 0.2–0.4: `C:\dev\bugproof`, move docs, git init, private GitHub repo, scaffold, deploy hello, specs A + B.
-4. ☁ Launch cloud sessions A (demo app) + B (UI shell) before sleeping.
-5. 🅱 Task 01: Bob `/init` → AGENTS.md.
+2. 👤 Import `C:\dev\bugproof` → Vercel (root dir `apps/web`), deploy the hello page, confirm the live URL.
+3. 👤 In this repo, run `/web-setup` once (enables cloud sessions to reach GitHub).
+4. ☁ Launch cloud session **A**: `claude --cloud "Implement docs/specs/demo-app.md exactly..."` (new repo `bugproof-demo-shoplite`).
+5. ☁ Launch cloud session **B**: `claude --cloud "Implement docs/specs/ui-shell.md exactly. Work only inside apps/web..."`.
+6. 🅱 Bob Task 01: open `C:\dev\bugproof` in Bob → `/init` → AGENTS.md (add "read context.md first").
 
 ## Waiting on you 👤
 - IBM Cloud / watsonx account approval.
