@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "bugproof": {
+      "command": "node",
+      "args": ["C:/dev/bugproof/packages/mcp/dist/index.js"],
+      "env": {
+        "BUGPROOF_ENV_FILE": "C:/dev/bugproof/.env.local"
+      }
+    }
+  }
+}

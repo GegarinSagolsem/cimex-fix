@@ -10,5 +10,8 @@
     "build": "npm run build --workspace=packages/shared && npm run build --workspace=apps/web",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
   }
 }
