@@ -1,9 +1,39 @@
 # context.md — living project state (read this FIRST every session)
 
-_Last updated: Sat 26 Sep 2026 ~21:45 IST · Claude Opus 5.5 · all 8 bugs proven, culprits 8/8; one-shot model comparison on /impact (8 bugs); resume from "Next steps"_
+_Last updated: Sat 26 Sep 2026 ~22:00 IST · Claude Opus 5.5 · all 8 bugs proven, culprits 8/8; one-shot model comparison on /impact (8 bugs); **start with "▶ Start here next session"**_
+
+## ▶ Start here next session
+**Task 1: rename the GitHub repos to the new product name.** The user noticed GitHub still shows
+`GegarinSagolsem/bugproof`. The site, README and Bob modes already say "Cimex Fix"; the repo names, the Vercel URL
+and the links do not.
+1. **Ask the user for the new names first.** Suggest `cimex-fix` for the main repo. For the demo repo, suggest keeping
+   `bugproof-demo-shoplite` (it's the target app, not the product, and every case record's `repo` field uses that
+   name), or rename it to `cimex-fix-demo-shoplite`.
+2. Rename on GitHub (`gh repo rename <new> -R GegarinSagolsem/bugproof`), then run `git remote set-url origin <new url>`
+   in each local clone. GitHub redirects old URLs, but update the links anyway.
+3. Update the links: 27 occurrences in 14 files. Find them with
+   `grep -rn "GegarinSagolsem/bugproof\|bugproof-web.vercel\|bugproof-demo-shoplite" --exclude-dir={graphify-out,node_modules,WebDemo} .`
+   and skip `apps/web/data/cases/` and `docs/benchmark/model-baseline/` (recorded data, leave as is).
+   Files: README.md, docs/submission.md (Links section), context.md, Plan.md, docs/specs/demo-app.md,
+   apps/web/src/lib/proof.ts (`REPO_URLS`: keep the key `bugproof-demo-shoplite`, it matches `case.repo`; change
+   only the URL), apps/web/src/app/page.tsx, apps/web/src/app/impact/page.tsx (`BENCHMARK_DOC`),
+   packages/shared/src/mockCase.ts, scripts/send-test-events.mjs, scripts/record-triage-examples.mjs, scripts/export-cases.mjs.
+   `scripts/model-baseline.mjs` uses the **local** demo path, so no change there.
+4. Vercel project `bugproof-web` (https://bugproof-web.vercel.app): after a GitHub rename, check Vercel → Settings →
+   Git is still connected (push a commit and watch it deploy). Optionally add a nicer domain (e.g.
+   `cimex-fix.vercel.app`, if free) and keep the old one working. Change links only once the new domain serves.
+5. **Do not rename:** the local folders `C:\dev\bugproof` and `C:\dev\bugproof-demo-shoplite` (Bob's `mcp.json` and
+   `.env.local` use these paths), the `bugproof` MCP server ID, the mode slugs (`bugproof-lead` …), `tests/bugproof/`,
+   or the theme storage key. README → "Built for …" already explains that these keep the old name.
+6. Verify: README links and mermaid on GitHub, the verify-it-yourself commands on a Proof page (the `cd <dir>` comes
+   from the repo URL's last segment), `/impact`'s benchmark link, and the landing page links. Then refresh graphify
+   and commit.
+
+**Then:** ask the user for the exact Bobcoin balance → item 16 below (slides + cover, video script) → Bob hooks only if
+coins remain. Both repos are still **private**; make them public just before submitting (Sun, after the freeze).
 
 ## Snapshot
-- **Project:** BugProof — "No fix without proof." IBM Bob reproduces a bug with a failing test, finds
+- **Project:** Cimex Fix (formerly BugProof) — "No fix without proof." IBM Bob reproduces a bug with a failing test, finds
   the culprit commit (git bisect), fixes it (the Fixer can't touch tests), a Critic reviews, and a
   Proof of Fix is published. The "Mission Control" website shows every case live.
 - **Deadline:** **Sun 27 Sep 2026, 19:30 IST** (10:00 AM ET, IBM form) · our target **18:30 IST**.
@@ -16,10 +46,10 @@ _Last updated: Sat 26 Sep 2026 ~21:45 IST · Claude Opus 5.5 · all 8 bugs prove
 ## Where things are
 | Thing | Location |
 |---|---|
-| Web app (Next.js 16) | `apps/web` — pages `/cases`, `/cases/[id]` (live, polls 1 s), `/triage`, `/impact` (from `src/data/benchmark.json`). No `/cases/[id]/proof` page yet; landing `/` is a placeholder |
+| Web app (Next.js 16) | `apps/web` — pages `/` (landing), `/cases`, `/cases/[id]` (live, polls 1 s), `/cases/[id]/proof` (Proof of Fix), `/triage`, `/impact` (from `src/data/benchmark.json`, incl. the model comparison) |
 | Benchmark | `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs` → `docs/benchmark.md` + `apps/web/src/data/benchmark.json`. Per-run Bob facts (coins, interventions, bisect) live in `docs/benchmark/bob-runs.json` — add a row after each new run (source: `~/.bob/db/bob.db`) |
 | API | `/api/ingest` (bearer `BUGPROOF_INGEST_TOKEN`), `/api/cases`, `/api/cases/[id]` (GET, DELETE w/ token), `/api/cases/[id]/publish`, `/api/triage` |
-| Storage | Upstash Redis on Vercel (KV_* env vars) + static replays `apps/web/data/cases/*.json` (6 proven cases exported 09-26) |
+| Storage | Upstash Redis on Vercel (KV_* env vars) + static replays `apps/web/data/cases/*.json` (all 8 proven cases, re-exported 09-26 ~21:30) |
 | Shared types | `packages/shared` (zod: Case, Event, Evidence, TriageResult, plainSummary) |
 | MCP server | `packages/mcp` → `dist/index.js` · tools: open_case, record, evidence, run_tests, bisect, publish_proof |
 | Bob pack (source) | `bob/pack/` (4 modes, rules, 3 skills, mcp.json) → install: `node scripts/install-bob-pack.mjs C:/dev/bugproof-demo-shoplite` |
@@ -159,3 +189,5 @@ Tasks 03–05 together ≈ 6.7 coins (40 − 1.53 − 2.78 − 5 − 24). Task 0
 - 09-25 22:50–23:35 · Sonnet subagent · Phase 0 scaffold
 - 09-25 23:40 → 09-26 03:50 · Opus (+ Sonnet subagents: backend, Granite) · cloud PRs merged, backend, Bob tasks 02–07, watsonx, 3 proven runs
 - 09-26 08:00–10:00 · Sonnet → Opus · bugs #3, #8 proven (Bob tasks 08–09); diagnosed stalls from Bob's task DB; fixed modes, bisect (`c:` casing), evidence tabs
+- 09-26 10:00–22:00 · Opus · Impact/Proof/landing pages, UI refresh, README, judge critique, rename to Cimex Fix (site + README + Bob modes),
+  bugs #5, #7, #2 proven (tasks 12–16), submission drafts, one-shot model comparison. GitHub repo rename deferred to the next session
