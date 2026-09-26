@@ -184,6 +184,39 @@
       "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-01.md"
     },
     {
+      "bug": 1,
+      "model": "anthropic/claude-opus-4-6-thinking",
+      "base": "df66390",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), claude-opus-4-6-thinking",
+      "conversationId": "364bcd58-0c63-43f7-a17e-f50bd51acc87",
+      "finishReason": "SUCCESS",
+      "promptTokens": 38517,
+      "completionTokens": 2408,
+      "thinkingTokens": 0,
+      "seconds": 45.9,
+      "askedAt": "2026-09-26T16:29:16.905Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": false,
+      "rootCause": "`applyCoupon` guards with `if (code && !isKnownCoupon(code))`, so when the user submits an empty coupon input, `normalizeCouponCode` returns `\"\"`, the falsy check skips validation, and the empty string is added to `couponCodes`. `couponDiscount` then looks up `COUPON_RULES[\"\"]` (→ `undefined`), passes it to `parseFloat` (→ `NaN`), and NaN propagates through discount and total.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": false,
+      "suite": {
+        "passed": 110,
+        "failed": 0,
+        "total": 110,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/coupons.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/anthropic_claude-opus-4-6-thinking/bug-01.md"
+    },
+    {
       "bug": 2,
       "model": "ibm/granite-4-h-small",
       "base": "f2a3033",
@@ -366,6 +399,39 @@
       ],
       "rejectedFiles": [],
       "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-02.md"
+    },
+    {
+      "bug": 2,
+      "model": "anthropic/claude-opus-4-6-thinking",
+      "base": "f2a3033",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), claude-opus-4-6-thinking",
+      "conversationId": "ab9f59bd-6167-44d7-962a-c64d7ff8392e",
+      "finishReason": "SUCCESS",
+      "promptTokens": 39329,
+      "completionTokens": 3801,
+      "thinkingTokens": 0,
+      "seconds": 64.1,
+      "askedAt": "2026-09-26T16:30:32.829Z",
+      "culprit": "98e2fce",
+      "culpritSubject": "feat(cart): sum multiple line items in cart totals",
+      "culpritCorrect": true,
+      "rootCause": "`computeTotals` calculates GST by multiplying each line total by the floating-point `GST_RATE` (0.18), which cannot be represented exactly in IEEE 754; for prices like ₹1,049.25 the product `1049.25 * 0.18` evaluates to ≈188.86499… instead of 188.865, so `roundMoney` rounds down instead of half-up. The existing `calculateGst` helper avoids this by working in integer paise, but `computeTotals` doesn't use it.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 119,
+        "failed": 0,
+        "total": 119,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/anthropic_claude-opus-4-6-thinking/bug-02.md"
     },
     {
       "bug": 3,
@@ -551,6 +617,39 @@
       "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-03.md"
     },
     {
+      "bug": 3,
+      "model": "anthropic/claude-opus-4-6-thinking",
+      "base": "6d6c87a",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), claude-opus-4-6-thinking",
+      "conversationId": "90d5b753-0c19-4e3a-9c75-eb6b67179af6",
+      "finishReason": "SUCCESS",
+      "promptTokens": 39309,
+      "completionTokens": 2070,
+      "thinkingTokens": 0,
+      "seconds": 36.5,
+      "askedAt": "2026-09-26T16:31:22.110Z",
+      "culprit": "b4369d9",
+      "culpritSubject": "perf(delivery): compute IST date without Intl.DateTimeFormat",
+      "culpritCorrect": true,
+      "rootCause": "The cutoff check uses `orderedAt.getUTCHours()` (the raw UTC hour) instead of `ist.getUTCHours()` (the IST-shifted hour), so the 20:00 IST cutoff is effectively applied at 20:00 UTC, missing all evening IST orders.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 112,
+        "failed": 0,
+        "total": 112,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/delivery/estimate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/anthropic_claude-opus-4-6-thinking/bug-03.md"
+    },
+    {
       "bug": 4,
       "model": "ibm/granite-4-h-small",
       "base": "5dd2952",
@@ -732,6 +831,39 @@
       ],
       "rejectedFiles": [],
       "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-04.md"
+    },
+    {
+      "bug": 4,
+      "model": "anthropic/claude-opus-4-6-thinking",
+      "base": "5dd2952",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), claude-opus-4-6-thinking",
+      "conversationId": "03440efc-dbbd-4993-ba2f-e1e9de8acd56",
+      "finishReason": "SUCCESS",
+      "promptTokens": 38616,
+      "completionTokens": 1234,
+      "thinkingTokens": 0,
+      "seconds": 23.4,
+      "askedAt": "2026-09-26T16:31:54.830Z",
+      "culprit": "882203d",
+      "culpritSubject": "refactor(catalog): compute pagination bounds explicitly",
+      "culpritCorrect": true,
+      "rootCause": "`totalPages` is computed from `items.length - 1` instead of `items.length`, so whenever the item count is an exact multiple of `pageSize` plus one, the final page is lost.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 104,
+        "failed": 0,
+        "total": 104,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/paginate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/anthropic_claude-opus-4-6-thinking/bug-04.md"
     },
     {
       "bug": 5,
@@ -917,6 +1049,39 @@
       "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-05.md"
     },
     {
+      "bug": 5,
+      "model": "anthropic/claude-opus-4-6-thinking",
+      "base": "5d1cea2",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), claude-opus-4-6-thinking",
+      "conversationId": "9cc63fd7-c55e-4b45-93f1-e7d4a4fee098",
+      "finishReason": "SUCCESS",
+      "promptTokens": 38914,
+      "completionTokens": 1257,
+      "thinkingTokens": 0,
+      "seconds": 24.9,
+      "askedAt": "2026-09-26T16:28:08.331Z",
+      "culprit": "649b24a",
+      "culpritSubject": "perf(catalog): memoize search index",
+      "culpritCorrect": true,
+      "rootCause": "When the search index was memoized in `indexFor`, the haystack was stored without lowercasing, and the needle in `searchProducts` also lost its `toLowerCase()` call, making substring matching case-sensitive.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 114,
+        "failed": 0,
+        "total": 114,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/search.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/anthropic_claude-opus-4-6-thinking/bug-05.md"
+    },
+    {
       "bug": 6,
       "model": "ibm/granite-4-h-small",
       "base": "35a91bf",
@@ -1098,6 +1263,39 @@
       ],
       "rejectedFiles": [],
       "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-06.md"
+    },
+    {
+      "bug": 6,
+      "model": "anthropic/claude-opus-4-6-thinking",
+      "base": "35a91bf",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), claude-opus-4-6-thinking",
+      "conversationId": "c5b66f76-a245-4b49-8882-d4d40278cce0",
+      "finishReason": "SUCCESS",
+      "promptTokens": 39091,
+      "completionTokens": 3557,
+      "thinkingTokens": 0,
+      "seconds": 62.2,
+      "askedAt": "2026-09-26T16:33:06.766Z",
+      "culprit": "c3fb68f",
+      "culpritSubject": "refactor(cart): accept numeric strings for quantities",
+      "culpritCorrect": true,
+      "rootCause": "`parseQuantity` only checks that the value is finite but never rejects negative numbers, so a quantity like `\"-3\"` is accepted, producing negative line totals, negative tax, and a negative payment amount.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 107,
+        "failed": 0,
+        "total": 107,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/cart.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/anthropic_claude-opus-4-6-thinking/bug-06.md"
     },
     {
       "bug": 7,
@@ -1283,6 +1481,39 @@
       "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-07.md"
     },
     {
+      "bug": 7,
+      "model": "anthropic/claude-opus-4-6-thinking",
+      "base": "fee040c",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), claude-opus-4-6-thinking",
+      "conversationId": "98daccd6-7231-414a-98c9-97332e8827ea",
+      "finishReason": "SUCCESS",
+      "promptTokens": 39350,
+      "completionTokens": 1584,
+      "thinkingTokens": 0,
+      "seconds": 25.3,
+      "askedAt": "2026-09-26T16:33:42.147Z",
+      "culprit": "985e247",
+      "culpritSubject": "refactor(orders): derive duplicate-order check from order history",
+      "culpritCorrect": true,
+      "rootCause": "The `placeOrder` method checks `hasOrderFor(cart.id)` before the `await this.payments.charge(...)` call, so two concurrent calls both pass the duplicate check before either has pushed its order into the `this.orders` array. There is no in-flight tracking to make the second call wait or be rejected while the first is still processing.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 117,
+        "failed": 0,
+        "total": 117,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/orders/service.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/anthropic_claude-opus-4-6-thinking/bug-07.md"
+    },
+    {
       "bug": 8,
       "model": "ibm/granite-4-h-small",
       "base": "31835d5",
@@ -1465,6 +1696,39 @@
       ],
       "rejectedFiles": [],
       "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-08.md"
+    },
+    {
+      "bug": 8,
+      "model": "anthropic/claude-opus-4-6-thinking",
+      "base": "31835d5",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), claude-opus-4-6-thinking",
+      "conversationId": "b4016ea0-b58c-42c8-af5a-59bc5b73d466",
+      "finishReason": "SUCCESS",
+      "promptTokens": 38556,
+      "completionTokens": 3039,
+      "thinkingTokens": 0,
+      "seconds": 56.9,
+      "askedAt": "2026-09-26T16:34:49.325Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": true,
+      "rootCause": "`applyCoupon` does not check whether the coupon code is already present in the cart, so the same code (DIWALI60) can be added repeatedly, stacking its 60% discount to exceed 100% and produce a negative total.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 113,
+        "failed": 0,
+        "total": 113,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/coupons.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/anthropic_claude-opus-4-6-thinking/bug-08.md"
     }
   ],
   "bob": [
@@ -1704,6 +1968,9 @@
     "manualModels": {
       "google/gemini-3.1-pro-high": {
         "via": "Antigravity CLI 1.2.11 headless (agy -p), one fresh session per bug in a folder holding only the prompts, commands auto-denied, default temperature"
+      },
+      "anthropic/claude-opus-4-6-thinking": {
+        "via": "Antigravity CLI 1.2.11 headless (agy -p), one fresh session per bug, run one after another, in a folder holding only the prompts, commands auto-denied, default temperature"
       }
     },
     "temperature": 0,

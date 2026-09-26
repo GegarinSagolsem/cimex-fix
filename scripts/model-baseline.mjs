@@ -35,6 +35,7 @@ export const MODELS = [
 // docs/benchmark/model-baseline/<id>/bug-0N.md, and then scored like the rest.
 export const MANUAL_MODELS = {
   "google/gemini-3.1-pro-high": { via: "Antigravity CLI 1.2.11 headless (agy -p), one fresh session per bug in a folder holding only the prompts, commands auto-denied, default temperature" },
+  "anthropic/claude-opus-4-6-thinking": { via: "Antigravity CLI 1.2.11 headless (agy -p), one fresh session per bug, run one after another, in a folder holding only the prompts, commands auto-denied, default temperature" },
 };
 const ALL_MODELS = [...MODELS, ...Object.keys(MANUAL_MODELS)];
 const TEMPERATURE = 0;

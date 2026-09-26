@@ -1,6 +1,6 @@
 # Benchmark — Cimex Fix on the ShopLite demo repo
 
-_Generated 2026-09-26 16:21 UTC by `scripts/build-benchmark.mjs` from the exported case events
+_Generated 2026-09-26 16:39 UTC by `scripts/build-benchmark.mjs` from the exported case events
 (`apps/web/data/cases/*.json`), IBM Bob's task log (`docs/benchmark/bob-runs.json`) and the answer key
 (`docs/answer-key/bugs.md`). Do not edit by hand: re-run `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs`._
 
@@ -58,7 +58,7 @@ _Generated 2026-09-26 16:21 UTC by `scripts/build-benchmark.mjs` from the export
 ## Compared with one-shot models
 
 Each model got **one** answer per bug (from 2026-09-26). 5 models ran on IBM watsonx.ai (us-south, temperature 0);
-Gemini 3.1 Pro (High) ran through the Google Antigravity CLI 1.2.11 in headless mode (`agy -p`).
+Gemini 3.1 Pro (High) and Claude Opus 4.6 (Thinking) ran through the Google Antigravity CLI 1.2.11 in headless mode (`agy -p`).
 Each received the bug report,
 every file under `src/` at the commit Bob's fix was applied to, and the git history with the `src/` files each commit changed, and
 had to name the culprit commit, return the fixed files and write a regression test. Bob's committed fixes and the models' answers
@@ -70,8 +70,8 @@ are scored by the same script (`scripts/model-baseline.mjs`) in a clean worktree
 - **Fix with proof**: all three of the above.
 - **Culprit**: the named commit has the answer key's commit subject.
 
-**Across all 48 one-shot answers:** 48 named a culprit and returned a fix and a test. 31 of the fixes
-fixed the bug, 23 came with a test that proves it, 5 broke existing tests, and 28 named the right culprit.
+**Across all 56 one-shot answers:** 56 named a culprit and returned a fix and a test. 38 of the fixes
+fixed the bug, 30 came with a test that proves it, 5 broke existing tests, and 35 named the right culprit.
 
 | Contender | Fixed | Nothing broken | Own test RED→GREEN | Fix with proof | Culprit correct | Cost / time |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -82,25 +82,28 @@ fixed the bug, 23 came with a test that proves it, 5 broke existing tests, and 2
 | Mistral Small 3.1 (one shot) | 5/8 | 7/8 | 3/8 | **2/8** | 5/8 | 7,907 tokens, 9.9 s per answer (median) |
 | gpt-oss-120b (one shot) | 8/8 | 8/8 | 8/8 | **8/8** | 6/8 | 8,474 tokens, 14 s per answer (median) |
 | Gemini 3.1 Pro (High) (one shot) | 7/8 | 8/8 | 8/8 | **7/8** | 7/8 | 46,871 tokens, 75.45 s per answer (median) |
+| Claude Opus 4.6 (Thinking) (one shot) | 7/8 | 8/8 | 8/8 | **7/8** | 7/8 | 41,157 tokens, 41.2 s per answer (median) |
 
-| Bug | Cimex Fix | Granite 4 H Small | Llama 3.3 70B | Llama 4 Maverick | Mistral Small 3.1 | gpt-oss-120b | Gemini 3.1 Pro (High) |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| #1 Empty coupon field → total shows ₹NaN | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit |
-| #2 Totals off by ₹0.01 | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit |
-| #3 Delivery date one day early after 8 PM IST | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
-| #4 Pagination drops the last product | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
-| #5 Search became case-sensitive | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
-| #6 Negative quantity accepted → negative total | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
-| #7 Double-click "Place order" → two orders | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
-| #8 Coupon applies twice → discount over 100% | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| Bug | Cimex Fix | Granite 4 H Small | Llama 3.3 70B | Llama 4 Maverick | Mistral Small 3.1 | gpt-oss-120b | Gemini 3.1 Pro (High) | Claude Opus 4.6 (Thinking) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| #1 Empty coupon field → total shows ₹NaN | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit |
+| #2 Totals off by ₹0.01 | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| #3 Delivery date one day early after 8 PM IST | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| #4 Pagination drops the last product | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| #5 Search became case-sensitive | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| #6 Negative quantity accepted → negative total | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| #7 Double-click "Place order" → two orders | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| #8 Coupon applies twice → discount over 100% | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
 
 **Read this fairly**
 
 - The models were handed every file under `src/` up front; Bob started from the report alone and had to find the code.
 - Bob read the two screenshots as images; the models got their visible text, transcribed without interpretation
   (`SCREENSHOT_TEXT` in the script). For bug #3 the models got the Markdown source of the QA report PDF.
-- Gemini ran through Google's Antigravity CLI, not watsonx.ai: same prompt file, one fresh session per bug, in a folder that held
-  only the 8 prompts; commands were auto-denied and no run was refused a tool. Its temperature can't be set there, and it thinks before answering.
+- Gemini and Claude Opus ran through Google's Antigravity CLI, not watsonx.ai: same prompt file, one fresh session per bug, in a folder
+  that held only the 8 prompts; commands were auto-denied and no run was refused a tool. Temperature can't be set there, and both are
+  thinking models. A first Opus batch run 8-at-once ended with "stream was interrupted" errors, so it was discarded unscored and every bug
+  was asked again one at a time (all 8 completed).
 - One answer per model is a single sample, not an average over tries. Exact prompts and raw answers are in
   `docs/benchmark/model-baseline/`.
 - The models could not run code; Bob ran tests and `git bisect`. The comparison shows what one answer gets right without that loop.

@@ -40,8 +40,8 @@ such.
 **Impact so far.** On a demo shop with 8 planted bugs, Bob proved all 8, from screenshots, a QA PDF, a
 server log and issue text. All 8 culprit commits match the seeded answer key. The median time from report to a failing
 test was 4m 02s; the cleanest run went from customer issue to published proof in 7m 44s with no human prompts. The
-median cost was 2.93 Bobcoins per fix. Six models (five on IBM watsonx.ai, plus Gemini 3.1 Pro) each gave one answer per bug with all the
-code handed to them: 31 of 48 answers fixed the bug, Gemini 3.1 Pro got 7/8, and the best, gpt-oss-120b, matched Cimex Fix's 8/8. Every number is generated from raw case events in the public repo.
+median cost was 2.93 Bobcoins per fix. Seven models (five on IBM watsonx.ai, plus Gemini 3.1 Pro and Claude Opus 4.6) each gave one answer per bug
+with all the code handed to them: 38 of 56 answers fixed the bug, Gemini and Opus got 7/8, and only gpt-oss-120b matched Cimex Fix's 8/8. Every number is generated from raw case events in the public repo.
 
 ## IBM Bob Usage Statement
 

@@ -132,6 +132,7 @@ const MODEL_LABELS = {
   "mistralai/mistral-small-3-1-24b-instruct-2503": "Mistral Small 3.1",
   "openai/gpt-oss-120b": "gpt-oss-120b",
   "google/gemini-3.1-pro-high": "Gemini 3.1 Pro (High)",
+  "anthropic/claude-opus-4-6-thinking": "Claude Opus 4.6 (Thinking)",
 };
 const baselineFile = path.join(root, "docs/benchmark/model-baseline.json");
 const baseline = existsSync(baselineFile) ? JSON.parse(readFileSync(baselineFile, "utf8")) : null;
@@ -233,7 +234,7 @@ function comparisonMd(cmp) {
     "## Compared with one-shot models",
     "",
     `Each model got **one** answer per bug (from ${cmp.askedOn}). ${models.filter((m) => m.provider === "IBM watsonx.ai").length} models ran on IBM watsonx.ai (${cmp.region}, temperature ${cmp.temperature});`,
-    ...models.filter((m) => m.provider !== "IBM watsonx.ai").map((m) => `${m.name} ran through the ${m.provider} 1.2.11 in headless mode (\`agy -p\`).`),
+    `${models.filter((m) => m.provider !== "IBM watsonx.ai").map((m) => m.name).join(" and ")} ran through the Google Antigravity CLI 1.2.11 in headless mode (\`agy -p\`).`,
     "Each received the bug report,",
     "every file under `src/` at the commit Bob's fix was applied to, and the git history with the `src/` files each commit changed, and",
     "had to name the culprit commit, return the fixed files and write a regression test. Bob's committed fixes and the models' answers",
@@ -271,8 +272,10 @@ function comparisonMd(cmp) {
     "- The models were handed every file under `src/` up front; Bob started from the report alone and had to find the code.",
     "- Bob read the two screenshots as images; the models got their visible text, transcribed without interpretation",
     "  (`SCREENSHOT_TEXT` in the script). For bug #3 the models got the Markdown source of the QA report PDF.",
-    "- Gemini ran through Google's Antigravity CLI, not watsonx.ai: same prompt file, one fresh session per bug, in a folder that held",
-    "  only the 8 prompts; commands were auto-denied and no run was refused a tool. Its temperature can't be set there, and it thinks before answering.",
+    "- Gemini and Claude Opus ran through Google's Antigravity CLI, not watsonx.ai: same prompt file, one fresh session per bug, in a folder",
+    "  that held only the 8 prompts; commands were auto-denied and no run was refused a tool. Temperature can't be set there, and both are",
+    "  thinking models. A first Opus batch run 8-at-once ended with \"stream was interrupted\" errors, so it was discarded unscored and every bug",
+    "  was asked again one at a time (all 8 completed).",
     "- One answer per model is a single sample, not an average over tries. Exact prompts and raw answers are in",
     "  `docs/benchmark/model-baseline/`.",
     "- The models could not run code; Bob ran tests and `git bisect`. The comparison shows what one answer gets right without that loop.",

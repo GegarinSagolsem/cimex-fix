@@ -94,8 +94,8 @@ export default function ImpactPage() {
           <CardHeader>
             <CardTitle>Compared with one-shot models</CardTitle>
             <p className="max-w-3xl text-sm text-[var(--muted)]">
-              {comparison.contenders.length - 1} models (five on IBM watsonx.ai, plus Gemini 3.1 Pro) each answered every
-              bug once, with all the source code handed to them. Every answer looked complete, but only {comparison.oneShotTotals.fixed} of{" "}
+              {comparison.contenders.length - 1} models (five on IBM watsonx.ai, plus Gemini 3.1 Pro and Claude Opus 4.6)
+              each answered every bug once, with all the source code handed to them. Every answer looked complete, but only {comparison.oneShotTotals.fixed} of{" "}
               {comparison.oneShotTotals.answers} fixed the bug. The best model, {bestModel.name}, got{" "}
               {bestModel.fixWithProof}/{comparison.bugs.length} fixes with proof,{" "}
               {bestModel.fixWithProof >= cimex.fixWithProof ? "matching" : "against"} Cimex Fix&apos;s {cimex.fixWithProof}/
@@ -114,8 +114,8 @@ export default function ImpactPage() {
               </li>
               <li>
                 One answer per model, asked on {comparison.askedOn}: a single sample, not an average. watsonx.ai models ran
-                at temperature {comparison.temperature} ({comparison.region}); Gemini ran through Google&apos;s Antigravity CLI
-                (headless, one fresh session per bug, default temperature, no commands run). Prompts and raw answers are in
+                at temperature {comparison.temperature} ({comparison.region}); Gemini and Claude Opus ran through
+                Google&apos;s Antigravity CLI (headless, one fresh session per bug, default temperature, no commands run). Prompts and raw answers are in
                 the repo.
               </li>
               <li>

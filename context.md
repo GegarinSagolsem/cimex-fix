@@ -10,9 +10,12 @@ connection survived the rename). Demo repo keeps `bugproof-demo-shoplite`. Local
 **Gemini added to the model comparison (done 09-26):** Gemini 3.1 Pro (High) via the Antigravity CLI headless
 (`agy --model gemini-3.1-pro-high --output-format json -p=...`), 8 parallel sessions in `C:\dev\gemini-baseline\` (only the
 prompts), commands auto-denied, 0 denied actions, 1 turn each. Result: **7/8 fixed with proof, culprit 7/8**; #1 miss = empty
-coupon now throws (own test green, probe red), culprit `185f248`. Raw JSON in `C:\dev\gemini-baselineaw\`, answers +
+coupon now throws (own test green, probe red), culprit `185f248`. Raw JSON in `C:\dev\gemini-baseline
+aw\`, answers +
 meta in `docs/benchmark/model-baseline/google_gemini-3.1-pro-high/`. 48 answers total: 31 fixed, 23 with proof.
-Same CLI also offers Claude Sonnet/Opus 4.6 and GPT-OSS 120B if more contenders are ever wanted.
+**Claude Opus 4.6 (Thinking) added too** (`claude-opus-4-6-thinking`): 7/8 with proof, culprit 7/8, same #1 miss (empty
+coupon throws, culprit `185f248`). Parallel Opus runs all ended "stream was interrupted" → discarded unscored (`raw-opus\`),
+re-asked one at a time (`raw-opus-solo\`, all SUCCESS). Totals now: 7 models, 56 answers, 38 fixed, 30 with proof.
 
 **Then:** slides + cover, video script → Bob hooks only if coins remain (**7 Bobcoins left**, user 09-26). Both repos
 still **private**; make them public just before submitting (Sun, after the freeze).
@@ -71,6 +74,7 @@ still **private**; make them public just before submitting (Sun, after the freez
 | 09-26 | **One-shot model comparison** instead of a human baseline: 5 watsonx.ai models (Granite 4 H Small, Llama 3.3 70B, Llama 4 Maverick, Mistral Small 3.1, gpt-oss-120b; us-south, temp 0, one answer each) get the report + all `src/` + git history at Bob's base commit. Bob's fixes and the answers are scored by the same script: answer-key probe (fixed), full suite (nothing broken), own test RED→GREEN, culprit subject. Result on Bob's 7 bugs: Cimex 7/7 fix with proof; gpt-oss-120b 7/7 (culprit 6/7); others 1–3/7; all 35 answers looked complete, 23 fixed the bug, 4 broke tests. Published as-is | user asked for an honest metric vs other models; the probes are independent of Bob and the models, so both sides are judged alike. 0 Bobcoins, ~307k watsonx tokens |
 | 09-26 | GitHub repo renamed to `cimex-fix`, Vercel domain `cimex-fix.vercel.app` added; demo repo name kept | product rename; demo repo name is in every case record and verify command |
 | 09-26 | Gemini added to the comparison by hand via Antigravity (clean folder, one chat per bug, no tools) | user has no Gemini API key; same prompts and scoring, caveats disclosed |
+| 09-26 | Claude Opus 4.6 (Thinking) added as a 7th contender via the same Antigravity CLI | strongest thinking model on the list and a third vendor; Sonnet weaker, Flash = second Google model, GPT-OSS already in |
 | 09-26 | Case page evidence tabs read the real MCP/Bob fields (`diff`, `sha`/`subject`, `reasons`, `APPROVE`/`pass`, `failures`, `stepsToReproduce`) | tabs were written against mock data: Diff/Culprit showed empty, Critic badge red |
 
 ## Results so far (all verified against the answer key)

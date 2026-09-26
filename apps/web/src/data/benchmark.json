@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T16:21:10.058Z",
+  "generatedAt": "2026-09-26T16:39:46.134Z",
   "summary": {
     "bugsAttempted": 8,
     "proven": 8,
@@ -291,11 +291,11 @@
   ],
   "comparison": {
     "oneShotTotals": {
-      "answers": 48,
-      "complete": 48,
-      "fixed": 31,
-      "fixWithProof": 23,
-      "culpritCorrect": 28,
+      "answers": 56,
+      "complete": 56,
+      "fixed": 38,
+      "fixWithProof": 30,
+      "culpritCorrect": 35,
       "brokeTests": 5
     },
     "bugs": [
@@ -410,6 +410,20 @@
         "culpritCorrect": 7,
         "medianSeconds": 75.45,
         "medianTokens": 46871
+      },
+      {
+        "id": "anthropic/claude-opus-4-6-thinking",
+        "name": "Claude Opus 4.6 (Thinking)",
+        "kind": "one-shot",
+        "provider": "Google Antigravity CLI",
+        "answered": 8,
+        "fixed": 7,
+        "suiteGreen": 8,
+        "proofTest": 8,
+        "fixWithProof": 7,
+        "culpritCorrect": 7,
+        "medianSeconds": 41.2,
+        "medianTokens": 41157
       }
     ],
     "perBug": [
@@ -467,6 +481,14 @@
             "answered": true
           },
           "google/gemini-3.1-pro-high": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "anthropic/claude-opus-4-6-thinking": {
             "fixed": false,
             "suiteGreen": true,
             "proofTest": true,
@@ -536,6 +558,14 @@
             "fixWithProof": true,
             "culpritCorrect": true,
             "answered": true
+          },
+          "anthropic/claude-opus-4-6-thinking": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
           }
         }
       },
@@ -593,6 +623,14 @@
             "answered": true
           },
           "google/gemini-3.1-pro-high": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "anthropic/claude-opus-4-6-thinking": {
             "fixed": true,
             "suiteGreen": true,
             "proofTest": true,
@@ -662,6 +700,14 @@
             "fixWithProof": true,
             "culpritCorrect": true,
             "answered": true
+          },
+          "anthropic/claude-opus-4-6-thinking": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
           }
         }
       },
@@ -719,6 +765,14 @@
             "answered": true
           },
           "google/gemini-3.1-pro-high": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "anthropic/claude-opus-4-6-thinking": {
             "fixed": true,
             "suiteGreen": true,
             "proofTest": true,
@@ -788,6 +842,14 @@
             "fixWithProof": true,
             "culpritCorrect": true,
             "answered": true
+          },
+          "anthropic/claude-opus-4-6-thinking": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
           }
         }
       },
@@ -851,6 +913,14 @@
             "fixWithProof": true,
             "culpritCorrect": true,
             "answered": true
+          },
+          "anthropic/claude-opus-4-6-thinking": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
           }
         }
       },
@@ -908,6 +978,14 @@
             "answered": true
           },
           "google/gemini-3.1-pro-high": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "anthropic/claude-opus-4-6-thinking": {
             "fixed": true,
             "suiteGreen": true,
             "proofTest": true,

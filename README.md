@@ -73,7 +73,7 @@ numbers that aren't there):
 
 ### Compared with one-shot models
 
-We gave six models one answer per bug: five on IBM watsonx.ai, plus Gemini 3.1 Pro through Google's Antigravity CLI. Each got the report, every file under `src/` and the git
+We gave seven models one answer per bug: five on IBM watsonx.ai, plus Gemini 3.1 Pro and Claude Opus 4.6 through Google's Antigravity CLI. Each got the report, every file under `src/` and the git
 history, and had to name the culprit and return a fix and a test. One script ([`scripts/model-baseline.mjs`](scripts/model-baseline.mjs))
 scores their answers and Bob's committed fixes the same way. The answer key's independent probe decides "fixed"; "fix
 with proof" also needs every existing test green and the contender's own test failing before its fix and passing after.
@@ -83,16 +83,17 @@ with proof" also needs every existing test green and the contender's own test fa
 | **Cimex Fix (IBM Bob)** | 8/8 | **8/8** | 8/8 (4/8 during the run) |
 | gpt-oss-120b | 8/8 | **8/8** | 6/8 |
 | Gemini 3.1 Pro (High) | 7/8 | 7/8 | 7/8 |
+| Claude Opus 4.6 (Thinking) | 7/8 | 7/8 | 7/8 |
 | Llama 4 Maverick | 5/8 | 3/8 | 4/8 |
 | Mistral Small 3.1 | 5/8 | 2/8 | 5/8 |
 | Llama 3.3 70B | 4/8 | 2/8 | 6/8 |
 | Granite 4 H Small | 2/8 | 1/8 | 0/8 |
 
-All 48 one-shot answers named a culprit and returned a fix and a test; 31 fixed the bug, 23 came with a test that
+All 56 one-shot answers named a culprit and returned a fix and a test; 38 fixed the bug, 30 came with a test that
 proves it, and 5 broke existing tests. The best model matched Cimex Fix, but only running the checks tells you which
-answer that is: Gemini's one miss (#1) made an empty coupon field throw an error, so its own test passed while the
-independent probe (total unchanged) failed. The models were handed all the code, while Bob started from the report
-alone; each model gave one answer (watsonx.ai at temperature 0, Gemini at its default). Prompts, raw answers and caveats: [`docs/benchmark.md`](docs/benchmark.md#compared-with-one-shot-models).
+answer that is: Gemini's and Opus's one miss (#1) made an empty coupon field throw an error, so their own tests passed
+while the independent probe (total unchanged) failed. The models were handed all the code, while Bob started from the report
+alone; each model gave one answer (watsonx.ai at temperature 0, Gemini and Opus at their default). Prompts, raw answers and caveats: [`docs/benchmark.md`](docs/benchmark.md#compared-with-one-shot-models).
 
 **Honesty notes**
 - Early runs (#4, #1, #3, #8) hit a bug in our bisect tool: Bob passed the repo path with a lowercase drive letter
