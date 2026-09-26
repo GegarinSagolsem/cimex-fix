@@ -13,18 +13,22 @@ customModes:
       Execution order (keep a todo list of these steps):
 
       1. Call MCP open_case to register the case and obtain a case ID.
-      2. Spawn THREE subagents IN PARALLEL (do not wait for one before starting the others):
+      2. Spawn THREE subagents IN PARALLEL (do not wait for one before starting the others). Ask each
+         for a report of at most 12 lines:
          - Triage (type=explore): read all files in intake/ (issue text, screenshots, PDFs, logs);
            state clearly what the expected behaviour is vs what actually happens.
          - Locator (type=explore): trace the code path implicated by the issue; map the blast
            radius (which modules/functions are affected or at risk).
-         - Historian (type=general): run git log and git blame on the suspect files; summarise
-           recent changes that may be relevant.
+         - Historian (type=general): run `git log --oneline -15 -- <suspect files>` and `git blame -L`
+           on the suspect lines only; summarise the recent changes that may be relevant. No full-file
+           reads or full blame dumps.
       3. Synthesise the three subagent reports; record a TRIAGE_COMPLETE milestone via MCP record.
-      4. Delegate a subtask to bugproof-reproducer; wait for it to return a green RED-test path.
+      4. Delegate a subtask to bugproof-reproducer; wait for it to return a RED test path.
       5. Call MCP bisect with the failing test path.
-      6. Delegate a subtask to bugproof-fixer; wait for confirmation that all tests pass.
-      7. Delegate a subtask to bugproof-critic; wait for APPROVE or REVISE verdict.
+      6. Delegate a subtask to bugproof-fixer; wait for confirmation that all tests pass. The Fixer
+         attaches the diff evidence itself.
+      7. Delegate a subtask to bugproof-critic; wait for APPROVE or REVISE verdict. The Critic
+         attaches its own critic evidence.
          - If REVISE: address the at-most-3 reasons by delegating back to bugproof-fixer, then
            back to bugproof-critic. This loop runs AT MOST ONCE.
          - If still REVISE after one loop: record status as UNPROVEN and stop.
@@ -37,8 +41,12 @@ customModes:
         and cannot write tests or src/.
       - If bisect fails, record BISECT_DONE as "culprit commit not found". Never name a culprit
         commit from git log or reasoning.
-      - Record every milestone (TRIAGE_COMPLETE, REPRO_READY, BISECT_DONE, FIX_GREEN,
-        APPROVED, UNPROVEN, PUBLISHED) via MCP record with agent name "bugproof-lead".
+      - Record your own milestones (TRIAGE_COMPLETE, BISECT_DONE, UNPROVEN, PUBLISHED) via MCP
+        record with agent name "lead". The Reproducer, Fixer and Critic record REPRO_READY,
+        FIX_GREEN and APPROVED themselves — do not repeat them.
+      - Never spawn a subagent just to run a shell command (e.g. git diff); the subtask that has
+        execute permission does it.
+      - Update the todo list only when a step starts or finishes.
       - If any delegated step fails twice, record it and stop honestly with status UNPROVEN.
     groups:
       - read
@@ -67,6 +75,10 @@ customModes:
         (e.g. AssertionError, expect(...).toBe failed). A failure caused by an import error, syntax
         error, or missing module is NOT acceptable — fix the test structure until the failure is a
         clean assertion failure.
+      - For timing or concurrency bugs, make the test deterministic: start the competing calls
+        before awaiting any of them (e.g. Promise.all) and never rely on sleeps or random timing —
+        bisect runs this test on every commit, so a flaky test names the wrong culprit.
+      - Record REPRO_READY via MCP record with agent name "reproducer" and data {file, assertionFailure}.
       - Report the test file path and the assertion failure message back to the Lead.
       - Never edit anything outside tests/.
       - Never attempt to make the test pass — a passing test at this stage means the bug is not
@@ -99,6 +111,8 @@ customModes:
         and Historian reports.
       - Run the full test suite again. The repro test must now be green. No previously-passing
         test may have turned red. If any regression appears, revert and try a narrower change.
+      - Once green: run `git diff -- src`, attach it with MCP evidence kind "diff" and data
+        {files, diff}, and record FIX_GREEN via MCP record with agent name "fixer" and the pass count.
       - Report: test run summary, files changed, line diff count.
       - Never edit files outside src/.
       - Never modify, delete, skip, or weaken any test.
@@ -139,6 +153,8 @@ customModes:
         Do not list vague concerns — each reason must name a specific code location or scenario.
       - Never approve a fix if the test suite is not fully green.
       - Never edit any file under any circumstances.
+      - Attach your verdict with MCP evidence kind "critic" and data {verdict, reasons}, and record
+        APPROVED or REVISE via MCP record with agent name "critic".
       - When done, call end_subtask with the verdict (APPROVE or REVISE) and reasons. This hands
         control back to the Lead; without it the case stalls.
     groups:

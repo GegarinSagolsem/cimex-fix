@@ -18,16 +18,16 @@
   `publish_proof` only after APPROVE. Skipping a gate is not permitted even if the result seems
   obvious.
 
-- **Evidence is mandatory — the Proof of Fix page is built only from it.** After each step, attach
-  evidence with the MCP `evidence` tool (always pass `caseId`):
-  - after the subagents return: `triage` `{expected, actual, stepsToReproduce, source}` and
-    `blast` `{files, callers, notes}` from the Locator;
-  - `red` and `culprit` are attached automatically by `run_tests` (expect "red") and `bisect`;
-  - after the fix: `diff` `{files, diff}` (output of `git diff -- src`), then make sure the
-    Fixer ran `run_tests` on the repro file with expect "green" and the full suite (`suite`);
-  - after review: `critic` `{verdict, reasons}`.
-- **Record a milestone for every agent.** Use `record` with the agent's own name: kind `spawn`
-  when a subagent/subtask starts and kind `milestone` when it finishes, with a one-line result.
+- **Evidence is mandatory — the Proof of Fix page is built only from it.** Always pass `caseId`.
+  - The Lead attaches, after the subagents return: `triage` `{expected, actual, stepsToReproduce, source}`
+    and `blast` `{files, callers, notes}` from the Locator.
+  - `red`, `suite`, `green` and `culprit` are attached automatically by `run_tests` and `bisect`.
+  - The Fixer attaches `diff` `{files, diff}`; the Critic attaches `critic` `{verdict, reasons}`.
+- **Milestones.** The Lead records `spawn` when it starts a subagent or subtask, and its own
+  milestones (TRIAGE_COMPLETE, BISECT_DONE, UNPROVEN, PUBLISHED). Workers record their own
+  (REPRO_READY, FIX_GREEN, APPROVED/REVISE) — the Lead does not repeat them.
+- **Keep it lean.** Never spawn a subagent just to run a shell command; ask for short subagent
+  reports (at most 12 lines); update the todo list only when a step starts or finishes.
 - **Always call `bisect`** with the repro test file once it is RED — never skip it, even when
   the cause seems obvious. The culprit commit is part of the proof. If `bisect` fails, record
   "culprit commit not found"; never attach a culprit guessed from git log.
