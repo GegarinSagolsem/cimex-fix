@@ -18,7 +18,6 @@ permission-scoped fix, an adversarial review — and a live dashboard that shows
 nothing else. In Stack Overflow's 2025 survey, 66% of developers named "AI solutions that are almost right, but not
 quite" their top frustration, and 45% said debugging AI-generated code takes longer. Reviewers get a diff, not
 evidence: no test that failed before and passes after, no commit that caused the bug, no record of what was checked.
-Reproducing the bug is usually the slowest step, and it is the step AI tools skip.
 
 **Who it is for and how it works.** Developers on bug-fix or on-call duty, reviewers and tech leads, and QA engineers
 who file bugs. A bug report — a customer screenshot, a QA PDF, a server log or an issue — goes into IBM Bob, and the
@@ -41,7 +40,7 @@ says so.
 server log and issue text. All 8 culprit commits match the seeded answer key (4 named during
 the run, 4 by a follow-up bisect). The median time from report to a failing
 test was 4m 02s; the cleanest run went from customer issue to published proof in 7m 44s with no human prompts. The
-median cost was 2.93 Bobcoins per fix. Seven models (five on IBM watsonx.ai, plus Gemini 3.1 Pro and
+median cost was 2.93 Bobcoins per fix, and no fix changed an existing test. Seven models (five on IBM watsonx.ai, plus Gemini 3.1 Pro and
 Claude Opus 4.6) answered each bug once, given all the code: 38 of 56 answers fixed it and only gpt-oss-120b matched
 Cimex Fix's 8/8. Nothing in an answer tells you which one is right; running the checks does. Every number is generated
 by a script from the case events and Bob's task log.
@@ -76,9 +75,11 @@ in Bob. Task-session screenshots are in `bob_sessions/`.
 **Bobcoins.** 32.64 Bobcoins across every Bob task — 8 bug runs, follow-up bisects and building the pack — tracked
 per task in `docs/benchmark.md`.
 
-**IBM watsonx.ai.** Granite (`ibm/granite-4-h-small`) writes each Proof of Fix's plain-English summary for
+**IBM watsonx.ai and Watson.** Granite (`ibm/granite-4-h-small`) writes each Proof of Fix's plain-English summary for
 non-technical readers, grounded in the Lead's technical summary and the full diff, and powers the live `/triage`
-page that turns a messy bug report into a structured triage.
+page that turns a messy bug report into a structured triage. Five watsonx.ai models were the one-shot baseline we
+scored Bob against. The demo video's narration is IBM Watson Text to Speech, checked line by line with Watson
+Speech to Text.
 
 Claude Code helped build the web dashboard and the glue code.
 
@@ -89,5 +90,7 @@ IBM Bob, watsonx.ai, Granite, Debugging, Developer Tools, MCP, AI Agents, Testin
 ## Links
 
 - Live app: https://cimex-fix.vercel.app
+- A real Proof of Fix (case #5): https://cimex-fix.vercel.app/cases/case_20260926_7e5e/proof
+- Demo video: [YouTube link — add after upload]
 - Repository: https://github.com/GegarinSagolsem/cimex-fix
 - Demo target repository: https://github.com/GegarinSagolsem/bugproof-demo-shoplite
