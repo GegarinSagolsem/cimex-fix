@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import benchmark from "@/data/benchmark.json";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TimeToProofChart } from "@/components/impact/TimeToProofChart";
+import { ModelComparison, type Comparison } from "@/components/impact/ModelComparison";
 import { mmss } from "@/components/impact/format";
 import { PageHero } from "@/components/shell/PageHero";
 
@@ -27,6 +28,11 @@ function StatTile({ label, value, detail, highlight }: { label: string; value: s
 export default function ImpactPage() {
   const { summary: s, cases, generatedAt } = benchmark;
   const live = s.liveBisectRun;
+  const comparison = (benchmark as { comparison?: unknown }).comparison as Comparison | null | undefined;
+  const cimex = comparison?.contenders.find((c) => c.kind === "pipeline");
+  const bestModel = comparison?.contenders
+    .filter((c) => c.kind === "one-shot")
+    .sort((a, b) => b.fixWithProof - a.fixWithProof || b.fixed - a.fixed)[0];
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6">
@@ -82,6 +88,43 @@ export default function ImpactPage() {
           />
         </div>
       </section>
+
+      {comparison && cimex && bestModel && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Compared with one-shot models</CardTitle>
+            <p className="max-w-3xl text-sm text-[var(--muted)]">
+              {comparison.contenders.length - 1} models on IBM watsonx.ai each answered every bug once, with all the source
+              code handed to them. Every answer looked complete, but only {comparison.oneShotTotals.fixed} of{" "}
+              {comparison.oneShotTotals.answers} fixed the bug. The best model, {bestModel.name}, got{" "}
+              {bestModel.fixWithProof}/{comparison.bugs.length} fixes with proof,{" "}
+              {bestModel.fixWithProof >= cimex.fixWithProof ? "matching" : "against"} Cimex Fix&apos;s {cimex.fixWithProof}/
+              {comparison.bugs.length}. One script scores every answer, Bob&apos;s included, and the answer key&apos;s
+              independent probe decides whether a bug is fixed. That is why Cimex Fix runs the checks instead of trusting
+              the answer.
+            </p>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <ModelComparison data={comparison} />
+            <ul className="list-disc space-y-1.5 pl-5 text-xs text-[var(--muted)]">
+              <li>
+                The models got every file under <span className="font-mono">src/</span> and the git history up front; Bob
+                started from the report and found the code itself. Bob read the screenshots as images; the models got their
+                visible text.
+              </li>
+              <li>
+                One answer per model at temperature {comparison.temperature}, asked on {comparison.askedOn} (watsonx.ai{" "}
+                {comparison.region}): a single sample, not an average. Prompts and raw answers are in the repo.
+              </li>
+              <li>
+                Bob&apos;s culprit count is the final result, including follow-up bisects; {cimex.culpritDuringRun}/
+                {comparison.bugs.length} were named during the runs.
+              </li>
+              {comparison.controlsOk && <li>Control: every probe fails on the unfixed code.</li>}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
@@ -184,7 +227,7 @@ export default function ImpactPage() {
               Human prompts are messages typed after the first one. Bobcoins come from IBM Bob&apos;s task log; building
               the Bob pack cost {s.coinsSetup.toFixed(2)} more, and all Bob work so far totals {s.coinsAllTasks.toFixed(2)}.
             </li>
-            <li>There is no manual baseline yet, so no human-versus-Bob time comparison is claimed.</li>
+            <li>There is no manual baseline, so no human-versus-Bob time comparison is claimed.</li>
           </ul>
           <p className="mt-3 text-xs text-[var(--muted)]">Generated {generatedAt.slice(0, 16).replace("T", " ")} UTC.</p>
         </CardContent>

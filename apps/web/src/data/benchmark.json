@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T13:57:08.567Z",
+  "generatedAt": "2026-09-26T15:25:01.687Z",
   "summary": {
     "bugsAttempted": 7,
     "proven": 7,
@@ -258,5 +258,495 @@
       "fixCommit": "0f5546f",
       "reproTest": "tests/bugproof/bug-07-double-order.test.ts"
     }
-  ]
+  ],
+  "comparison": {
+    "oneShotTotals": {
+      "answers": 35,
+      "complete": 35,
+      "fixed": 23,
+      "fixWithProof": 15,
+      "culpritCorrect": 20,
+      "brokeTests": 4
+    },
+    "bugs": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "temperature": 0,
+    "askedOn": "2026-09-26",
+    "region": "us-south",
+    "controlsOk": true,
+    "contenders": [
+      {
+        "id": "cimex",
+        "name": "Cimex Fix (IBM Bob)",
+        "kind": "pipeline",
+        "fixed": 7,
+        "suiteGreen": 7,
+        "proofTest": 7,
+        "fixWithProof": 7,
+        "culpritCorrect": 7,
+        "culpritDuringRun": 3,
+        "cost": "2.84 Bobcoins median per bug",
+        "time": "14m 39s median to proof"
+      },
+      {
+        "id": "ibm/granite-4-h-small",
+        "name": "Granite 4 H Small",
+        "kind": "one-shot",
+        "answered": 7,
+        "fixed": 2,
+        "suiteGreen": 5,
+        "proofTest": 1,
+        "fixWithProof": 1,
+        "culpritCorrect": 0,
+        "medianSeconds": 8.2,
+        "medianTokens": 7004
+      },
+      {
+        "id": "meta-llama/llama-3-3-70b-instruct",
+        "name": "Llama 3.3 70B",
+        "kind": "one-shot",
+        "answered": 7,
+        "fixed": 4,
+        "suiteGreen": 7,
+        "proofTest": 2,
+        "fixWithProof": 2,
+        "culpritCorrect": 5,
+        "medianSeconds": 12.7,
+        "medianTokens": 6993
+      },
+      {
+        "id": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+        "name": "Llama 4 Maverick",
+        "kind": "one-shot",
+        "answered": 7,
+        "fixed": 5,
+        "suiteGreen": 6,
+        "proofTest": 3,
+        "fixWithProof": 3,
+        "culpritCorrect": 4,
+        "medianSeconds": 9.9,
+        "medianTokens": 7417
+      },
+      {
+        "id": "mistralai/mistral-small-3-1-24b-instruct-2503",
+        "name": "Mistral Small 3.1",
+        "kind": "one-shot",
+        "answered": 7,
+        "fixed": 5,
+        "suiteGreen": 6,
+        "proofTest": 3,
+        "fixWithProof": 2,
+        "culpritCorrect": 5,
+        "medianSeconds": 10.2,
+        "medianTokens": 7858
+      },
+      {
+        "id": "openai/gpt-oss-120b",
+        "name": "gpt-oss-120b",
+        "kind": "one-shot",
+        "answered": 7,
+        "fixed": 7,
+        "suiteGreen": 7,
+        "proofTest": 7,
+        "fixWithProof": 7,
+        "culpritCorrect": 6,
+        "medianSeconds": 14.2,
+        "medianTokens": 8483
+      }
+    ],
+    "perBug": [
+      {
+        "bug": 1,
+        "title": "Empty coupon field → total shows ₹NaN",
+        "probeFailsAtBase": true,
+        "cimex": {
+          "fixed": true,
+          "suiteGreen": true,
+          "proofTest": true,
+          "fixWithProof": true,
+          "culpritCorrect": true,
+          "culpritDuringRun": false
+        },
+        "models": {
+          "ibm/granite-4-h-small": {
+            "fixed": false,
+            "suiteGreen": false,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-3-3-70b-instruct": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": {
+            "fixed": false,
+            "suiteGreen": false,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "mistralai/mistral-small-3-1-24b-instruct-2503": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "openai/gpt-oss-120b": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": false,
+            "answered": true
+          }
+        }
+      },
+      {
+        "bug": 3,
+        "title": "Delivery date one day early after 8 PM IST",
+        "probeFailsAtBase": true,
+        "cimex": {
+          "fixed": true,
+          "suiteGreen": true,
+          "proofTest": true,
+          "fixWithProof": true,
+          "culpritCorrect": true,
+          "culpritDuringRun": false
+        },
+        "models": {
+          "ibm/granite-4-h-small": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-3-3-70b-instruct": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "mistralai/mistral-small-3-1-24b-instruct-2503": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "openai/gpt-oss-120b": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          }
+        }
+      },
+      {
+        "bug": 4,
+        "title": "Pagination drops the last product",
+        "probeFailsAtBase": true,
+        "cimex": {
+          "fixed": true,
+          "suiteGreen": true,
+          "proofTest": true,
+          "fixWithProof": true,
+          "culpritCorrect": true,
+          "culpritDuringRun": true
+        },
+        "models": {
+          "ibm/granite-4-h-small": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-3-3-70b-instruct": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "mistralai/mistral-small-3-1-24b-instruct-2503": {
+            "fixed": true,
+            "suiteGreen": false,
+            "proofTest": true,
+            "fixWithProof": false,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "openai/gpt-oss-120b": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          }
+        }
+      },
+      {
+        "bug": 5,
+        "title": "Search became case-sensitive",
+        "probeFailsAtBase": true,
+        "cimex": {
+          "fixed": true,
+          "suiteGreen": true,
+          "proofTest": true,
+          "fixWithProof": true,
+          "culpritCorrect": true,
+          "culpritDuringRun": true
+        },
+        "models": {
+          "ibm/granite-4-h-small": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-3-3-70b-instruct": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "mistralai/mistral-small-3-1-24b-instruct-2503": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "openai/gpt-oss-120b": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          }
+        }
+      },
+      {
+        "bug": 6,
+        "title": "Negative quantity accepted → negative total",
+        "probeFailsAtBase": true,
+        "cimex": {
+          "fixed": true,
+          "suiteGreen": true,
+          "proofTest": true,
+          "fixWithProof": true,
+          "culpritCorrect": true,
+          "culpritDuringRun": true
+        },
+        "models": {
+          "ibm/granite-4-h-small": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-3-3-70b-instruct": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "mistralai/mistral-small-3-1-24b-instruct-2503": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "openai/gpt-oss-120b": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          }
+        }
+      },
+      {
+        "bug": 7,
+        "title": "Double-click \"Place order\" → two orders",
+        "probeFailsAtBase": true,
+        "cimex": {
+          "fixed": true,
+          "suiteGreen": true,
+          "proofTest": true,
+          "fixWithProof": true,
+          "culpritCorrect": true,
+          "culpritDuringRun": false
+        },
+        "models": {
+          "ibm/granite-4-h-small": {
+            "fixed": false,
+            "suiteGreen": false,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-3-3-70b-instruct": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "mistralai/mistral-small-3-1-24b-instruct-2503": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "openai/gpt-oss-120b": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          }
+        }
+      },
+      {
+        "bug": 8,
+        "title": "Coupon applies twice → discount over 100%",
+        "probeFailsAtBase": true,
+        "cimex": {
+          "fixed": true,
+          "suiteGreen": true,
+          "proofTest": true,
+          "fixWithProof": true,
+          "culpritCorrect": true,
+          "culpritDuringRun": false
+        },
+        "models": {
+          "ibm/granite-4-h-small": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-3-3-70b-instruct": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "mistralai/mistral-small-3-1-24b-instruct-2503": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": true,
+            "answered": true
+          },
+          "openai/gpt-oss-120b": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": true,
+            "answered": true
+          }
+        }
+      }
+    ]
+  }
 }

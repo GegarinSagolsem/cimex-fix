@@ -70,6 +70,27 @@ numbers that aren't there):
 | #5 Search became case-sensitive | issue text | 7m 44s | `649b24a` perf(catalog): memoize search index |
 | #7 Double-click "Place order" → two orders | issue text + log | 8m 02s | `985e247` refactor(orders): derive duplicate-order check from order history |
 
+### Compared with one-shot models
+
+We gave five models on IBM watsonx.ai one answer per bug. Each got the report, every file under `src/` and the git
+history, and had to name the culprit and return a fix and a test. One script ([`scripts/model-baseline.mjs`](scripts/model-baseline.mjs))
+scores their answers and Bob's committed fixes the same way. The answer key's independent probe decides "fixed"; "fix
+with proof" also needs every existing test green and the contender's own test failing before its fix and passing after.
+
+| Contender (7 bugs) | Fixed | Fix with proof | Culprit correct |
+|---|---|---|---|
+| **Cimex Fix (IBM Bob)** | 7/7 | **7/7** | 7/7 (3/7 during the run) |
+| gpt-oss-120b | 7/7 | **7/7** | 6/7 |
+| Llama 4 Maverick | 5/7 | 3/7 | 4/7 |
+| Mistral Small 3.1 | 5/7 | 2/7 | 5/7 |
+| Llama 3.3 70B | 4/7 | 2/7 | 5/7 |
+| Granite 4 H Small | 2/7 | 1/7 | 0/7 |
+
+All 35 one-shot answers named a culprit and returned a fix and a test; 23 fixed the bug, 15 came with a test that
+proves it, and 4 broke existing tests. The best model matched Cimex Fix, but only running the checks tells you which
+answer that is. The models were handed all the code, while Bob started from the report alone; each model gave one
+answer at temperature 0. Prompts, raw answers and caveats: [`docs/benchmark.md`](docs/benchmark.md#compared-with-one-shot-models-ibm-watsonxai).
+
 **Honesty notes**
 - Early runs (#4, #1, #3, #8) hit a bug in our bisect tool: Bob passed the repo path with a lowercase drive letter
   (`c:\…`), Vitest loaded twice, and every bisect step was skipped. We fixed it, then re-ran bisect in Bob for those

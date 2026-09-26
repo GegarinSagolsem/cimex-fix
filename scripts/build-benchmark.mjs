@@ -3,11 +3,12 @@
 //   apps/web/data/cases/*.json      case events + evidence (scripts/export-cases.mjs)
 //   docs/benchmark/bob-runs.json    per-run facts from IBM Bob's task log (coins, interventions, bisect)
 //   docs/answer-key/bugs.md         the seeded culprit commits
+//   docs/benchmark/model-baseline.json  one-shot watsonx.ai models and Bob's fixes, scored alike (scripts/model-baseline.mjs)
 // Every number in the video, slides and README must come from this output (Plan.md §9).
 //
 // Usage: node scripts/export-cases.mjs && node scripts/build-benchmark.mjs
 
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -123,12 +124,155 @@ const summary = {
 };
 summary.coinsAllTasks = round2(summary.coinsRuns + summary.coinsFollowUps + summary.coinsSetup);
 
+// One-shot models vs Bob's fixes, scored by the same checks, on the bugs Bob attempted.
+const MODEL_LABELS = {
+  "ibm/granite-4-h-small": "Granite 4 H Small",
+  "meta-llama/llama-3-3-70b-instruct": "Llama 3.3 70B",
+  "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": "Llama 4 Maverick",
+  "mistralai/mistral-small-3-1-24b-instruct-2503": "Mistral Small 3.1",
+  "openai/gpt-oss-120b": "gpt-oss-120b",
+};
+const baselineFile = path.join(root, "docs/benchmark/model-baseline.json");
+const baseline = existsSync(baselineFile) ? JSON.parse(readFileSync(baselineFile, "utf8")) : null;
+let comparison = null;
+if (baseline) {
+  const bugs = cases.map((c) => c.bug).sort((a, b) => a - b);
+  const checks = (x) => ({
+    fixed: Boolean(x?.probe),
+    suiteGreen: Boolean(x?.suite?.ok),
+    proofTest: Boolean(x?.red && x?.green),
+    fixWithProof: Boolean(x?.probe && x?.suite?.ok && x?.red && x?.green),
+  });
+  const tally = (rows) => ({
+    fixed: rows.filter((r) => r.fixed).length,
+    suiteGreen: rows.filter((r) => r.suiteGreen).length,
+    proofTest: rows.filter((r) => r.proofTest).length,
+    fixWithProof: rows.filter((r) => r.fixWithProof).length,
+    culpritCorrect: rows.filter((r) => r.culpritCorrect).length,
+  });
+  const perBug = bugs.map((bug) => {
+    const c = cases.find((x) => x.bug === bug);
+    const bobScore = baseline.bob.find((b) => b.bug === bug);
+    return {
+      bug,
+      title: c.title,
+      probeFailsAtBase: bobScore?.control.probeFailsAtBase ?? null,
+      cimex: { ...checks(bobScore?.bob), culpritCorrect: c.culpritCorrect, culpritDuringRun: c.liveCulprit === "correct" },
+      models: Object.fromEntries(
+        baseline.setup.models.map((m) => {
+          const a = baseline.attempts.find((x) => x.bug === bug && x.model === m);
+          return [m, a ? { ...checks(a), culpritCorrect: a.culpritCorrect, answered: true } : { ...checks(null), culpritCorrect: false, answered: false }];
+        }),
+      ),
+    };
+  });
+  const attemptsOn = (m) => baseline.attempts.filter((a) => a.model === m && bugs.includes(a.bug));
+  const oneShot = baseline.attempts.filter((a) => bugs.includes(a.bug)).map((a) => ({ ...a, ...checks(a) }));
+  comparison = {
+    oneShotTotals: {
+      answers: oneShot.length,
+      complete: oneShot.filter((a) => a.culprit && a.filesChanged.length > 0 && a.testWritten).length,
+      fixed: oneShot.filter((a) => a.fixed).length,
+      fixWithProof: oneShot.filter((a) => a.fixWithProof).length,
+      culpritCorrect: oneShot.filter((a) => a.culpritCorrect).length,
+      brokeTests: oneShot.filter((a) => a.suite && !a.suite.ok).length,
+    },
+    bugs,
+    temperature: baseline.setup.temperature,
+    askedOn: baseline.attempts.map((a) => a.askedAt).sort()[0]?.slice(0, 10) ?? null,
+    region: (baseline.setup.region ?? "").replace(/^https:\/\//, "").split(".")[0],
+    controlsOk: perBug.every((p) => p.probeFailsAtBase === true),
+    contenders: [
+      {
+        id: "cimex",
+        name: "Cimex Fix (IBM Bob)",
+        kind: "pipeline",
+        ...tally(perBug.map((p) => p.cimex)),
+        culpritDuringRun: perBug.filter((p) => p.cimex.culpritDuringRun).length,
+        cost: `${summary.coinsPerRunMedian} Bobcoins median per bug`,
+        time: `${mmss(summary.medianMinutesToProof)} median to proof`,
+      },
+      ...baseline.setup.models.map((m) => {
+        const xs = attemptsOn(m);
+        return {
+          id: m,
+          name: MODEL_LABELS[m] ?? m,
+          kind: "one-shot",
+          answered: xs.length,
+          ...tally(perBug.map((p) => p.models[m])),
+          medianSeconds: round2(median(xs.map((x) => x.seconds))),
+          medianTokens: Math.round(median(xs.map((x) => (x.promptTokens ?? 0) + (x.completionTokens ?? 0)))),
+        };
+      }),
+    ],
+    perBug,
+  };
+}
+
 const generatedAt = new Date().toISOString();
 mkdirSync(path.join(root, "apps/web/src/data"), { recursive: true });
-writeFileSync(path.join(root, "apps/web/src/data/benchmark.json"), JSON.stringify({ generatedAt, summary, cases }, null, 2) + "\n");
+writeFileSync(path.join(root, "apps/web/src/data/benchmark.json"), JSON.stringify({ generatedAt, summary, cases, comparison }, null, 2) + "\n");
 
 const s = summary;
 const row = (cells) => `| ${cells.join(" | ")} |`;
+
+function comparisonMd(cmp) {
+  const n = cmp.bugs.length;
+  const mark = (ok) => (ok ? "✅" : "❌");
+  const cell = (x) => (x.answered === false ? "no answer" : `${mark(x.fixWithProof)} fix with proof · ${mark(x.culpritCorrect)} culprit`);
+  const models = cmp.contenders.filter((c) => c.kind === "one-shot");
+  const cimex = cmp.contenders.find((c) => c.kind === "pipeline");
+  const t = cmp.oneShotTotals;
+  return [
+    "## Compared with one-shot models (IBM watsonx.ai)",
+    "",
+    `Each model got **one** answer per bug (${cmp.askedOn}, watsonx.ai ${cmp.region}, temperature ${cmp.temperature}). It received the bug report,`,
+    "every file under `src/` at the commit Bob's fix was applied to, and the git history with the `src/` files each commit changed, and",
+    "had to name the culprit commit, return the fixed files and write a regression test. Bob's committed fixes and the models' answers",
+    "are scored by the same script (`scripts/model-baseline.mjs`) in a clean worktree of the demo repo:",
+    "",
+    "- **Fixed**: the answer key's independent probe for that bug passes (`docs/answer-key/bug-probes.test.ts`; neither Bob nor any model wrote it).",
+    "- **Nothing broken**: every existing test still passes.",
+    "- **Own test RED→GREEN**: the contender's own test fails on the unfixed code and passes with its fix.",
+    "- **Fix with proof**: all three of the above.",
+    "- **Culprit**: the named commit has the answer key's commit subject.",
+    "",
+    `**Across all ${t.answers} one-shot answers:** ${t.complete} named a culprit and returned a fix and a test. ${t.fixed} of the fixes`,
+    `fixed the bug, ${t.fixWithProof} came with a test that proves it, ${t.brokeTests} broke existing tests, and ${t.culpritCorrect} named the right culprit.`,
+    "",
+    row(["Contender", "Fixed", "Nothing broken", "Own test RED→GREEN", "Fix with proof", "Culprit correct", "Cost / time"]),
+    row(Array(7).fill("---")),
+    ...cmp.contenders.map((c) =>
+      row([
+        c.kind === "pipeline" ? `**${c.name}**` : `${c.name} (one shot)`,
+        `${c.fixed}/${n}`,
+        `${c.suiteGreen}/${n}`,
+        `${c.proofTest}/${n}`,
+        `**${c.fixWithProof}/${n}**`,
+        c.kind === "pipeline" ? `${c.culpritCorrect}/${n} (${c.culpritDuringRun}/${n} during the run)` : `${c.culpritCorrect}/${n}`,
+        c.kind === "pipeline" ? `${c.cost}; ${c.time}` : `${c.medianTokens.toLocaleString("en-US")} tokens, ${c.medianSeconds} s per answer (median)`,
+      ]),
+    ),
+    "",
+    row(["Bug", "Cimex Fix", ...models.map((m) => m.name)]),
+    row(Array(models.length + 2).fill("---")),
+    ...cmp.perBug.map((p) => row([`#${p.bug} ${p.title}`, cell(p.cimex), ...models.map((m) => cell(p.models[m.id]))])),
+    "",
+    "**Read this fairly**",
+    "",
+    "- The models were handed every file under `src/` up front; Bob started from the report alone and had to find the code.",
+    "- Bob read the two screenshots as images; the models got their visible text, transcribed without interpretation",
+    "  (`SCREENSHOT_TEXT` in the script). For bug #3 the models got the Markdown source of the QA report PDF.",
+    "- One answer per model at temperature 0 is a single sample, not an average over tries. Exact prompts and raw answers are in",
+    "  `docs/benchmark/model-baseline/`.",
+    "- The models could not run code; Bob ran tests and `git bisect`. The comparison shows what one answer gets right without that loop.",
+    `- Bob's culprit count is the final result; ${cimex.culpritDuringRun}/${n} were named during the runs themselves (see the bisect caveat below).`,
+    cmp.controlsOk
+      ? "- Control: every bug's probe fails on the unfixed code, so a passing probe means the bug was fixed."
+      : "- ⚠️ Control failed: at least one probe passed on the unfixed code; its bug's results are not meaningful.",
+    "",
+  ];
+}
 const md = [
   "# Benchmark — Cimex Fix on the ShopLite demo repo",
   "",
@@ -170,6 +314,7 @@ const md = [
   row(Array(6).fill("---")),
   ...cases.map((c) => row([`#${c.bug}`, c.answerKeySubject, c.culprit ? `\`${c.culprit.sha}\`` : "—", `${c.liveCulprit} — ${c.liveCulpritNote}`, c.finalCulpritMethod, c.finalCulpritNote ?? ""])),
   "",
+  ...(comparison ? comparisonMd(comparison) : []),
   "## Bobcoins (IBM Bob task log)",
   "",
   row(["Bob task", "What", "Bobcoins"]),

@@ -1,6 +1,6 @@
 # context.md — living project state (read this FIRST every session)
 
-_Last updated: Sat 26 Sep 2026 ~11:45 IST · Claude Opus 5.5 · 6 bugs proven, culprits 6/6; Impact, Proof and Landing pages live; resume from "Next steps"_
+_Last updated: Sat 26 Sep 2026 ~21:15 IST · Claude Opus 5.5 · 7 bugs proven, culprits 7/7; one-shot model comparison on /impact; bug #2 running in Bob; resume from "Next steps"_
 
 ## Snapshot
 - **Project:** BugProof — "No fix without proof." IBM Bob reproduces a bug with a failing test, finds
@@ -24,6 +24,7 @@ _Last updated: Sat 26 Sep 2026 ~11:45 IST · Claude Opus 5.5 · 6 bugs proven, c
 | MCP server | `packages/mcp` → `dist/index.js` · tools: open_case, record, evidence, run_tests, bisect, publish_proof |
 | Bob pack (source) | `bob/pack/` (4 modes, rules, 3 skills, mcp.json) → install: `node scripts/install-bob-pack.mjs C:/dev/bugproof-demo-shoplite` |
 | Answer key (never show Bob) | `docs/answer-key/` (bugs.md, probes, build-history.sh) |
+| Model comparison | `node scripts/model-baseline.mjs` → `docs/benchmark/model-baseline.json` + raw answers/prompts in `docs/benchmark/model-baseline/` (cached: re-runs only re-score). `build-benchmark.mjs` turns it into the benchmark section + `/impact` table |
 | Secrets | `C:\dev\bugproof\.env.local` (ingest token + WATSONX_*) — gitignored, never print |
 | Bob screenshots | `bob_sessions/` |
 
@@ -52,6 +53,7 @@ _Last updated: Sat 26 Sep 2026 ~11:45 IST · Claude Opus 5.5 · 6 bugs proven, c
 | 09-26 | `* { border-color }` moved into `@layer base` | unlayered, it overrode every border-colour utility in Tailwind v4 (e.g. the PROVEN stamp's green border rendered grey) |
 | 09-26 | Manual human baseline dropped (Plan.md §9): no human-vs-Bob time comparison is claimed anywhere | user can't do a fair manual debug; a single rushed attempt would be a weak, attackable number. Problem framing uses cited industry stats instead (Plan.md §2, verify each source first) |
 | 09-26 | Granite summaries now get the Lead's technical summary + the full diff; new `POST /api/cases/[id]/summary` (bearer) regenerates only `plainSummary` (keeps `status`/`provenAt`). Regenerated #4, #5, #6 and checked each by hand | #5's summary stated the wrong root cause (diff was cut at 600 chars of JSON), #6's contradicted itself, #4 had none. `/publish` must not be re-run: it resets `provenAt` |
+| 09-26 | **One-shot model comparison** instead of a human baseline: 5 watsonx.ai models (Granite 4 H Small, Llama 3.3 70B, Llama 4 Maverick, Mistral Small 3.1, gpt-oss-120b; us-south, temp 0, one answer each) get the report + all `src/` + git history at Bob's base commit. Bob's fixes and the answers are scored by the same script: answer-key probe (fixed), full suite (nothing broken), own test RED→GREEN, culprit subject. Result on Bob's 7 bugs: Cimex 7/7 fix with proof; gpt-oss-120b 7/7 (culprit 6/7); others 1–3/7; all 35 answers looked complete, 23 fixed the bug, 4 broke tests. Published as-is | user asked for an honest metric vs other models; the probes are independent of Bob and the models, so both sides are judged alike. 0 Bobcoins, ~307k watsonx tokens |
 | 09-26 | Case page evidence tabs read the real MCP/Bob fields (`diff`, `sha`/`subject`, `reasons`, `APPROVE`/`pass`, `failures`, `stepsToReproduce`) | tabs were written against mock data: Diff/Culprit showed empty, Critic badge red |
 
 ## Results so far (all verified against the answer key)
@@ -95,6 +97,9 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 13. Sat 18:17 plan (user): ✅ leaner Bob pack (Historian capped, Fixer attaches diff, Critic attaches verdict, no
     duplicate milestones, deterministic tests for timing bugs) → 🅱 bug #7 (dry run: deterministic RED 3/3, bisect finds
     `985e247` = answer key in 29.6 s) → 🅱 Bob hooks only if coins remain. Bug #2 skipped.
+14. ✅ One-shot model comparison (see Decisions) on `/impact`, in `docs/benchmark.md`, README and the submission text.
+    After bug #2 is committed: `node scripts/model-baseline.mjs --bugs 2` (answers cached; adds Bob's #2 scoring), then
+    `node scripts/build-benchmark.mjs` → the comparison grows to 8 bugs; update README/submission numbers.
 
 ## Notes / open items
 - Demo repo history contains the original build spec (`docs/SPEC.md` in root commit `32d13b1`, deleted in `49f8447`):

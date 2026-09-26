@@ -1,0 +1,1430 @@
+{
+  "attempts": [
+    {
+      "bug": 1,
+      "model": "ibm/granite-4-h-small",
+      "base": "df66390",
+      "finishReason": "stop",
+      "promptTokens": 6264,
+      "completionTokens": 666,
+      "seconds": 8.2,
+      "askedAt": "2026-09-26T14:18:26.251Z",
+      "culprit": "5dd2952",
+      "culpritSubject": "Add the BugProof Bob pack",
+      "culpritCorrect": false,
+      "rootCause": "The `computeTotals` function in `src/cart/totals.ts` incorrectly calculates the discount by applying each coupon to the original subtotal instead of the running subtotal after previous discounts, causing the discount to be NaN when multiple coupons are applied.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 108,
+        "failed": 2,
+        "total": 110,
+        "loadErrors": 0,
+        "ok": false
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/ibm_granite-4-h-small/bug-01.md"
+    },
+    {
+      "bug": 1,
+      "model": "meta-llama/llama-3-3-70b-instruct",
+      "base": "df66390",
+      "finishReason": "stop",
+      "promptTokens": 6285,
+      "completionTokens": 685,
+      "seconds": 13.4,
+      "askedAt": "2026-09-26T14:19:06.223Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": false,
+      "rootCause": "The bug is caused by the `couponDiscount` function being called for each coupon code in the `computeTotals` function, which results in the discount being applied multiple times to the same subtotal. This leads to an incorrect total calculation. The `couponDiscount` function should be called with the cumulative discount applied to the subtotal.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 110,
+        "failed": 0,
+        "total": 110,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-3-3-70b-instruct/bug-01.md"
+    },
+    {
+      "bug": 1,
+      "model": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "base": "df66390",
+      "finishReason": "stop",
+      "promptTokens": 6311,
+      "completionTokens": 1106,
+      "seconds": 13.4,
+      "askedAt": "2026-09-26T14:19:46.119Z",
+      "culprit": "f376d02",
+      "culpritSubject": "feat(cart): support coupon codes",
+      "culpritCorrect": false,
+      "rootCause": "The bug was introduced when the coupon discount calculation was implemented. The issue arises when the discount exceeds the subtotal, causing the total to become NaN.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 73,
+        "failed": 0,
+        "total": 73,
+        "loadErrors": 5,
+        "ok": false
+      },
+      "filesChanged": [
+        "src/cart/coupons.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-4-maverick-17b-128e-instruct-fp8/bug-01.md"
+    },
+    {
+      "bug": 1,
+      "model": "mistralai/mistral-small-3-1-24b-instruct-2503",
+      "base": "df66390",
+      "finishReason": "stop",
+      "promptTokens": 6990,
+      "completionTokens": 792,
+      "seconds": 14.1,
+      "askedAt": "2026-09-26T14:20:26.686Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": false,
+      "rootCause": "The bug was introduced when allowing stacking multiple coupon codes, which caused the discount to be calculated incorrectly when multiple coupons are applied.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 110,
+        "failed": 0,
+        "total": 110,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/mistralai_mistral-small-3-1-24b-instruct-2503/bug-01.md"
+    },
+    {
+      "bug": 1,
+      "model": "openai/gpt-oss-120b",
+      "base": "df66390",
+      "finishReason": "stop",
+      "promptTokens": 6383,
+      "completionTokens": 2100,
+      "seconds": 12.5,
+      "askedAt": "2026-09-26T14:21:06.264Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": false,
+      "rootCause": "`applyCoupon` added an empty string as a coupon code, which later caused `couponDiscount` to receive `undefined` and return `NaN`, breaking discount and total calculations.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 110,
+        "failed": 0,
+        "total": 110,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/coupons.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-01.md"
+    },
+    {
+      "bug": 2,
+      "model": "ibm/granite-4-h-small",
+      "base": "f2a3033",
+      "finishReason": "stop",
+      "promptTokens": 6806,
+      "completionTokens": 1075,
+      "seconds": 10.1,
+      "askedAt": "2026-09-26T14:22:14.954Z",
+      "culprit": "0f5546f",
+      "culpritSubject": "Reject a second order for a cart while its payment is still in flight",
+      "culpritCorrect": false,
+      "rootCause": "The cart's `addItem` function uses `Math.trunc` to discard the fractional part of the quantity, causing quantities like 1.5 to be treated as 1, which leads to incorrect line totals and GST calculations for products with non‑integer prices.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 119,
+        "failed": 0,
+        "total": 119,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/cart.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/ibm_granite-4-h-small/bug-02.md"
+    },
+    {
+      "bug": 2,
+      "model": "meta-llama/llama-3-3-70b-instruct",
+      "base": "f2a3033",
+      "finishReason": "stop",
+      "promptTokens": 6827,
+      "completionTokens": 806,
+      "seconds": 15.4,
+      "askedAt": "2026-09-26T14:23:08.932Z",
+      "culprit": "98e2fce",
+      "culpritSubject": "feat(cart): sum multiple line items in cart totals",
+      "culpritCorrect": true,
+      "rootCause": "The bug is caused by the rounding of line totals in the `lineItems` function, which leads to a loss of precision when calculating the subtotal and tax. This results in a discrepancy of ₹0.01 in the total amount.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 119,
+        "failed": 0,
+        "total": 119,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/lineItems.ts",
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-3-3-70b-instruct/bug-02.md"
+    },
+    {
+      "bug": 2,
+      "model": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "base": "f2a3033",
+      "finishReason": "stop",
+      "promptTokens": 6859,
+      "completionTokens": 645,
+      "seconds": 7.2,
+      "askedAt": "2026-09-26T14:23:52.039Z",
+      "culprit": "28e83cf",
+      "culpritSubject": "feat(cart): add cart totals with GST and shipping",
+      "culpritCorrect": false,
+      "rootCause": "The bug was introduced when the `computeTotals` function was implemented. The issue arises from the order of operations when calculating the total amount, specifically when calculating the tax (GST) on the subtotal. The tax is calculated by summing the GST for each line item, which can lead to a rounding error.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 116,
+        "failed": 3,
+        "total": 119,
+        "loadErrors": 0,
+        "ok": false
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-4-maverick-17b-128e-instruct-fp8/bug-02.md"
+    },
+    {
+      "bug": 2,
+      "model": "mistralai/mistral-small-3-1-24b-instruct-2503",
+      "base": "f2a3033",
+      "finishReason": "stop",
+      "promptTokens": 7621,
+      "completionTokens": 335,
+      "seconds": 4.6,
+      "askedAt": "2026-09-26T14:24:30.146Z",
+      "culprit": "8cc8c28",
+      "culpritSubject": "feat(cart): expose line items with line totals",
+      "culpritCorrect": false,
+      "rootCause": "The `lineItems` function rounds the line total to the nearest paisa before summing, which causes the GST calculation to be off by one paisa for some products.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 119,
+        "failed": 0,
+        "total": 119,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/lineItems.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/mistralai_mistral-small-3-1-24b-instruct-2503/bug-02.md"
+    },
+    {
+      "bug": 2,
+      "model": "openai/gpt-oss-120b",
+      "base": "f2a3033",
+      "finishReason": "stop",
+      "promptTokens": 6929,
+      "completionTokens": 1536,
+      "seconds": 13.8,
+      "askedAt": "2026-09-26T14:25:16.846Z",
+      "culprit": "28e83cf",
+      "culpritSubject": "feat(cart): add cart totals with GST and shipping",
+      "culpritCorrect": false,
+      "rootCause": "The GST tax was calculated with floating‑point multiplication (`line.lineTotal * GST_RATE`) and rounded via `roundMoney`, which can lose a fraction of a paisa (e.g., 188.864999…) and round down, giving a ₹0.01 shortfall. The tax should be computed in integer paise (using `calculateGst`) to guarantee correct half‑up rounding.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 119,
+        "failed": 0,
+        "total": 119,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-02.md"
+    },
+    {
+      "bug": 3,
+      "model": "ibm/granite-4-h-small",
+      "base": "6d6c87a",
+      "finishReason": "stop",
+      "promptTokens": 6809,
+      "completionTokens": 831,
+      "seconds": 7.8,
+      "askedAt": "2026-09-26T14:26:52.766Z",
+      "culprit": "6f7ca14",
+      "culpritSubject": "feat(delivery): estimate delivery date in Asia/Kolkata",
+      "culpritCorrect": false,
+      "rootCause": "The `estimateDelivery` function adds transit days to the UTC date after converting the order time to IST, but it does not account for the fact that the dispatch cutoff is based on the IST date. This causes orders placed after 20:00 IST to be dispatched on the same UTC day, resulting in a delivery estimate that is one day too early.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": true,
+      "suite": {
+        "passed": 112,
+        "failed": 0,
+        "total": 112,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/delivery/estimate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/ibm_granite-4-h-small/bug-03.md"
+    },
+    {
+      "bug": 3,
+      "model": "meta-llama/llama-3-3-70b-instruct",
+      "base": "6d6c87a",
+      "finishReason": "stop",
+      "promptTokens": 6830,
+      "completionTokens": 783,
+      "seconds": 14.6,
+      "askedAt": "2026-09-26T14:27:34.786Z",
+      "culprit": "b4369d9",
+      "culpritSubject": "perf(delivery): compute IST date without Intl.DateTimeFormat",
+      "culpritCorrect": true,
+      "rootCause": "The bug was introduced when the `estimateDelivery` function was refactored to compute the IST date without using `Intl.DateTimeFormat`, which caused the function to incorrectly determine the dispatch date for orders placed after the cutoff time. The issue arises from the fact that the `orderedAt` date is not being converted to the IST timezone correctly before being used to determine the dispatch date.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 112,
+        "failed": 0,
+        "total": 112,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/delivery/estimate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-3-3-70b-instruct/bug-03.md"
+    },
+    {
+      "bug": 3,
+      "model": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "base": "6d6c87a",
+      "finishReason": "stop",
+      "promptTokens": 6858,
+      "completionTokens": 886,
+      "seconds": 9.9,
+      "askedAt": "2026-09-26T14:28:12.855Z",
+      "culprit": "b4369d9",
+      "culpritSubject": "perf(delivery): compute IST date without Intl.DateTimeFormat",
+      "culpritCorrect": true,
+      "rootCause": "The bug was introduced when the IST date calculation was simplified, but it incorrectly handled the dispatch cutoff hour by comparing UTC hours instead of IST hours.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": true,
+      "suite": {
+        "passed": 112,
+        "failed": 0,
+        "total": 112,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/delivery/estimate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-4-maverick-17b-128e-instruct-fp8/bug-03.md"
+    },
+    {
+      "bug": 3,
+      "model": "mistralai/mistral-small-3-1-24b-instruct-2503",
+      "base": "6d6c87a",
+      "finishReason": "stop",
+      "promptTokens": 7613,
+      "completionTokens": 878,
+      "seconds": 10.2,
+      "askedAt": "2026-09-26T14:28:50.766Z",
+      "culprit": "b4369d9",
+      "culpritSubject": "perf(delivery): compute IST date without Intl.DateTimeFormat",
+      "culpritCorrect": true,
+      "rootCause": "The commit introduced a bug where the dispatch date calculation does not correctly account for the time zone offset when determining if the order was placed after the dispatch cutoff.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 112,
+        "failed": 0,
+        "total": 112,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/delivery/estimate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/mistralai_mistral-small-3-1-24b-instruct-2503/bug-03.md"
+    },
+    {
+      "bug": 3,
+      "model": "openai/gpt-oss-120b",
+      "base": "6d6c87a",
+      "finishReason": "stop",
+      "promptTokens": 6932,
+      "completionTokens": 1627,
+      "seconds": 13,
+      "askedAt": "2026-09-26T14:29:31.018Z",
+      "culprit": "b4369d9",
+      "culpritSubject": "perf(delivery): compute IST date without Intl.DateTimeFormat",
+      "culpritCorrect": true,
+      "rootCause": "The delivery estimate logic checks the cutoff hour against the UTC hour of the order timestamp (`orderedAt.getUTCHours()`), but the cutoff is defined in IST. This causes orders placed after 20:00 IST to be treated as before the cutoff, resulting in a one‑day‑early estimate.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 112,
+        "failed": 0,
+        "total": 112,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/delivery/estimate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-03.md"
+    },
+    {
+      "bug": 4,
+      "model": "ibm/granite-4-h-small",
+      "base": "5dd2952",
+      "finishReason": "stop",
+      "promptTokens": 6313,
+      "completionTokens": 465,
+      "seconds": 5.7,
+      "askedAt": "2026-09-26T14:30:55.348Z",
+      "culprit": "5dd2952",
+      "culpritSubject": "Add the BugProof Bob pack",
+      "culpritCorrect": false,
+      "rootCause": "The pagination logic in `src/catalog/paginate.ts` clamps the requested page number to the total page count, so when the last page would contain exactly one product the page number is forced to the previous page, making the product invisible in the grid.",
+      "testWritten": true,
+      "red": false,
+      "green": true,
+      "probe": false,
+      "suite": {
+        "passed": 104,
+        "failed": 0,
+        "total": 104,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/paginate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/ibm_granite-4-h-small/bug-04.md"
+    },
+    {
+      "bug": 4,
+      "model": "meta-llama/llama-3-3-70b-instruct",
+      "base": "5dd2952",
+      "finishReason": "stop",
+      "promptTokens": 6334,
+      "completionTokens": 466,
+      "seconds": 9.1,
+      "askedAt": "2026-09-26T14:31:29.413Z",
+      "culprit": "882203d",
+      "culpritSubject": "refactor(catalog): compute pagination bounds explicitly",
+      "culpritCorrect": true,
+      "rootCause": "The bug is caused by the `paginate` function not correctly handling cases where the last page has only one item. The `totalPages` calculation is correct, but the `hasNext` flag is not updated correctly when the current page is the last page with only one item.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 104,
+        "failed": 0,
+        "total": 104,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/paginate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-3-3-70b-instruct/bug-04.md"
+    },
+    {
+      "bug": 4,
+      "model": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "base": "5dd2952",
+      "finishReason": "stop",
+      "promptTokens": 6364,
+      "completionTokens": 461,
+      "seconds": 5.8,
+      "askedAt": "2026-09-26T14:31:59.543Z",
+      "culprit": "882203d",
+      "culpritSubject": "refactor(catalog): compute pagination bounds explicitly",
+      "culpritCorrect": true,
+      "rootCause": "The bug was introduced when the pagination logic was refactored to compute bounds explicitly, but the calculation of `totalPages` was not adjusted to account for the correct last index.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 104,
+        "failed": 0,
+        "total": 104,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/paginate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-4-maverick-17b-128e-instruct-fp8/bug-04.md"
+    },
+    {
+      "bug": 4,
+      "model": "mistralai/mistral-small-3-1-24b-instruct-2503",
+      "base": "5dd2952",
+      "finishReason": "stop",
+      "promptTokens": 7006,
+      "completionTokens": 527,
+      "seconds": 6.5,
+      "askedAt": "2026-09-26T14:32:30.992Z",
+      "culprit": "882203d",
+      "culpritSubject": "refactor(catalog): compute pagination bounds explicitly",
+      "culpritCorrect": true,
+      "rootCause": "The `paginate` function incorrectly calculates the `totalPages` when the last page contains exactly one item, causing the last product to be omitted from the pagination.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 103,
+        "failed": 1,
+        "total": 104,
+        "loadErrors": 0,
+        "ok": false
+      },
+      "filesChanged": [
+        "src/catalog/paginate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/mistralai_mistral-small-3-1-24b-instruct-2503/bug-04.md"
+    },
+    {
+      "bug": 4,
+      "model": "openai/gpt-oss-120b",
+      "base": "5dd2952",
+      "finishReason": "stop",
+      "promptTokens": 6434,
+      "completionTokens": 1047,
+      "seconds": 14.2,
+      "askedAt": "2026-09-26T14:33:09.687Z",
+      "culprit": "882203d",
+      "culpritSubject": "refactor(catalog): compute pagination bounds explicitly",
+      "culpritCorrect": true,
+      "rootCause": "The pagination logic calculated total pages using `lastIndex = items.length - 1`, which under‑counts when the final page contains fewer than `pageSize` items (e.g., 25 items with pageSize 6 yields 4 pages instead of 5).",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 104,
+        "failed": 0,
+        "total": 104,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/paginate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-04.md"
+    },
+    {
+      "bug": 5,
+      "model": "ibm/granite-4-h-small",
+      "base": "5d1cea2",
+      "finishReason": "stop",
+      "promptTokens": 6504,
+      "completionTokens": 495,
+      "seconds": 6.3,
+      "askedAt": "2026-09-26T14:15:20.879Z",
+      "culprit": "0944d88",
+      "culpritSubject": "Ignore a coupon that is already applied and cap the discount at the subtotal",
+      "culpritCorrect": false,
+      "rootCause": "The search index is built once per product list and never refreshed, so when the `searchProducts` function is called it uses the cached index that was created before any case‑insensitive normalization was added, causing case‑sensitive matching.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 114,
+        "failed": 0,
+        "total": 114,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/search.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/ibm_granite-4-h-small/bug-05.md"
+    },
+    {
+      "bug": 5,
+      "model": "meta-llama/llama-3-3-70b-instruct",
+      "base": "5d1cea2",
+      "finishReason": "stop",
+      "promptTokens": 6525,
+      "completionTokens": 433,
+      "seconds": 9.5,
+      "askedAt": "2026-09-26T14:35:13.146Z",
+      "culprit": "649b24a",
+      "culpritSubject": "perf(catalog): memoize search index",
+      "culpritCorrect": true,
+      "rootCause": "The bug was introduced when the search index was memoized, but the memoization did not account for the case sensitivity of the search query. This caused the search to become case-sensitive, as the memoized index was not updated when the case of the query changed.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 114,
+        "failed": 0,
+        "total": 114,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/search.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-3-3-70b-instruct/bug-05.md"
+    },
+    {
+      "bug": 5,
+      "model": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "base": "5d1cea2",
+      "finishReason": "stop",
+      "promptTokens": 6555,
+      "completionTokens": 368,
+      "seconds": 4.8,
+      "askedAt": "2026-09-26T14:35:47.791Z",
+      "culprit": "649b24a",
+      "culpritSubject": "perf(catalog): memoize search index",
+      "culpritCorrect": true,
+      "rootCause": "The searchProducts function became case-sensitive after the introduction of the search index memoization, because the query was not normalized to match the haystack.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": true,
+      "suite": {
+        "passed": 114,
+        "failed": 0,
+        "total": 114,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/search.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-4-maverick-17b-128e-instruct-fp8/bug-05.md"
+    },
+    {
+      "bug": 5,
+      "model": "mistralai/mistral-small-3-1-24b-instruct-2503",
+      "base": "5d1cea2",
+      "finishReason": "stop",
+      "promptTokens": 7232,
+      "completionTokens": 491,
+      "seconds": 6.2,
+      "askedAt": "2026-09-26T14:36:24.528Z",
+      "culprit": "649b24a",
+      "culpritSubject": "perf(catalog): memoize search index",
+      "culpritCorrect": true,
+      "rootCause": "The search index was memoized in a case-sensitive way, causing the search to become case-sensitive.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 114,
+        "failed": 0,
+        "total": 114,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/search.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/mistralai_mistral-small-3-1-24b-instruct-2503/bug-05.md"
+    },
+    {
+      "bug": 5,
+      "model": "openai/gpt-oss-120b",
+      "base": "5d1cea2",
+      "finishReason": "stop",
+      "promptTokens": 6626,
+      "completionTokens": 1298,
+      "seconds": 14.5,
+      "askedAt": "2026-09-26T14:37:07.673Z",
+      "culprit": "649b24a",
+      "culpritSubject": "perf(catalog): memoize search index",
+      "culpritCorrect": true,
+      "rootCause": "The search index stores the raw product name/category strings and the query is compared without normalising case, so `includes` becomes case‑sensitive after the memoisation change.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 114,
+        "failed": 0,
+        "total": 114,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/search.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-05.md"
+    },
+    {
+      "bug": 6,
+      "model": "ibm/granite-4-h-small",
+      "base": "35a91bf",
+      "finishReason": "stop",
+      "promptTokens": 6758,
+      "completionTokens": 830,
+      "seconds": 11.1,
+      "askedAt": "2026-09-26T14:38:36.201Z",
+      "culprit": "1ed4c55",
+      "culpritSubject": "feat(orders): add order placement with payment gateway",
+      "culpritCorrect": false,
+      "rootCause": "The `placeOrder` method in `src/orders/service.ts` does not check whether the cart is empty before computing totals and charging the payment gateway, allowing an order to be placed for a cart with no items, which leads to a settlement mismatch later.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 107,
+        "failed": 0,
+        "total": 107,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/orders/service.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/ibm_granite-4-h-small/bug-06.md"
+    },
+    {
+      "bug": 6,
+      "model": "meta-llama/llama-3-3-70b-instruct",
+      "base": "35a91bf",
+      "finishReason": "stop",
+      "promptTokens": 6779,
+      "completionTokens": 636,
+      "seconds": 12,
+      "askedAt": "2026-09-26T14:39:13.267Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": false,
+      "rootCause": "The bug is caused by the `computeTotals` function in `src/cart/totals.ts` not handling negative quantities correctly, resulting in incorrect totals and ultimately leading to a payment gateway error. This issue was introduced when the cart was updated to allow stacking multiple coupon codes.",
+      "testWritten": true,
+      "red": false,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 107,
+        "failed": 0,
+        "total": 107,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-3-3-70b-instruct/bug-06.md"
+    },
+    {
+      "bug": 6,
+      "model": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "base": "35a91bf",
+      "finishReason": "stop",
+      "promptTokens": 6820,
+      "completionTokens": 943,
+      "seconds": 10.4,
+      "askedAt": "2026-09-26T14:39:48.229Z",
+      "culprit": "c3fb68f",
+      "culpritSubject": "refactor(cart): accept numeric strings for quantities",
+      "culpritCorrect": true,
+      "rootCause": "The bug was introduced when the code started accepting numeric strings for quantities, but didn't enforce a minimum quantity of 1 for items added to the cart, allowing negative quantities to be set.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 107,
+        "failed": 0,
+        "total": 107,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/cart.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-4-maverick-17b-128e-instruct-fp8/bug-06.md"
+    },
+    {
+      "bug": 6,
+      "model": "mistralai/mistral-small-3-1-24b-instruct-2503",
+      "base": "35a91bf",
+      "finishReason": "stop",
+      "promptTokens": 7706,
+      "completionTokens": 810,
+      "seconds": 9.6,
+      "askedAt": "2026-09-26T14:40:22.329Z",
+      "culprit": "c3fb68f",
+      "culpritSubject": "refactor(cart): accept numeric strings for quantities",
+      "culpritCorrect": true,
+      "rootCause": "The `parseQuantity` function does not validate that the quantity is positive, allowing negative quantities to be set.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 107,
+        "failed": 0,
+        "total": 107,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/cart.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/mistralai_mistral-small-3-1-24b-instruct-2503/bug-06.md"
+    },
+    {
+      "bug": 6,
+      "model": "openai/gpt-oss-120b",
+      "base": "35a91bf",
+      "finishReason": "stop",
+      "promptTokens": 6890,
+      "completionTokens": 1638,
+      "seconds": 9.5,
+      "askedAt": "2026-09-26T14:40:56.919Z",
+      "culprit": "c3fb68f",
+      "culpritSubject": "refactor(cart): accept numeric strings for quantities",
+      "culpritCorrect": true,
+      "rootCause": "The refactor that added support for numeric‑string quantities removed the validation that quantities must be positive, allowing zero or negative quantities to be stored in the cart and later produce negative order totals.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 107,
+        "failed": 0,
+        "total": 107,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/cart.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-06.md"
+    },
+    {
+      "bug": 7,
+      "model": "ibm/granite-4-h-small",
+      "base": "fee040c",
+      "finishReason": "stop",
+      "promptTokens": 6897,
+      "completionTokens": 962,
+      "seconds": 12.7,
+      "askedAt": "2026-09-26T14:42:34.239Z",
+      "culprit": "1ed4c55",
+      "culpritSubject": "feat(orders): add order placement with payment gateway",
+      "culpritCorrect": false,
+      "rootCause": "The `OrderService` does not prevent placing a new order for a cart that has already been ordered, because the `hasOrderFor` check only looks at the in‑memory `orders` array and does not persist the cart‑order relationship across multiple requests. Consequently, a double‑click on “Place order” creates two separate `OrderService` instances (or two separate runs of the same instance) that both see an empty order list and both succeed in creating an order.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 116,
+        "failed": 1,
+        "total": 117,
+        "loadErrors": 0,
+        "ok": false
+      },
+      "filesChanged": [
+        "src/orders/service.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/ibm_granite-4-h-small/bug-07.md"
+    },
+    {
+      "bug": 7,
+      "model": "meta-llama/llama-3-3-70b-instruct",
+      "base": "fee040c",
+      "finishReason": "stop",
+      "promptTokens": 6917,
+      "completionTokens": 919,
+      "seconds": 17,
+      "askedAt": "2026-09-26T14:43:22.054Z",
+      "culprit": "985e247",
+      "culpritSubject": "refactor(orders): derive duplicate-order check from order history",
+      "culpritCorrect": true,
+      "rootCause": "The bug is caused by the fact that the `placeOrder` function in `src/orders/service.ts` does not check if an order is already being processed for a given cart before creating a new order. This allows multiple orders to be created for the same cart if the function is called multiple times in quick succession.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": true,
+      "suite": {
+        "passed": 117,
+        "failed": 0,
+        "total": 117,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/orders/service.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-3-3-70b-instruct/bug-07.md"
+    },
+    {
+      "bug": 7,
+      "model": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "base": "fee040c",
+      "finishReason": "stop",
+      "promptTokens": 6953,
+      "completionTokens": 923,
+      "seconds": 15.1,
+      "askedAt": "2026-09-26T14:44:07.357Z",
+      "culprit": "1ed4c55",
+      "culpritSubject": "feat(orders): add order placement with payment gateway",
+      "culpritCorrect": false,
+      "rootCause": "The bug was introduced when the order placement functionality was added without proper synchronization, allowing multiple concurrent requests for the same cart to bypass the duplicate order check.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 117,
+        "failed": 0,
+        "total": 117,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/orders/service.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-4-maverick-17b-128e-instruct-fp8/bug-07.md"
+    },
+    {
+      "bug": 7,
+      "model": "mistralai/mistral-small-3-1-24b-instruct-2503",
+      "base": "fee040c",
+      "finishReason": "stop",
+      "promptTokens": 7770,
+      "completionTokens": 1010,
+      "seconds": 40.7,
+      "askedAt": "2026-09-26T14:45:18.259Z",
+      "culprit": "1ed4c55",
+      "culpritSubject": "feat(orders): add order placement with payment gateway",
+      "culpritCorrect": false,
+      "rootCause": "The `placeOrder` method does not handle concurrent requests for the same cart, allowing multiple orders to be placed for the same cart.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": true,
+      "suite": {
+        "passed": 117,
+        "failed": 0,
+        "total": 117,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/orders/service.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/mistralai_mistral-small-3-1-24b-instruct-2503/bug-07.md"
+    },
+    {
+      "bug": 7,
+      "model": "openai/gpt-oss-120b",
+      "base": "fee040c",
+      "finishReason": "stop",
+      "promptTokens": 7023,
+      "completionTokens": 2065,
+      "seconds": 65.4,
+      "askedAt": "2026-09-26T14:46:53.948Z",
+      "culprit": "985e247",
+      "culpritSubject": "refactor(orders): derive duplicate-order check from order history",
+      "culpritCorrect": true,
+      "rootCause": "The duplicate‑order check only looks at already‑saved orders, so two concurrent `placeOrder` calls both pass the check, charge the payment gateway twice and create two orders.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 117,
+        "failed": 0,
+        "total": 117,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/orders/service.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-07.md"
+    },
+    {
+      "bug": 8,
+      "model": "ibm/granite-4-h-small",
+      "base": "31835d5",
+      "finishReason": "stop",
+      "promptTokens": 6301,
+      "completionTokens": 703,
+      "seconds": 8.4,
+      "askedAt": "2026-09-26T14:48:26.689Z",
+      "culprit": "6d6c87a",
+      "culpritSubject": "Ignore empty coupon codes instead of producing NaN totals",
+      "culpritCorrect": false,
+      "rootCause": "The coupon discount is calculated against the pre‑tax subtotal, but the discount amount is subtracted from the total after tax has already been added, causing the final total to be incorrect (e.g., a 120 % off coupon makes the total negative).",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 113,
+        "failed": 0,
+        "total": 113,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/ibm_granite-4-h-small/bug-08.md"
+    },
+    {
+      "bug": 8,
+      "model": "meta-llama/llama-3-3-70b-instruct",
+      "base": "31835d5",
+      "finishReason": "stop",
+      "promptTokens": 6320,
+      "completionTokens": 673,
+      "seconds": 12.7,
+      "askedAt": "2026-09-26T14:49:07.884Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": true,
+      "rootCause": "The bug is caused by the fact that the `couponDiscount` function is called for each coupon code in the `cart.couponCodes` array, and the discount is calculated against the subtotal for each code. However, the discount is not cumulative, so applying multiple codes with the same discount percentage results in incorrect totals. The `DIWALI60` code is applied twice, resulting in a discount of 120% instead of 60%.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": true,
+      "suite": {
+        "passed": 113,
+        "failed": 0,
+        "total": 113,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-3-3-70b-instruct/bug-08.md"
+    },
+    {
+      "bug": 8,
+      "model": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "base": "31835d5",
+      "finishReason": "stop",
+      "promptTokens": 6344,
+      "completionTokens": 744,
+      "seconds": 8.1,
+      "askedAt": "2026-09-26T14:49:46.268Z",
+      "culprit": "f376d02",
+      "culpritSubject": "feat(cart): support coupon codes",
+      "culpritCorrect": false,
+      "rootCause": "The discount calculation is incorrect because it applies the coupon discount multiple times against the original subtotal instead of applying each subsequent coupon against the already discounted subtotal.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": false,
+      "suite": {
+        "passed": 113,
+        "failed": 0,
+        "total": 113,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/meta-llama_llama-4-maverick-17b-128e-instruct-fp8/bug-08.md"
+    },
+    {
+      "bug": 8,
+      "model": "mistralai/mistral-small-3-1-24b-instruct-2503",
+      "base": "31835d5",
+      "finishReason": "stop",
+      "promptTokens": 7035,
+      "completionTokens": 823,
+      "seconds": 17.8,
+      "askedAt": "2026-09-26T14:50:33.170Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": true,
+      "rootCause": "The bug was introduced when allowing stacking multiple coupon codes, which did not account for the possibility of applying the same coupon code multiple times.",
+      "testWritten": true,
+      "red": true,
+      "green": false,
+      "probe": true,
+      "suite": {
+        "passed": 113,
+        "failed": 0,
+        "total": 113,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/coupons.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/mistralai_mistral-small-3-1-24b-instruct-2503/bug-08.md"
+    },
+    {
+      "bug": 8,
+      "model": "openai/gpt-oss-120b",
+      "base": "31835d5",
+      "finishReason": "stop",
+      "promptTokens": 6416,
+      "completionTokens": 1834,
+      "seconds": 24.7,
+      "askedAt": "2026-09-26T14:51:27.393Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": true,
+      "rootCause": "The `applyCoupon` function allowed the same coupon code to be added multiple times, so duplicate coupons stacked and could produce discounts exceeding 100% of the subtotal.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 113,
+        "failed": 0,
+        "total": 113,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/coupons.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-08.md"
+    }
+  ],
+  "bob": [
+    {
+      "bug": 1,
+      "base": "df66390",
+      "control": {
+        "probeFailsAtBase": true,
+        "suiteAtBase": {
+          "passed": 110,
+          "failed": 0,
+          "total": 110,
+          "loadErrors": 0,
+          "ok": true
+        }
+      },
+      "bob": {
+        "fixCommit": "6d6c87a",
+        "reproTest": "tests/bugproof/bug-01-empty-coupon-nan.test.ts",
+        "red": true,
+        "green": true,
+        "probe": true,
+        "suite": {
+          "passed": 112,
+          "failed": 0,
+          "total": 112,
+          "loadErrors": 0,
+          "ok": true
+        }
+      }
+    },
+    {
+      "bug": 2,
+      "base": "f2a3033",
+      "control": {
+        "probeFailsAtBase": true,
+        "suiteAtBase": {
+          "passed": 119,
+          "failed": 0,
+          "total": 119,
+          "loadErrors": 0,
+          "ok": true
+        }
+      },
+      "bob": null
+    },
+    {
+      "bug": 3,
+      "base": "6d6c87a",
+      "control": {
+        "probeFailsAtBase": true,
+        "suiteAtBase": {
+          "passed": 112,
+          "failed": 0,
+          "total": 112,
+          "loadErrors": 0,
+          "ok": true
+        }
+      },
+      "bob": {
+        "fixCommit": "31835d5",
+        "reproTest": "tests/bugproof/bug-03-delivery-estimate.test.ts",
+        "red": true,
+        "green": true,
+        "probe": true,
+        "suite": {
+          "passed": 113,
+          "failed": 0,
+          "total": 113,
+          "loadErrors": 0,
+          "ok": true
+        }
+      }
+    },
+    {
+      "bug": 4,
+      "base": "5dd2952",
+      "control": {
+        "probeFailsAtBase": true,
+        "suiteAtBase": {
+          "passed": 104,
+          "failed": 0,
+          "total": 104,
+          "loadErrors": 0,
+          "ok": true
+        }
+      },
+      "bob": {
+        "fixCommit": "35a91bf",
+        "reproTest": "tests/bugproof/case_20260925_34fd.test.ts",
+        "red": true,
+        "green": true,
+        "probe": true,
+        "suite": {
+          "passed": 107,
+          "failed": 0,
+          "total": 107,
+          "loadErrors": 0,
+          "ok": true
+        }
+      }
+    },
+    {
+      "bug": 5,
+      "base": "5d1cea2",
+      "control": {
+        "probeFailsAtBase": true,
+        "suiteAtBase": {
+          "passed": 114,
+          "failed": 0,
+          "total": 114,
+          "loadErrors": 0,
+          "ok": true
+        }
+      },
+      "bob": {
+        "fixCommit": "6ff3e78",
+        "reproTest": "tests/bugproof/bug-05-search-case.test.ts",
+        "red": true,
+        "green": true,
+        "probe": true,
+        "suite": {
+          "passed": 117,
+          "failed": 0,
+          "total": 117,
+          "loadErrors": 0,
+          "ok": true
+        }
+      }
+    },
+    {
+      "bug": 6,
+      "base": "35a91bf",
+      "control": {
+        "probeFailsAtBase": true,
+        "suiteAtBase": {
+          "passed": 107,
+          "failed": 0,
+          "total": 107,
+          "loadErrors": 0,
+          "ok": true
+        }
+      },
+      "bob": {
+        "fixCommit": "e21313f",
+        "reproTest": "tests/bugproof/case_20260925_318b.test.ts",
+        "red": true,
+        "green": true,
+        "probe": true,
+        "suite": {
+          "passed": 110,
+          "failed": 0,
+          "total": 110,
+          "loadErrors": 0,
+          "ok": true
+        }
+      }
+    },
+    {
+      "bug": 7,
+      "base": "fee040c",
+      "control": {
+        "probeFailsAtBase": true,
+        "suiteAtBase": {
+          "passed": 117,
+          "failed": 0,
+          "total": 117,
+          "loadErrors": 0,
+          "ok": true
+        }
+      },
+      "bob": {
+        "fixCommit": "0f5546f",
+        "reproTest": "tests/bugproof/bug-07-double-order.test.ts",
+        "red": true,
+        "green": true,
+        "probe": true,
+        "suite": {
+          "passed": 118,
+          "failed": 0,
+          "total": 118,
+          "loadErrors": 0,
+          "ok": true
+        }
+      }
+    },
+    {
+      "bug": 8,
+      "base": "31835d5",
+      "control": {
+        "probeFailsAtBase": true,
+        "suiteAtBase": {
+          "passed": 113,
+          "failed": 0,
+          "total": 113,
+          "loadErrors": 0,
+          "ok": true
+        }
+      },
+      "bob": {
+        "fixCommit": "0944d88",
+        "reproTest": "tests/bugproof/bug-08-duplicate-coupon.test.ts",
+        "red": true,
+        "green": true,
+        "probe": true,
+        "suite": {
+          "passed": 114,
+          "failed": 0,
+          "total": 114,
+          "loadErrors": 0,
+          "ok": true
+        }
+      }
+    }
+  ],
+  "setup": {
+    "models": [
+      "ibm/granite-4-h-small",
+      "meta-llama/llama-3-3-70b-instruct",
+      "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "mistralai/mistral-small-3-1-24b-instruct-2503",
+      "openai/gpt-oss-120b"
+    ],
+    "temperature": 0,
+    "maxTokens": 16384,
+    "region": "https://us-south.ml.cloud.ibm.com"
+  }
+}

@@ -1,6 +1,6 @@
 # Benchmark — Cimex Fix on the ShopLite demo repo
 
-_Generated 2026-09-26 13:57 UTC by `scripts/build-benchmark.mjs` from the exported case events
+_Generated 2026-09-26 15:25 UTC by `scripts/build-benchmark.mjs` from the exported case events
 (`apps/web/data/cases/*.json`), IBM Bob's task log (`docs/benchmark/bob-runs.json`) and the answer key
 (`docs/answer-key/bugs.md`). Do not edit by hand: re-run `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs`._
 
@@ -51,6 +51,52 @@ _Generated 2026-09-26 13:57 UTC by `scripts/build-benchmark.mjs` from the export
 | #8 | feat(cart): allow stacking multiple coupon codes | `185f248` | wrong — Lead named the initial commit from git log after bisect timed out | bisect (follow-up Bob task) |  |
 | #5 | perf(catalog): memoize search index | `649b24a` | correct — found by bisect during the run | bisect (live, during the run) |  |
 | #7 | refactor(orders): derive duplicate-order check from order history | `985e247` | none — bisect aborted after 8 untestable commits: the repro test also required the second call to be rejected, which the code before the regression did not do, so it failed on every commit | bisect (follow-up Bob task) | follow-up used a symptom-only test (one order, one charge); the Reproducer rules now require symptom-only tests |
+
+## Compared with one-shot models (IBM watsonx.ai)
+
+Each model got **one** answer per bug (2026-09-26, watsonx.ai us-south, temperature 0). It received the bug report,
+every file under `src/` at the commit Bob's fix was applied to, and the git history with the `src/` files each commit changed, and
+had to name the culprit commit, return the fixed files and write a regression test. Bob's committed fixes and the models' answers
+are scored by the same script (`scripts/model-baseline.mjs`) in a clean worktree of the demo repo:
+
+- **Fixed**: the answer key's independent probe for that bug passes (`docs/answer-key/bug-probes.test.ts`; neither Bob nor any model wrote it).
+- **Nothing broken**: every existing test still passes.
+- **Own test RED→GREEN**: the contender's own test fails on the unfixed code and passes with its fix.
+- **Fix with proof**: all three of the above.
+- **Culprit**: the named commit has the answer key's commit subject.
+
+**Across all 35 one-shot answers:** 35 named a culprit and returned a fix and a test. 23 of the fixes
+fixed the bug, 15 came with a test that proves it, 4 broke existing tests, and 20 named the right culprit.
+
+| Contender | Fixed | Nothing broken | Own test RED→GREEN | Fix with proof | Culprit correct | Cost / time |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Cimex Fix (IBM Bob)** | 7/7 | 7/7 | 7/7 | **7/7** | 7/7 (3/7 during the run) | 2.84 Bobcoins median per bug; 14m 39s median to proof |
+| Granite 4 H Small (one shot) | 2/7 | 5/7 | 1/7 | **1/7** | 0/7 | 7,004 tokens, 8.2 s per answer (median) |
+| Llama 3.3 70B (one shot) | 4/7 | 7/7 | 2/7 | **2/7** | 5/7 | 6,993 tokens, 12.7 s per answer (median) |
+| Llama 4 Maverick (one shot) | 5/7 | 6/7 | 3/7 | **3/7** | 4/7 | 7,417 tokens, 9.9 s per answer (median) |
+| Mistral Small 3.1 (one shot) | 5/7 | 6/7 | 3/7 | **2/7** | 5/7 | 7,858 tokens, 10.2 s per answer (median) |
+| gpt-oss-120b (one shot) | 7/7 | 7/7 | 7/7 | **7/7** | 6/7 | 8,483 tokens, 14.2 s per answer (median) |
+
+| Bug | Cimex Fix | Granite 4 H Small | Llama 3.3 70B | Llama 4 Maverick | Mistral Small 3.1 | gpt-oss-120b |
+| --- | --- | --- | --- | --- | --- | --- |
+| #1 Empty coupon field → total shows ₹NaN | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ❌ culprit |
+| #3 Delivery date one day early after 8 PM IST | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| #4 Pagination drops the last product | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| #5 Search became case-sensitive | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| #6 Negative quantity accepted → negative total | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+| #7 Double-click "Place order" → two orders | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ❌ culprit | ❌ fix with proof · ❌ culprit | ✅ fix with proof · ✅ culprit |
+| #8 Coupon applies twice → discount over 100% | ✅ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ❌ fix with proof · ❌ culprit | ❌ fix with proof · ✅ culprit | ✅ fix with proof · ✅ culprit |
+
+**Read this fairly**
+
+- The models were handed every file under `src/` up front; Bob started from the report alone and had to find the code.
+- Bob read the two screenshots as images; the models got their visible text, transcribed without interpretation
+  (`SCREENSHOT_TEXT` in the script). For bug #3 the models got the Markdown source of the QA report PDF.
+- One answer per model at temperature 0 is a single sample, not an average over tries. Exact prompts and raw answers are in
+  `docs/benchmark/model-baseline/`.
+- The models could not run code; Bob ran tests and `git bisect`. The comparison shows what one answer gets right without that loop.
+- Bob's culprit count is the final result; 3/7 were named during the runs themselves (see the bisect caveat below).
+- Control: every bug's probe fails on the unfixed code, so a passing probe means the bug was fixed.
 
 ## Bobcoins (IBM Bob task log)
 
