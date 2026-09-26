@@ -29,13 +29,15 @@ export function AgentSwimlanes({
 }) {
   const prefersReducedMotion = useReducedMotion();
   const totalDuration = timelineDurationSec(events, startedAt, endedAt);
+  // Follow-up events after the proof (e.g. a later re-bisect) stay in the activity feed, not in the run's lanes.
+  const runEvents = events.filter((e) => toOffsetSec(e.ts, startedAt) <= totalDuration);
 
-  const mostRecentAgent = events.length
-    ? events.reduce((latest, e) => (toOffsetSec(e.ts, startedAt) > toOffsetSec(latest.ts, startedAt) ? e : latest)).agent
+  const mostRecentAgent = runEvents.length
+    ? runEvents.reduce((latest, e) => (toOffsetSec(e.ts, startedAt) > toOffsetSec(latest.ts, startedAt) ? e : latest)).agent
     : undefined;
 
   const lanes = AGENT_ORDER.map((agent) => {
-    const agentEvents = events.filter((e) => e.agent === agent);
+    const agentEvents = runEvents.filter((e) => e.agent === agent);
     if (agentEvents.length === 0) return null;
 
     const offsets = agentEvents.map((e) => toOffsetSec(e.ts, startedAt));
