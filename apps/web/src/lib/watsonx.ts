@@ -1,7 +1,7 @@
 import "server-only";
 
 /**
- * Server-only IBM watsonx.ai Granite client (Plan.md §4.4).
+ * Server-only IBM watsonx.ai Granite client.
  *
  * Never throws to the caller: every failure (missing env, network error,
  * timeout, bad response shape) resolves to `null` so pages/routes can

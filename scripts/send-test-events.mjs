@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Posts a fake case + a handful of events to POST /api/ingest, for smoke
-// testing the backend end to end. Plan.md §4.2 / §5.
+// testing the backend end to end.
 //
 // Usage: BUGPROOF_INGEST_TOKEN=xxx node scripts/send-test-events.mjs
 // Env:

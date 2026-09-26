@@ -1,7 +1,7 @@
 import "server-only";
 
 /**
- * Naive in-memory rate limiter (Plan.md §4.4: 10/min per IP on /api/triage).
+ * Naive in-memory rate limiter (10/min per IP on /api/triage).
  * Not distributed — fine for a hackathon single-instance deploy. Cached on
  * globalThis so hot-reload / repeated module evaluation in dev doesn't
  * reset the window.

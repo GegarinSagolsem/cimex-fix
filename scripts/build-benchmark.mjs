@@ -4,7 +4,7 @@
 //   docs/benchmark/bob-runs.json    per-run facts from IBM Bob's task log (coins, interventions, bisect)
 //   docs/answer-key/bugs.md         the seeded culprit commits
 //   docs/benchmark/model-baseline.json  one-shot watsonx.ai models and Bob's fixes, scored alike (scripts/model-baseline.mjs)
-// Every number in the video, slides and README must come from this output (Plan.md §9).
+// Every number in the video, slides and README must come from this output.
 //
 // Usage: node scripts/export-cases.mjs && node scripts/build-benchmark.mjs
 
@@ -372,7 +372,7 @@ const md = [
   "  and why their culprits were attached by a follow-up bisect task.",
   "- Bug #8's RED/GREEN evidence recorded 0 tests (`run_tests` hit the same bug); its tests-after comes from the FIX_GREEN milestone.",
   "  Bug #4's early run attached no RED/GREEN evidence (early MCP version); same fallback.",
-  "- **Manual baseline: not measured yet** (Plan.md §9) — no human-vs-Bob time comparison is claimed.",
+  "- **Manual baseline: not measured yet** — no human-vs-Bob time comparison is claimed.",
   notAttempted.length
     ? `- ${notAttempted.map((n) => `Bug #${n}`).join(" and ")} ${notAttempted.length === 1 ? "was" : "were"} not attempted (Bobcoin budget).`
     : "- Every bug in the answer key was attempted.",

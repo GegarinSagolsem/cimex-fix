@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Shared zod schemas + types for BugProof Cloud (Plan.md §4.2).
+ * Shared zod schemas + types for BugProof Cloud.
  * These are the contract between the Bob pack (bugproof-mcp / hooks),
  * the API routes (apps/web) and the UI (Mission Control).
  */
@@ -87,13 +87,13 @@ export const Case = z.object({
   metrics: CaseMetrics.optional(),
   summary: z.string().optional(), // plain-English proof summary, set by POST /api/cases/[id]/publish
   // Granite-generated plain-English "what broke / why / what changed" summary
-  // for a non-technical manager (Plan.md §4.4). Set by POST /api/cases/[id]/publish.
+  // for a non-technical manager. Set by POST /api/cases/[id]/publish.
   plainSummary: PlainSummary.optional(),
 });
 export type Case = z.infer<typeof Case>;
 
 /**
- * /api/triage (Plan.md §4.4) — Granite turns a messy bug report into
+ * /api/triage — Granite turns a messy bug report into
  * structured JSON. Shared so the API route, the /triage page and the
  * recorded-examples file all agree on the shape.
  */

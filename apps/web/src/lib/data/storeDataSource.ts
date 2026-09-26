@@ -2,7 +2,7 @@ import { getMergedCaseDetail, listMergedCases } from "./merge";
 import type { CaseDataSource } from "./types";
 
 /**
- * Store + static-replay backed data source (Plan.md §4.2). Replaces the
+ * Store + static-replay backed data source. Replaces the
  * mock data source for the UI: /cases and /cases/[id] now read from the
  * CaseStore (Redis or in-memory) layered on top of apps/web/data/cases/*.json.
  */

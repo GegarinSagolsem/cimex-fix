@@ -33,3 +33,21 @@ graphify-out/cache/
 
 # Raw screen recordings and rendered videos (large; hosted elsewhere)
 rawvideo/
+
+# Internal working notes and tooling: kept locally, not published
+CLAUDE.md
+context.md
+Plan.md
+model.md
+Graphify.md
+.claude/agents/
+docs/specs/
+docs/video-script.md
+docs/submission.md
+apps/web/README.md
+.bob/rules-agent/
+.bob/rules-ask/
+.bob/rules-plan/
+scripts/count-words.mjs
+brag-output/
+graphify-out/

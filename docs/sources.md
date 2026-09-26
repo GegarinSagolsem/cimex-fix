@@ -34,4 +34,4 @@ checked against the primary source on 2026-09-26. Use the wording in **Safe to s
 
 ## Not used
 
-- **A human-vs-Bob time comparison:** we have no manual baseline (see `context.md` → Decisions), so we claim none.
+- **A human-vs-Bob time comparison:** we have no manual baseline, so we claim none.

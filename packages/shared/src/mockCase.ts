@@ -1,7 +1,7 @@
 import type { Case, Evidence, Event } from "./schemas.js";
 
 /**
- * Fixture for UI development: the hero bug (#1, Plan.md §4.3).
+ * Fixture for UI development: the hero bug (#1).
  * "Empty coupon field -> total shows NaN" on the demo shop, worked end-to-end
  * by the Bob pack in ~6 minutes. Used by apps/web until the real API is live.
  */

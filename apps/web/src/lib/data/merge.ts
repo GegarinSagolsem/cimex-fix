@@ -4,7 +4,7 @@ import { getStaticCase, listStaticCases } from "@/lib/replay";
 import type { CaseDetail } from "./types";
 
 /**
- * Merges the live store with the static replay files (Plan.md §4.2):
+ * Merges the live store with the static replay files:
  * reads check the store first, then fill in from static files. Static
  * files are read-only here — nothing in this module ever writes to disk.
  */

@@ -3,7 +3,7 @@ import { getMergedCaseDetail, getMergedEventsSince } from "@/lib/data/merge";
 import { store } from "@/lib/store";
 
 /**
- * GET /api/cases/[id] — {case, events, evidence}. Plan.md §4.2.
+ * GET /api/cases/[id] — {case, events, evidence}.
  * ?after=<ISO ts> returns only events newer than that timestamp (used by
  * the live case page's 1s poll), keeping `case` and `evidence` in the
  * response so status/evidence changes are still picked up each poll.

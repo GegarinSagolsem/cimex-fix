@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // (Re)generates the Granite plain-English proof summary for a case and
 // writes it into its static replay file: apps/web/data/cases/<caseId>.json
-// (Plan.md §4.4). Deliberately simple — only works against local static
+//. Deliberately simple — only works against local static
 // case files, not the deployed API / live store.
 //
 // Usage: node scripts/summarize-case.mjs case_hero_001

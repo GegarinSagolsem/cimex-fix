@@ -3,7 +3,7 @@ import type { Case, Evidence, PlainSummary } from "@bugproof/shared";
 import { watsonxChat, getWatsonxModelId } from "@/lib/watsonx";
 
 /**
- * Proof-page plain-English summaries (Plan.md §4.4): a 3-sentence
+ * Proof-page plain-English summaries: a 3-sentence
  * "what broke / why / what changed" written for a non-technical manager,
  * generated once per case from its title + evidence and cached on the
  * Case forever. Never throws — POST /api/cases/[id]/publish skips this

@@ -1,6 +1,6 @@
 # Benchmark — Cimex Fix on the ShopLite demo repo
 
-_Generated 2026-09-26 16:58 UTC by `scripts/build-benchmark.mjs` from the exported case events
+_Generated 2026-09-26 21:16 UTC by `scripts/build-benchmark.mjs` from the exported case events
 (`apps/web/data/cases/*.json`), IBM Bob's task log (`docs/benchmark/bob-runs.json`) and the answer key
 (`docs/answer-key/bugs.md`). Do not edit by hand: re-run `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs`._
 
@@ -145,5 +145,5 @@ fixed the bug, 30 came with a test that proves it, 5 broke existing tests, and 3
   and why their culprits were attached by a follow-up bisect task.
 - Bug #8's RED/GREEN evidence recorded 0 tests (`run_tests` hit the same bug); its tests-after comes from the FIX_GREEN milestone.
   Bug #4's early run attached no RED/GREEN evidence (early MCP version); same fallback.
-- **Manual baseline: not measured yet** (Plan.md §9) — no human-vs-Bob time comparison is claimed.
+- **Manual baseline: not measured yet** — no human-vs-Bob time comparison is claimed.
 - Every bug in the answer key was attempted.

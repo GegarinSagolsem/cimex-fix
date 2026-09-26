@@ -9,7 +9,7 @@ import {
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 /**
- * POST /api/triage — Plan.md §4.4. Turns a messy bug report into structured
+ * POST /api/triage. Turns a messy bug report into structured
  * JSON via Granite. Falls back to the closest recorded example once the IBM
  * Cloud account closes (or on any live failure), always labelled honestly.
  * Never returns a 500 for a well-formed request.

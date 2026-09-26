@@ -31,7 +31,7 @@ function mergeEvidence(existing: Evidence[], incoming: Evidence[]): Evidence[] {
 }
 
 /**
- * Live/replay case view (Plan.md §4.2). While the case is not yet
+ * Live/replay case view. While the case is not yet
  * proven/unproven, polls GET /api/cases/[id]?after=<lastTs> every second
  * and merges in new events/evidence/case updates. Stops polling once the
  * case reaches a terminal status.

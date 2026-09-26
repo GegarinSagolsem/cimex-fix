@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Generates apps/web/data/triage-examples.json by actually calling Granite
-// (Plan.md §4.4) on 4 realistic bug reports from
+// on 4 realistic bug reports from
 // C:\dev\bugproof-demo-shoplite\intake\. Loads .env.local itself so it can
 // run standalone: `node scripts/record-triage-examples.mjs`.
 //

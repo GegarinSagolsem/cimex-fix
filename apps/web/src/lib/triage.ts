@@ -4,7 +4,7 @@ import path from "node:path";
 import { TriageExampleRecord, TriageResult } from "@bugproof/shared";
 
 /**
- * Shared helpers for POST /api/triage (Plan.md §4.4): the system prompt
+ * Shared helpers for POST /api/triage: the system prompt
  * sent to Granite, robust JSON extraction from its reply, and the
  * "closest recorded example" fallback used once the IBM Cloud account
  * closes. scripts/record-triage-examples.mjs mirrors the system prompt

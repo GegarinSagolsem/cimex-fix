@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Copies bob/pack/** into <targetRepo>/.bob/, creating directories as
 // needed and overwriting files. Never touches any other file already in
-// <targetRepo>/.bob/. Plan.md §4.1/§5.
+// <targetRepo>/.bob/.
 //
 // Usage: node scripts/install-bob-pack.mjs <targetRepo>
 

@@ -3,7 +3,7 @@ import { AgentName, Case, Evidence, Event } from "@bugproof/shared";
 import { store } from "@/lib/store";
 
 /**
- * POST /api/ingest — Plan.md §4.2. Bearer-token-protected sink for the
+ * POST /api/ingest. Bearer-token-protected sink for the
  * Bob pack (hooks + MCP). Batch-friendly: body may be a single message or
  * an array of messages. Always returns {ok:true} once authorized; a bad or
  * unrecognized individual item is stored best-effort / skipped, never a 500.
