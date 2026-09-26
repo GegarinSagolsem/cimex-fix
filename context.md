@@ -48,6 +48,17 @@ re-asked one at a time (`raw-opus-solo\`, all SUCCESS). Totals now: 7 models, 56
   chapter (chapter IV freezes on the culprit message, labelled PAUSED), case-file sidebar driven by real event times,
   mix: voice 13 dB over the bed, −14 LUFS. Pipeline in `brag-output/work/film/` (timeline.mjs = single source of truth,
   extract.mjs, index.html, render.mjs, audio.mjs, srt.mjs). Output: `brag-output/cimex-fix-submission.mp4` + `.srt`.
+- ✅ Submission film final (27 Sep ~01:10 IST): `brag-output/cimex-fix-submission.mp4` (2:55.00, 1920×1080, −14.9 LUFS,
+  21.8 MB) + `brag-output/cimex-fix-video.srt`. Chapter I shows the real intake file, then the prompt landing; III and IV
+  freeze on the key Bob messages (badge PAUSED). Not committed (brag-output/ untracked).
+- ✅ Design skills installed at user level (`~/.claude/skills/`): impeccable (pbakaus), emil-design-eng (emilkowalski),
+  design-taste-frontend (Leonxlnx) — reviewed before install; claude.ai ZIPs in `C:\dev\claude-skills\`. Playwright MCP is
+  in local config (tools load next session).
+- ✅ Browser QA of the live site (Playwright library, `brag-output/work/qa.mjs`): 7 pages × desktop/phone — no console
+  errors, failed requests, overflow or broken images; theme toggle, Ctrl+K, evidence tabs, replay (16×), copy link work.
+  axe found serious contrast failures on every tinted chip (3.6–4.4:1) + list markup → fixed (`--*-ink` tokens, 832938f);
+  live now 0 serious. Known, left: unknown case URL returns 200 (Next streaming), moderate heading-order/landmark notes,
+  GitHub links 404 until the repos go public.
 - Judge's other notes kept for slides/video: pitch "we don't trust any model's answer, we prove it", not "we beat the
   models"; no hooks / "PR per fix" claims; setup coins 0.40/0.40 verified in bob.db (real, not placeholders).
 
