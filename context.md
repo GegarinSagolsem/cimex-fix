@@ -76,7 +76,8 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 5. ✅ Impact page (`/impact`), Proof of Fix page (`/cases/[id]/proof`: PROVEN stamp, 4 checks, fix diff, tested
    verify-it-yourself commands, copy link) and real landing page (`/`: results, bug #5 replay, how it works, Bob features).
    All checked at 1440 px and a true 390 px. Bug #1 re-bisected in Bob (task 13) → 5/6 culprits by Bob's bisect.
-6. ~~Manual baseline~~ dropped (see Decisions). 🅲 Instead: verify + link the Plan.md §2 industry stats before they go in the video.
+6. ~~Manual baseline~~ dropped (see Decisions). ✅ Industry stats verified against primary sources → `docs/sources.md`
+   (SO 2025: 66% / 45.2% · Cambridge 2013: 50% of programming time, $312bn · Stripe 2018: >17 h/week maintenance).
 7. 🅱 Bob Review task on the bugproof repo (more Bob evidence).
 8. Video + slides + texts + make repos public (Plan.md §12). Feature freeze Sun 14:00.
 
