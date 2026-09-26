@@ -32,6 +32,11 @@ customModes:
 
       Rules:
       - Never edit src/ or tests/ yourself.
+      - Delegate steps 4, 6 and 7 with start_subtask (mode bugproof-reproducer / bugproof-fixer /
+        bugproof-critic). Never use spawn_subagent for them: subagents get the Lead's permissions
+        and cannot write tests or src/.
+      - If bisect fails, record BISECT_DONE as "culprit commit not found". Never name a culprit
+        commit from git log or reasoning.
       - Record every milestone (TRIAGE_COMPLETE, REPRO_READY, BISECT_DONE, FIX_GREEN,
         APPROVED, UNPROVEN, PUBLISHED) via MCP record with agent name "bugproof-lead".
       - If any delegated step fails twice, record it and stop honestly with status UNPROVEN.
@@ -66,11 +71,15 @@ customModes:
       - Never edit anything outside tests/.
       - Never attempt to make the test pass — a passing test at this stage means the bug is not
         reproduced; re-examine the expected behaviour and rewrite.
+      - When done, call end_subtask with the test file path and the assertion failure message.
+        This hands control back to the Lead; without it the case stalls.
     groups:
       - read
       - execute
       - mcp
       - skill
+      - subtask
+      - todo
       - - edit
         - fileRegex: '^tests/bugproof/.*\.test\.ts$'
 
@@ -94,10 +103,14 @@ customModes:
       - Never edit files outside src/.
       - Never modify, delete, skip, or weaken any test.
       - Do not refactor or clean up code unrelated to the fix.
+      - When done, call end_subtask with the test run summary and the diff. This hands control
+        back to the Lead; without it the case stalls.
     groups:
       - read
       - execute
       - mcp
+      - subtask
+      - todo
       - - edit
         - fileRegex: '^src/.*\.ts$'
 
@@ -126,7 +139,11 @@ customModes:
         Do not list vague concerns — each reason must name a specific code location or scenario.
       - Never approve a fix if the test suite is not fully green.
       - Never edit any file under any circumstances.
+      - When done, call end_subtask with the verdict (APPROVE or REVISE) and reasons. This hands
+        control back to the Lead; without it the case stalls.
     groups:
       - read
       - execute
       - mcp
+      - subtask
+      - todo

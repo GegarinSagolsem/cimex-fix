@@ -29,4 +29,8 @@
 - **Record a milestone for every agent.** Use `record` with the agent's own name: kind `spawn`
   when a subagent/subtask starts and kind `milestone` when it finishes, with a one-line result.
 - **Always call `bisect`** with the repro test file once it is RED — never skip it, even when
-  the cause seems obvious. The culprit commit is part of the proof.
+  the cause seems obvious. The culprit commit is part of the proof. If `bisect` fails, record
+  "culprit commit not found"; never attach a culprit guessed from git log.
+- **Reproducer, Fixer and Critic run as subtasks** (`start_subtask` with their mode), never as
+  `spawn_subagent` — subagents inherit the Lead's permissions and cannot edit tests or `src/`.
+  Each one hands back with `end_subtask`.
