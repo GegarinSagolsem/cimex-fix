@@ -16,6 +16,12 @@
   --danger: #da1e28;
   --warning: #8a6a00;
   --agent: #8a3ffc;
+  /* Darker text for tinted chips (colour/15 backgrounds): each clears 4.5:1 on its tint over --bg and --surface. */
+  --success-ink: #116b33;
+  --danger-ink: #b3141f;
+  --warning-ink: #6f5500;
+  --agent-ink: #6d28d9;
+  --accent-ink: #0a52c2;
 }
 
 .dark {
@@ -33,6 +39,11 @@
   --danger: #fa4d56;
   --warning: #f1c21b;
   --agent: #a56eff;
+  --success-ink: var(--success);
+  --danger-ink: var(--danger);
+  --warning-ink: var(--warning);
+  --agent-ink: var(--agent);
+  --accent-ink: var(--accent);
 }
 
 @theme inline {

@@ -49,8 +49,8 @@ export function ActivityFeed({ events, startedAt }: { events: Event[]; startedAt
             <span className="min-w-0 flex-1 text-[var(--text)]">{e.title}</span>
           </li>
         ))}
-        <div ref={bottomRef} />
       </ol>
+      <div ref={bottomRef} />
     </aside>
   );
 }

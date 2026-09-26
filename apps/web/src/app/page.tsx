@@ -182,7 +182,7 @@ export default async function Home() {
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
             <div className="flex flex-col justify-between gap-6 rounded-3xl bg-[var(--accent)] p-6 text-[var(--accent-fg)] sm:col-span-2 lg:row-span-2 lg:p-8">
-              <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-80">Headline</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-90">Headline</p>
               <p className="flex flex-col gap-2">
                 <span className="text-7xl font-semibold tracking-tight sm:text-8xl">
                   {s.culpritCorrect}/{s.bugsAttempted}

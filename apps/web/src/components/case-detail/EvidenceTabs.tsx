@@ -34,7 +34,8 @@ function EvidenceBody({ evidence }: { evidence: Evidence }) {
     case "triage": {
       const steps = isStringArray(d.steps) ? d.steps : isStringArray(d.stepsToReproduce) ? d.stepsToReproduce : [];
       return (
-        <dl className="grid gap-3 text-sm">
+        <div className="grid gap-3 text-sm">
+        <dl className="grid gap-3">
           {(text(d.severity) || text(d.component)) && (
             <div>
               <dt className="text-xs text-[var(--muted)]">Severity / component</dt>
@@ -63,8 +64,9 @@ function EvidenceBody({ evidence }: { evidence: Evidence }) {
               </dd>
             </div>
           )}
-          {text(d.source) && <p className="font-mono text-xs text-[var(--muted)]">{String(d.source)}</p>}
         </dl>
+        {text(d.source) && <p className="font-mono text-xs text-[var(--muted)]">{String(d.source)}</p>}
+        </div>
       );
     }
 
