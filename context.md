@@ -101,7 +101,7 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 | 07 | Run bug #1 hero | shoplite | ~5 | `bugproof_task07_run_bug01_hero_summary.png` (check saved) |
 | 08 | Run bug #3 (delivery date, PDF intake) | shoplite | 2.00 | `bugproof_task08_run_bug03_summary.png` ✅ |
 | 09 | Run bug #8 (coupon twice, screenshot intake) | shoplite | 6.00 (incl. stalled duplicate run + 3 bisect timeouts) | `bugproof_task09_run_bug08_summary.png` ✅ |
-| 10 | Re-bisect bugs #3 + #8 (culprits attached) | shoplite | ? (ask user) | `bugproof_task10_rebisect_bug03_bug08_summary.png` (not saved yet) |
+| 10 | Re-bisect bugs #3 + #8 (culprits attached) | shoplite | <1 (balance still shows 16) | `bugproof_task10_rebisect_bug03_bug08_summary.png` ✅ |
 Tasks 03–05 together ≈ 6.7 coins (40 − 1.53 − 2.78 − 5 − 24). Task 08: 2.00 coins (24 → 22 left).
 
 ## Session log
