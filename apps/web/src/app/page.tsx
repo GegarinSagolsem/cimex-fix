@@ -5,7 +5,7 @@ import { dataSource } from "@/lib/data";
 import { buildProof } from "@/lib/proof";
 import { mmss } from "@/components/impact/format";
 
-const REPO_URL = "https://github.com/GegarinSagolsem/bugproof";
+const REPO_URL = "https://github.com/GegarinSagolsem/cimex-fix";
 
 const LABEL = "font-mono text-[11px] uppercase tracking-[0.25em] text-[var(--muted)]";
 const HERO_LABEL = "font-mono text-[11px] uppercase tracking-[0.25em] text-white";

@@ -9,7 +9,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const base = process.argv[2] ?? "https://bugproof-web.vercel.app";
+const base = process.argv[2] ?? "https://cimex-fix.vercel.app";
 const outDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "apps", "web", "data", "cases");
 
 async function getJson(url) {

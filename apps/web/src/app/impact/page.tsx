@@ -10,7 +10,7 @@ import { PageHero } from "@/components/shell/PageHero";
 
 export const metadata: Metadata = { title: "Impact · Cimex Fix" };
 
-const BENCHMARK_DOC = "https://github.com/GegarinSagolsem/bugproof/blob/main/docs/benchmark.md";
+const BENCHMARK_DOC = "https://github.com/GegarinSagolsem/cimex-fix/blob/main/docs/benchmark.md";
 
 function StatTile({ label, value, detail, highlight }: { label: string; value: string; detail: string; highlight?: boolean }) {
   const sub = highlight ? "" : "text-[var(--muted)]";

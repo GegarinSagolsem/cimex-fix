@@ -6,13 +6,13 @@ Cimex Fix turns a bug report into a **Proof of Fix**. IBM Bob reproduces the bug
 culprit commit with `git bisect`, fixes it under file-level permissions, and an adversarial Critic signs off —
 while **Mission Control** shows the whole investigation live.
 
-- **Live site:** https://bugproof-web.vercel.app
-- **A real Proof of Fix:** https://bugproof-web.vercel.app/cases/case_20260926_7e5e/proof
-- **Results:** https://bugproof-web.vercel.app/impact · raw numbers in [`docs/benchmark.md`](docs/benchmark.md)
+- **Live site:** https://cimex-fix.vercel.app
+- **A real Proof of Fix:** https://cimex-fix.vercel.app/cases/case_20260926_7e5e/proof
+- **Results:** https://cimex-fix.vercel.app/impact · raw numbers in [`docs/benchmark.md`](docs/benchmark.md)
 - **Demo target repo:** https://github.com/GegarinSagolsem/bugproof-demo-shoplite
 
 Built for the IBM Bob 2.0 hackathon (lablab.ai). *Cimex* is the Latin genus of the bed bug. The project was first
-called BugProof, so the repo names, URLs, the `bugproof` MCP server and the Bob mode IDs still use that name.
+called BugProof, so the demo repo, the `bugproof` MCP server and the Bob mode IDs still use that name.
 
 ---
 

@@ -85,6 +85,6 @@ IBM Bob, watsonx.ai, Granite, Debugging, Developer Tools, MCP, AI Agents, Testin
 
 ## Links
 
-- Live app: https://bugproof-web.vercel.app
-- Repository: https://github.com/GegarinSagolsem/bugproof
+- Live app: https://cimex-fix.vercel.app
+- Repository: https://github.com/GegarinSagolsem/cimex-fix
 - Demo target repository: https://github.com/GegarinSagolsem/bugproof-demo-shoplite
