@@ -50,7 +50,7 @@ export function AgentSwimlanes({
   return (
     <div className="flex flex-col gap-2" role="list" aria-label="Agent swimlanes">
       {lanes.map(({ agent, agentEvents, leftPct, widthPct }) => {
-        const isActive = agent === mostRecentAgent;
+        const isActive = !endedAt && agent === mostRecentAgent;
         return (
           <div key={agent} role="listitem" className="flex items-center gap-3">
             <span className="w-24 shrink-0 truncate font-mono text-xs text-[var(--muted)]">
