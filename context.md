@@ -77,7 +77,8 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 ## Notes / open items
 - **Raw video take of the clean bug #5 run:** `Videos\Screen Recordings\bugproof_video_run_bug05_raw.mp4` (split screen:
   Mission Control + Bob). Best candidate for the 0:25–2:05 live-demo segment (speed up, label "⏩").
-- Cases list cards say "no proof yet" on proven cases, and bug #4's card shows repo "IBM Bob" → fix before final recording.
+- ✅ Cases list cards now show "proof in Xm Ys" (from `startedAt`→`provenAt`); bug #4's repo corrected to `bugproof-demo-shoplite`.
+  Times include human-in-the-loop stalls: #4 14m39s, #6 7m40s, #1 21m6s, #3 43m49s, #8 34m1s, #5 7m44s (clean run).
 - Bug #8's RED/GREEN evidence shows 0 tests (run_tests hit the `c:` bug during that run) → don't use #8 as a video hero.
 - `docs/answer-key` hashes predate a history rewrite; match culprits by commit subject (e.g. #3 `eb3a92e` = `b4369d9`).
 - **Hero recording** (Snipping Tool, `Videos\Screen Recordings`): usable, but Bob's chat shows the WRONG culprit
