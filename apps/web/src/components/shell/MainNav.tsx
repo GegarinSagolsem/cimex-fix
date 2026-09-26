@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 const LINKS = [
   { href: "/cases", label: "Cases" },
   { href: "/triage", label: "Triage" },
+  { href: "/impact", label: "Impact" },
 ] as const;
 
 export function MainNav() {
@@ -22,7 +23,7 @@ export function MainNav() {
             href={link.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors",
+              "rounded-md px-2 py-1.5 text-sm font-medium transition-colors sm:px-2.5",
               active
                 ? "bg-[var(--accent)]/15 text-[var(--accent)]"
                 : "text-[var(--muted)] hover:bg-[var(--surface)] hover:text-[var(--text)]",
