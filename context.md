@@ -8,7 +8,7 @@ _Last updated: Sat 26 Sep 2026 ~11:45 IST · Claude Opus 5.5 · 6 bugs proven, c
   Proof of Fix is published. The "Mission Control" website shows every case live.
 - **Deadline:** **Sun 27 Sep 2026, 19:30 IST** (10:00 AM ET, IBM form) · our target **18:30 IST**.
   The IBM Cloud / watsonx account also closes at that moment.
-- **Team:** solo · Claude Pro (5-h window + weekly) + $100 cloud-session credit (backup only) · Bobcoins **13 / 40 left**.
+- **Team:** solo · Claude Pro (5-h window + weekly) + $100 cloud-session credit (backup only) · Bobcoins **~9.5 / 40 left** (10 after task 14, minus 0.55).
 - **Phase:** 3 (real runs + numbers). Phases 0–2 done. Plan: `Plan.md` §7.
 - **Links:** repo https://github.com/GegarinSagolsem/bugproof (private) · live https://bugproof-web.vercel.app
   (auto-deploys from main) · demo repo https://github.com/GegarinSagolsem/bugproof-demo-shoplite (private)
@@ -63,6 +63,7 @@ _Last updated: Sat 26 Sep 2026 ~11:45 IST · Claude Opus 5.5 · 6 bugs proven, c
 | #3 delivery date | PDF (QA report) | case_20260926_2c6c | proven | ✅ `b4369d9` (re-bisected in Bob, task 10) | 113 |
 | #8 coupon twice | screenshot | case_20260926_db4f | proven | ✅ `185f248` (re-bisected in Bob, task 10; older wrong entry superseded) | 114 |
 | #5 search case-sensitive | issue text | case_20260926_7e5e | proven in 7 min 44 s (first fully clean run: subtasks hand back, bisect found culprit live) | ✅ `649b24a` | 117 |
+| #7 double order (race) | issue text + log | case_20260926_9afc | proven in 8 min 02 s, 0 human prompts, leaner pack (2.54 coins) | ✅ `985e247` via follow-up (first test over-specified) | 118 |
 Culprit commits vs answer key: **6/6** — #1 `c3f394a`, #6 `c3fb68f`, #3 `b4369d9`, #8 `185f248`, #4 `882203d` (re-bisected, task 11), #5 `649b24a` (live).
 Bug #5 fix = answer key exactly (lower-case index haystack + query); demo repo commit `6ff3e78`, pushed.
 All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`, bug #8 = `0944d88`). Stray case `69ba` deleted.
@@ -135,6 +136,8 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 | 11 | Re-bisect bug #4 (culprit attached) | shoplite | 0.09 | `bugproof_task11_rebisect_bug04_summary.png` ✅ |
 | 12 | Run bug #5 (search case-sensitive, issue intake) — clean run, recorded | shoplite | 3.06 (16 → 13) | `bugproof_task12_run_bug05_summary.png` ✅ |
 | 13 | Re-bisect bug #1 (hero culprit now Bob-verified, `c3f394a`) | shoplite | 0.09 | `bugproof_task13_rebisect_bug01_summary.png` ✅ |
+| 14 | Run bug #7 (race condition) with the leaner pack — proven, culprit not found live | shoplite | 2.54 (13 → 10) | `bugproof_task14_run_bug07_summary.png` ✅ |
+| 15 | Bug #7 follow-up: symptom-only test + bisect → `985e247` | shoplite | 0.55 | `bugproof_task15_rebisect_bug07_summary.png` (not saved yet) |
 Costs from Bob's task DB `~/.bob/db/bob.db` (`tasks.costs`): a Lead's total includes its subagents and every subtask that
 returned via `end_subtask`; subtasks that never returned (#3, #8) must be added. Each model call re-sends the whole thread
 (~0.03/step early, ~0.10 late). In run 12 the Lead's own turns ≈1.2, Historian subagent 0.72, a git-diff subagent 0.33,
