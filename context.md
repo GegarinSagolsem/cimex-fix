@@ -102,7 +102,7 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
     ✅ Bug #2 added (8 bugs): Cimex 8/8 fix with proof; gpt-oss-120b 8/8 (culprit 6/8); others 1–3/8; 40 answers, 24 fixed, 16 with proof.
 15. ✅ Bug #2 proven (task 16) and committed in the demo repo; benchmark, README, submission, /impact now say 8/8.
     Bug #2's Granite summary regenerated twice via the summary route (1st said "penny" + "stacked across items").
-16. Next: Bob pack display rename to "Cimex …" (reinstall into the demo repo) · 🅱 Bob hooks only if coins remain · slides +
+16. ✅ Bob pack modes renamed to "🕵️ Cimex Lead" etc. (slugs unchanged; reinstalled, both repos pushed). Next: 🅱 Bob hooks only if coins remain · slides +
     cover · video script (8 bugs, model comparison, no "lifecycle hooks" unless built).
 
 ## Notes / open items
