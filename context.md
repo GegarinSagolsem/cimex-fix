@@ -55,16 +55,16 @@ _Last updated: Sat 26 Sep 2026 ~10:00 IST · Claude Opus 5.5 · bugs #3 and #8 p
 | #4 pagination | issue text | case_20260925_34fd | proven | fix in correct file (evidence thin: early MCP bug) | 107 |
 | #6 negative qty | server log | case_20260925_318b | proven | ✅ | 110 |
 | #1 ₹NaN (hero) | screenshot | case_20260925_bf62 | proven | ✅ (re-attached after bisect fix) | 112 |
-| #3 delivery date | PDF (QA report) | case_20260926_2c6c | proven | root-cause line ✅ (estimate.ts:34); culprit **commit not found** (bisect timed out) | 113 |
-| #8 coupon twice | screenshot | case_20260926_db4f | proven | root-cause line ✅ (coupons.ts:56); culprit evidence **wrong** (names initial commit; answer key = `feat(cart): allow stacking multiple coupon codes` `185f248`) | 114 |
-All five fixes are committed on demo repo `main` (bug #3 = `31835d5`, bug #8 = `0944d88`).
-Stray duplicate case `case_20260926_69ba` (first bug #8 attempt) is still `investigating` — delete or ignore.
+| #3 delivery date | PDF (QA report) | case_20260926_2c6c | proven | ✅ `b4369d9` (re-bisected in Bob, task 10) | 113 |
+| #8 coupon twice | screenshot | case_20260926_db4f | proven | ✅ `185f248` (re-bisected in Bob, task 10; older wrong entry superseded) | 114 |
+Culprit commits vs answer key: #1 ✅ `c3f394a`, #6 ✅ `c3fb68f`, #3 ✅, #8 ✅, #4 ❌ none recorded (dry run finds `882203d` ✅ → attach with `bad=35a91bf^`).
+All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`, bug #8 = `0944d88`). Stray case `69ba` deleted.
 
 ## Next steps (in order)
 1. ✅ Pipeline fixed (see Decisions 09-26): modes hand back, bisect works with Bob's path, tabs show real data.
    👤 In Bob: restart the MCP server (Settings → MCP) so it loads the new `dist/`; modes reload from `.bob/`.
-2. 🅱 Re-run bisect in Bob for bugs #3 and #8 to attach the real culprit commits (latest culprit evidence wins):
-   bug #3 `bad=31835d5^` → expect `b4369d9`; bug #8 `bad=0944d88^` → expect `185f248`.
+2. ✅ Re-bisected #3 and #8 in Bob (task 10) — both correct. 🅱 Optional: same for #4
+   (`tests/bugproof/case_20260925_34fd.test.ts`, `bad=35a91bf^`, caseId `case_20260925_34fd`) → 5/5 culprits.
 3. 🅱 Then #2 / #5 if coins allow (keep ~10 in reserve). After each run, Claude: verify vs
    `docs/answer-key/bugs.md`, run `npx vitest run`, commit the fix in the demo repo, log coins here.
 4. 🅲 Export finished cases to `apps/web/data/cases/*.json` (replay safety net) + write `docs/benchmark.md` (times from case events, coins, culprit accuracy).
@@ -101,6 +101,7 @@ Stray duplicate case `case_20260926_69ba` (first bug #8 attempt) is still `inves
 | 07 | Run bug #1 hero | shoplite | ~5 | `bugproof_task07_run_bug01_hero_summary.png` (check saved) |
 | 08 | Run bug #3 (delivery date, PDF intake) | shoplite | 2.00 | `bugproof_task08_run_bug03_summary.png` ✅ |
 | 09 | Run bug #8 (coupon twice, screenshot intake) | shoplite | 6.00 (incl. stalled duplicate run + 3 bisect timeouts) | `bugproof_task09_run_bug08_summary.png` ✅ |
+| 10 | Re-bisect bugs #3 + #8 (culprits attached) | shoplite | ? (ask user) | `bugproof_task10_rebisect_bug03_bug08_summary.png` (not saved yet) |
 Tasks 03–05 together ≈ 6.7 coins (40 − 1.53 − 2.78 − 5 − 24). Task 08: 2.00 coins (24 → 22 left).
 
 ## Session log
