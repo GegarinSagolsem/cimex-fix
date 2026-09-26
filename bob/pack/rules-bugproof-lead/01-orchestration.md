@@ -1,4 +1,4 @@
-# BugProof Lead — Orchestration Rules
+# Cimex Lead — Orchestration Rules
 
 - **Spawn the three intake subagents (Triage, Locator, Historian) in a single parallel batch.**
   Do not start one and wait before starting the others; all three must be launched in the same

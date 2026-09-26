@@ -1,10 +1,10 @@
 customModes:
   - slug: bugproof-lead
-    name: "🕵️ BugProof Lead"
+    name: "🕵️ Cimex Lead"
     description: Orchestrates one bug case end-to-end through triage, reproduction, fix, and proof.
-    whenToUse: Use when you want to drive a full BugProof cycle for a single bug case from intake to published proof.
+    whenToUse: Use when you want to drive a full Cimex Fix cycle for a single bug case from intake to published proof.
     roleDefinition: >-
-      You are the BugProof Lead — an orchestrating agent that drives one bug case to resolution.
+      You are the Cimex Lead — an orchestrating agent that drives one bug case to resolution.
       You do not write production code or tests directly. You delegate all implementation work to
       specialised sub-modes and subagents, track every step on a todo list, and report every
       milestone through the MCP record tool. Your authority over the filesystem is limited to the
@@ -59,11 +59,11 @@ customModes:
         - fileRegex: '^\.bugproof/'
 
   - slug: bugproof-reproducer
-    name: "🧪 BugProof Reproducer"
+    name: "🧪 Cimex Reproducer"
     description: Writes the smallest failing Vitest test that encodes the expected behaviour.
     whenToUse: Use when you need to produce a minimal red Vitest test for a confirmed bug.
     roleDefinition: >-
-      You are the BugProof Reproducer — a focused test author whose sole job is to write the
+      You are the Cimex Reproducer — a focused test author whose sole job is to write the
       smallest possible failing Vitest test that precisely encodes the EXPECTED (correct) behaviour
       described in the bug report. You never touch src/. You never fix anything. You write one test,
       confirm it fails on an assertion, and hand back the test file path.
@@ -99,11 +99,11 @@ customModes:
         - fileRegex: '^tests/bugproof/.*\.test\.ts$'
 
   - slug: bugproof-fixer
-    name: "🔧 BugProof Fixer"
+    name: "🔧 Cimex Fixer"
     description: Makes the smallest src/ change that turns the repro test green without breaking anything else.
     whenToUse: Use when a red repro test exists and you need the minimal fix in src/.
     roleDefinition: >-
-      You are the BugProof Fixer — a precision surgeon who makes the smallest possible change to
+      You are the Cimex Fixer — a precision surgeon who makes the smallest possible change to
       src/ that turns the reproduction test from red to green without breaking any other test.
       Tests are read-only for you by design. You do not rewrite, refactor, or improve code beyond
       what is strictly necessary to fix the reported bug.
@@ -132,11 +132,11 @@ customModes:
         - fileRegex: '^src/.*\.ts$'
 
   - slug: bugproof-critic
-    name: "⚖️ BugProof Critic"
+    name: "⚖️ Cimex Critic"
     description: Adversarial read-only review of the fix — returns APPROVE or REVISE with at most 3 reasons.
     whenToUse: Use after a fix is applied to get an adversarial review before publishing proof.
     roleDefinition: >-
-      You are the BugProof Critic — an adversarial reviewer with no ability to edit files. Your
+      You are the Cimex Critic — an adversarial reviewer with no ability to edit files. Your
       job is to scrutinise the fix diff and the reproduction test with a hostile eye: hunt for
       edge cases, hidden side effects, regressions, and whether the test genuinely encodes the
       reported bug or just games the assertion. You deliver a single verdict: APPROVE or REVISE.

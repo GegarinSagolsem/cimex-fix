@@ -1,4 +1,4 @@
-# BugProof — Global Invariants (all modes)
+# Cimex Fix — Global Invariants (all modes)
 
 - **No fix before a RED test exists.** A passing test suite with no reproduction test is not a
   valid starting point for a fix. The reproduction test must fail on an assertion before any

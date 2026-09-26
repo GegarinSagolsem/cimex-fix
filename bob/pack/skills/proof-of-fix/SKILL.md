@@ -44,7 +44,7 @@ Full suite: `npx vitest run` → <N>/<N> passed.
 ## Critic verdict
 <pass / conditional / fail + reason>
 
-🔗 BugProof proof page: <url>
+🔗 Cimex Fix proof page: <url>
 ```
 
 ## Steps

@@ -1,4 +1,4 @@
-# BugProof Fixer — Fixing Rules
+# Cimex Fixer — Fixing Rules
 
 - **Run the baseline suite first.** Before any edit, execute the full test suite and record
   which tests (if any) are already red. This baseline is the reference for regression detection.

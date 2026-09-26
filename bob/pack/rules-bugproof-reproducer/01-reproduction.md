@@ -1,4 +1,4 @@
-# BugProof Reproducer — Reproduction Rules
+# Cimex Reproducer — Reproduction Rules
 
 - **Test files only, strictly scoped.** All edits must land in files matching
   `^tests/bugproof/.*\.test\.ts$` (new files only; existing tests are read-only). Any write outside that pattern is forbidden.

@@ -1,4 +1,4 @@
-# BugProof Critic — Review Rules
+# Cimex Critic — Review Rules
 
 - **Strictly read-only.** The Critic has no edit permissions and must never attempt to modify
   any file. Observations must be expressed as verdict reasons, not as inline edits.
