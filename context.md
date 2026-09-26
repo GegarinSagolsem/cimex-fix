@@ -33,6 +33,13 @@ re-asked one at a time (`raw-opus-solo\`, all SUCCESS). Totals now: 7 models, 56
   `SagolsemHironika <sagolsemhironika@gmail.com>` and carry `Co-Authored-By: Claude` trailers; 2 main commits use the
   personal gmail. Main repo could be rewritten (force-push); demo root can't without breaking every SHA.
   (b) Public CLAUDE.md says "no AI/Claude names in commits" while README discloses Claude Code; decide whether to keep.
+- ✅ User decision 09-26: the `SagolsemHironika` identity is family and may stay public → no history rewrite.
+  Still open: personal gmail on 2 commits, and whether to keep the public CLAUDE.md commit rule.
+- ✅ Launch video (brag plugin, /brag-slim): `brag-output/brag.mp4` (24 s, 1920×1080, -14 LUFS, poster = frame 0),
+  `brag.jpg`, `share-copy.txt`, `brag-plan.md`, `composition/index.html` (HTML, every frame a function of time) and
+  `work/` (render.mjs = headless Chrome → ffmpeg; music.mjs = synthesized 120 BPM D-minor score + SFX). Real bug #5
+  data only; numbers from docs/benchmark.md. Untracked (not committed). It's a teaser: the submission video still
+  needs ≥90 s of live demo (use the raw bug #5 take) — the brag clip can open it.
 - Judge's other notes kept for slides/video: pitch "we don't trust any model's answer, we prove it", not "we beat the
   models"; no hooks / "PR per fix" claims; setup coins 0.40/0.40 verified in bob.db (real, not placeholders).
 
