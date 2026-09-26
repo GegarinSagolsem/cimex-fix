@@ -57,14 +57,16 @@ _Last updated: Sat 26 Sep 2026 ~10:00 IST · Claude Opus 5.5 · bugs #3 and #8 p
 | #1 ₹NaN (hero) | screenshot | case_20260925_bf62 | proven | ✅ (re-attached after bisect fix) | 112 |
 | #3 delivery date | PDF (QA report) | case_20260926_2c6c | proven | ✅ `b4369d9` (re-bisected in Bob, task 10) | 113 |
 | #8 coupon twice | screenshot | case_20260926_db4f | proven | ✅ `185f248` (re-bisected in Bob, task 10; older wrong entry superseded) | 114 |
-Culprit commits vs answer key: **5/5** — #1 `c3f394a`, #6 `c3fb68f`, #3 `b4369d9`, #8 `185f248`, #4 `882203d` (re-bisected in Bob, task 11).
+| #5 search case-sensitive | issue text | case_20260926_7e5e | proven in 7 min 44 s (first fully clean run: subtasks hand back, bisect found culprit live) | ✅ `649b24a` | 117 |
+Culprit commits vs answer key: **6/6** — #1 `c3f394a`, #6 `c3fb68f`, #3 `b4369d9`, #8 `185f248`, #4 `882203d` (re-bisected, task 11), #5 `649b24a` (live).
+Bug #5 fix = answer key exactly (lower-case index haystack + query); demo repo commit `6ff3e78`, pushed.
 All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`, bug #8 = `0944d88`). Stray case `69ba` deleted.
 
 ## Next steps (in order)
 1. ✅ Pipeline fixed (see Decisions 09-26): modes hand back, bisect works with Bob's path, tabs show real data.
    👤 In Bob: restart the MCP server (Settings → MCP) so it loads the new `dist/`; modes reload from `.bob/`.
 2. ✅ Re-bisected #3, #8 (task 10) and #4 (task 11) in Bob — culprit accuracy 5/5.
-3. 🅱 Then #2 / #5 if coins allow (keep ~10 in reserve). After each run, Claude: verify vs
+3. ✅ #5 done (clean run, recorded). 🅱 #2 only if coins allow (keep ~10 in reserve). After each run, Claude: verify vs
    `docs/answer-key/bugs.md`, run `npx vitest run`, commit the fix in the demo repo, log coins here.
 4. 🅲 Export finished cases to `apps/web/data/cases/*.json` (replay safety net) + write `docs/benchmark.md` (times from case events, coins, culprit accuracy).
 5. 🅲 Build the Impact page from real data (root-cause accuracy X/N vs answer key = our headline metric) + landing page + proof page polish.
@@ -73,6 +75,9 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 8. Video + slides + texts + make repos public (Plan.md §12). Feature freeze Sun 14:00.
 
 ## Notes / open items
+- **Raw video take of the clean bug #5 run:** `Videos\Screen Recordings\bugproof_video_run_bug05_raw.mp4` (split screen:
+  Mission Control + Bob). Best candidate for the 0:25–2:05 live-demo segment (speed up, label "⏩").
+- Cases list cards say "no proof yet" on proven cases, and bug #4's card shows repo "IBM Bob" → fix before final recording.
 - Bug #8's RED/GREEN evidence shows 0 tests (run_tests hit the `c:` bug during that run) → don't use #8 as a video hero.
 - `docs/answer-key` hashes predate a history rewrite; match culprits by commit subject (e.g. #3 `eb3a92e` = `b4369d9`).
 - **Hero recording** (Snipping Tool, `Videos\Screen Recordings`): usable, but Bob's chat shows the WRONG culprit
@@ -98,12 +103,15 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 | 05 | Run bug #4 | shoplite | ? | `bugproof_task05_first_run_bug04_summary.png` ✅ |
 | 06 | Run bug #6 | shoplite | 2.78 | `bugproof_task06_run_bug06_summary.png` (check saved) |
 | 07 | Run bug #1 hero | shoplite | ~5 | `bugproof_task07_run_bug01_hero_summary.png` (check saved) |
-| 08 | Run bug #3 (delivery date, PDF intake) | shoplite | 2.00 | `bugproof_task08_run_bug03_summary.png` ✅ |
-| 09 | Run bug #8 (coupon twice, screenshot intake) | shoplite | 6.00 (Bob log 6.19; ≈1.8 of it caused by the `c:` bug + stalled hand-offs) | `bugproof_task09_run_bug08_summary.png` ✅ |
-| 10 | Re-bisect bugs #3 + #8 (culprits attached) | shoplite | 0.17 (Bob log) | `bugproof_task10_rebisect_bug03_bug08_summary.png` ✅ |
-| 11 | Re-bisect bug #4 (culprit attached) | shoplite | 0.09 (Bob log) | `bugproof_task11_rebisect_bug04_summary.png` (not saved yet) |
-Bob's per-task cost is in `~/.bob/db/bob.db` (`tasks.costs`); it matches the coin balance closely. Each model call re-sends the
-whole thread, so steps cost ~0.03 early and ~0.10 late in a long thread — fresh subtasks keep runs cheap.
+| 08 | Run bug #3 (delivery date, PDF intake) | shoplite | 2.39 (≈0.7 caused by the `c:` bug + stalled hand-offs) | `bugproof_task08_run_bug03_summary.png` ✅ |
+| 09 | Run bug #8 (coupon twice, screenshot intake) | shoplite | 5.36 (≈1.8 caused by the `c:` bug + stalled hand-offs) | `bugproof_task09_run_bug08_summary.png` ✅ |
+| 10 | Re-bisect bugs #3 + #8 (culprits attached) | shoplite | 0.17 | `bugproof_task10_rebisect_bug03_bug08_summary.png` ✅ |
+| 11 | Re-bisect bug #4 (culprit attached) | shoplite | 0.09 | `bugproof_task11_rebisect_bug04_summary.png` ✅ |
+| 12 | Run bug #5 (search case-sensitive, issue intake) — clean run, recorded | shoplite | 3.06 | `bugproof_task12_run_bug05_summary.png` (not saved yet) |
+Costs from Bob's task DB `~/.bob/db/bob.db` (`tasks.costs`): a Lead's total includes its subagents and every subtask that
+returned via `end_subtask`; subtasks that never returned (#3, #8) must be added. Each model call re-sends the whole thread
+(~0.03/step early, ~0.10 late). In run 12 the Lead's own turns ≈1.2, Historian subagent 0.72, a git-diff subagent 0.33,
+Reproducer 0.23, Fixer 0.25, Critic 0.13.
 Tasks 03–05 together ≈ 6.7 coins (40 − 1.53 − 2.78 − 5 − 24). Task 08: 2.00 coins (24 → 22 left).
 
 ## Session log
