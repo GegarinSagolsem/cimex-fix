@@ -42,21 +42,22 @@ Drop a bug report into IBM Bob and pick the **🕵️ BugProof Lead** mode:
 
 Every step is recorded as evidence on the case, so the Proof of Fix page is built only from what actually happened.
 
-## Results — 6 real bugs
+## Results — 7 real bugs
 
 From [`docs/benchmark.md`](docs/benchmark.md) (generated from the case events and Bob's task log; do not quote
 numbers that aren't there):
 
 | Metric | Result |
 |---|---|
-| Bugs attempted / proven | **6 / 6** (0 unproven) |
-| Culprit commit matches the answer key | **6/6** — 5 pinned by `git bisect`, 1 named by the Historian from git history |
-| Culprit named correctly *during* the run | 3/6 — earlier runs hit a bisect bug and were re-bisected afterwards (see below) |
-| Median time to a failing (RED) test | **4m 49s** |
-| Median time to proof | 17m 52s (fastest 7m 40s; includes time runs waited on a human) |
+| Bugs attempted / proven | **7 / 7** (0 unproven) |
+| Culprit commit matches the answer key | **7/7** — 6 pinned by `git bisect`, 1 named by the Historian from git history |
+| Culprit named correctly *during* the run | 3/7 — the rest were confirmed by a follow-up bisect (see below) |
+| Median time to a failing (RED) test | **4m 32s** |
+| Median time to proof | 14m 39s (fastest 7m 40s; includes time runs waited on a human) |
 | Run after the pipeline fixes (bug #5) | culprit by bisect at 4m 01s, **proven at 7m 44s**, 0 human prompts |
-| Bobcoins per fix | median 2.95 (range 2.39–5.36) |
-| Test suite at the end | 117 tests, all passing |
+| Runs with zero human prompts | 5/7 |
+| Bobcoins per fix | median 2.84 (range 2.39–5.36) |
+| Largest test suite in a run | 118 tests, all passing |
 
 | Bug | Arrived as | Time to proof | Culprit commit (found) |
 |---|---|---|---|
@@ -66,6 +67,7 @@ numbers that aren't there):
 | #3 Delivery date one day early after 8 PM IST | PDF (QA report) | 43m 49s | `b4369d9` perf(delivery): compute IST date without Intl.DateTimeFormat |
 | #8 Coupon applies twice → discount over 100% | screenshot | 34m 01s | `185f248` feat(cart): allow stacking multiple coupon codes |
 | #5 Search became case-sensitive | issue text | 7m 44s | `649b24a` perf(catalog): memoize search index |
+| #7 Double-click "Place order" → two orders | issue text + log | 8m 02s | `985e247` refactor(orders): derive duplicate-order check from order history |
 
 **Honesty notes**
 - Early runs (#4, #1, #3, #8) hit a bug in our bisect tool: Bob passed the repo path with a lowercase drive letter
@@ -73,8 +75,11 @@ numbers that aren't there):
   cases; #5 ran after the fix and found its culprit live. Runs #3 and #8 also needed human prompts because of it.
 - #6 can't be bisected with its repro test (the test imports a function the culprit commit itself introduced), so its
   culprit comes from the Historian's git-history analysis.
+- #7 (a race condition) was proven, but its first repro test also required the second click to be rejected, which
+  the code before the regression didn't do, so bisect found nothing. A follow-up Bob task wrote a symptom-only test
+  (one order, one charge) and bisect named the culprit; the Reproducer rules now require symptom-only tests.
 - There is **no manual human baseline**, so we claim no "N× faster than a developer" number.
-- Bugs #2 and #7 were not attempted (Bobcoin budget).
+- Bug #2 was not attempted (Bobcoin budget).
 
 ## Verify it yourself
 
@@ -153,7 +158,7 @@ no run ever opened it.
   subtasks, skills, the MCP server, and screenshot/PDF intake.
 - **To build the Bob-native parts.** Bob generated `AGENTS.md` (`/init`), the custom modes and rules, the skills and
   the first version of the MCP server. Session screenshots are in [`bob_sessions/`](bob_sessions).
-- **Cost.** 26.52 Bobcoins across every Bob task, including runs, follow-up re-bisects and building the pack
+- **Cost.** 29.61 Bobcoins across every Bob task, including runs, follow-up re-bisects and building the pack
   ([`docs/benchmark.md`](docs/benchmark.md)).
 - Claude Code helped build the web dashboard and the glue code.
 

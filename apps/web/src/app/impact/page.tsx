@@ -65,7 +65,7 @@ export default function ImpactPage() {
           <StatTile label="Median time to a failing test" value={mmss(s.medianMinutesToRed)} detail="from the customer's report to a RED reproduction" />
           {live && (
             <StatTile
-              label={`Latest run (bug #${live.bug}), start to proof`}
+              label={`Fully live run (bug #${live.bug}), start to proof`}
               value={mmss(live.minutesToProof)}
               detail={`culprit by bisect at ${mmss(live.minutesToCulprit)} · ${live.humanInterventions} human prompts`}
             />

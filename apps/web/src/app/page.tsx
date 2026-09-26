@@ -60,7 +60,7 @@ export default async function Home() {
 
   const heroStats = [
     [`${s.culpritCorrect}/${s.bugsAttempted}`, "culprit commits correct"],
-    [mmss(s.liveBisectRun?.minutesToProof ?? s.fastestMinutesToProof), "report to proof, latest run"],
+    [mmss(s.liveBisectRun?.minutesToProof ?? s.fastestMinutesToProof), `report to proof, bug #${showcase.bug}`],
     [String(s.testsInSuiteAtEnd), "tests green at the end"],
   ];
 
