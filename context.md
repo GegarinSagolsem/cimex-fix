@@ -1,6 +1,6 @@
 # context.md — living project state (read this FIRST every session)
 
-_Last updated: Sat 26 Sep 2026 ~03:50 IST · Claude Opus 5.5 · user went to sleep; resume from "Next steps"_
+_Last updated: Sat 26 Sep 2026 ~10:00 IST · Claude Opus 5.5 · bugs #3 and #8 proven; pipeline fixed; resume from "Next steps"_
 
 ## Snapshot
 - **Project:** BugProof — "No fix without proof." IBM Bob reproduces a bug with a failing test, finds
@@ -8,7 +8,7 @@ _Last updated: Sat 26 Sep 2026 ~03:50 IST · Claude Opus 5.5 · user went to sle
   Proof of Fix is published. The "Mission Control" website shows every case live.
 - **Deadline:** **Sun 27 Sep 2026, 19:30 IST** (10:00 AM ET, IBM form) · our target **18:30 IST**.
   The IBM Cloud / watsonx account also closes at that moment.
-- **Team:** solo · Claude Pro (5-h window + weekly) + $100 cloud-session credit (backup only) · Bobcoins **24 / 40 left**.
+- **Team:** solo · Claude Pro (5-h window + weekly) + $100 cloud-session credit (backup only) · Bobcoins **16 / 40 left**.
 - **Phase:** 3 (real runs + numbers). Phases 0–2 done. Plan: `Plan.md` §7.
 - **Links:** repo https://github.com/GegarinSagolsem/bugproof (private) · live https://bugproof-web.vercel.app
   (auto-deploys from main) · demo repo https://github.com/GegarinSagolsem/bugproof-demo-shoplite (private)
@@ -42,6 +42,12 @@ _Last updated: Sat 26 Sep 2026 ~03:50 IST · Claude Opus 5.5 · user went to sle
 | 09-26 | Model = `ibm/granite-4-h-small` (us-south) | newest Granite available |
 | 09-26 | Skip bug #7 (race condition) unless coins remain | costliest; 7/8 is enough |
 | 09-26 | bisect ignores agent-supplied good/bad and never blames the root commit | Lead passed bad refs on the hero run |
+| 09-26 | bug #3: bisect MCP timed out twice; Lead fell back to root-cause analysis + RED test confirmation instead of stopping UNPROVEN | culprit was already confirmed by triage/Historian and repro test; honestly logged as a fallback in the case events, not hidden |
+| 09-26 | Root cause of stalled runs (from Bob's task DB `~/.bob/db/bob.db`): Reproducer/Fixer/Critic modes lack the `subtask` group, so `end_subtask` is refused and control never returns to the Lead. Recovery by switching the stuck subtask's mode meant the "fixer"/"critic" ran as `spawn_subagent`s (they inherit the current mode's permissions; the bug #3 critic was a generic explore subagent). The bug #3 fix itself was made with the chat in Fixer mode. | replaces the earlier "one-off hiccup" note, which was wrong |
+| 09-26 | **Root cause of bisect timeouts + "0 tests":** Bob passes `repoPath: "c:\\dev\\..."` (lowercase drive). Vitest then loads twice and every test errors (`Cannot read properties of undefined (reading 'config')`): bisect skipped all ~41 commits (BISECT_LOG in the stale worktrees), overran Bob's ~60 s MCP limit and orphaned 13 worktrees; `run_tests` returned 0 tests in bug #8. Fix: `resolveRepoPath` uppercases the drive letter. | Reproduced (`c:` vs `C:` is the only difference) and verified with Bob's exact path: #3 → `b4369d9`, #8 → `185f248` (both = answer key), ~25 s each |
+| 09-26 | bisect hardening: pre-flight (test must fail on an assertion at `bad`), abort after 8 skips, 45 s budget, async (server stays responsive), clears stale Temp worktrees. `bad` is accepted again but validated; `good` is still always the root commit. | fail fast with a reason instead of a silent timeout; lets us re-bisect bugs whose fix is already committed (`bad=<fix>^`) |
+| 09-26 | Bob pack: Reproducer/Fixer/Critic get `subtask` + `todo` groups and must `end_subtask`; Lead must delegate with `start_subtask` and record "culprit commit not found" if bisect fails | fixes the stalled hand-offs and the wrong bug #8 culprit guess |
+| 09-26 | Case page evidence tabs read the real MCP/Bob fields (`diff`, `sha`/`subject`, `reasons`, `APPROVE`/`pass`, `failures`, `stepsToReproduce`) | tabs were written against mock data: Diff/Culprit showed empty, Critic badge red |
 
 ## Results so far (all verified against the answer key)
 | Bug | Intake | Case id | Status | Culprit correct | Tests after |
@@ -49,13 +55,18 @@ _Last updated: Sat 26 Sep 2026 ~03:50 IST · Claude Opus 5.5 · user went to sle
 | #4 pagination | issue text | case_20260925_34fd | proven | fix in correct file (evidence thin: early MCP bug) | 107 |
 | #6 negative qty | server log | case_20260925_318b | proven | ✅ | 110 |
 | #1 ₹NaN (hero) | screenshot | case_20260925_bf62 | proven | ✅ (re-attached after bisect fix) | 112 |
-All three fixes are committed on demo repo `main`.
+| #3 delivery date | PDF (QA report) | case_20260926_2c6c | proven | root-cause line ✅ (estimate.ts:34); culprit **commit not found** (bisect timed out) | 113 |
+| #8 coupon twice | screenshot | case_20260926_db4f | proven | root-cause line ✅ (coupons.ts:56); culprit evidence **wrong** (names initial commit; answer key = `feat(cart): allow stacking multiple coupon codes` `185f248`) | 114 |
+All five fixes are committed on demo repo `main` (bug #3 = `31835d5`, bug #8 = `0944d88`).
+Stray duplicate case `case_20260926_69ba` (first bug #8 attempt) is still `investigating` — delete or ignore.
 
 ## Next steps (in order)
-1. 🅱 Run **bug #3** (QA PDF) in **ShopLite Bob, BugProof Lead mode, New Task**:
-   `QA sent this report: intake/bug-03-qa-report.pdf. Prove and fix the bug it describes. Follow the BugProof process exactly, including bisect and attaching all evidence with the evidence tool.`
-2. 🅱 Run **bug #8** (screenshot `intake/bug-08-screenshot.png`), then #2 / #5 if coins allow (keep ~10 in reserve).
-3. After each run, Claude: verify vs `docs/answer-key/bugs.md`, run `npx vitest run`, commit the fix in the demo repo, log coins here.
+1. ✅ Pipeline fixed (see Decisions 09-26): modes hand back, bisect works with Bob's path, tabs show real data.
+   👤 In Bob: restart the MCP server (Settings → MCP) so it loads the new `dist/`; modes reload from `.bob/`.
+2. 🅱 Re-run bisect in Bob for bugs #3 and #8 to attach the real culprit commits (latest culprit evidence wins):
+   bug #3 `bad=31835d5^` → expect `b4369d9`; bug #8 `bad=0944d88^` → expect `185f248`.
+3. 🅱 Then #2 / #5 if coins allow (keep ~10 in reserve). After each run, Claude: verify vs
+   `docs/answer-key/bugs.md`, run `npx vitest run`, commit the fix in the demo repo, log coins here.
 4. 🅲 Export finished cases to `apps/web/data/cases/*.json` (replay safety net) + write `docs/benchmark.md` (times from case events, coins, culprit accuracy).
 5. 🅲 Build the Impact page from real data (root-cause accuracy X/N vs answer key = our headline metric) + landing page + proof page polish.
 6. 👤 Manual baseline: fix one bug by hand with a timer.
@@ -63,6 +74,8 @@ All three fixes are committed on demo repo `main`.
 8. Video + slides + texts + make repos public (Plan.md §12). Feature freeze Sun 14:00.
 
 ## Notes / open items
+- Bug #8's RED/GREEN evidence shows 0 tests (run_tests hit the `c:` bug during that run) → don't use #8 as a video hero.
+- `docs/answer-key` hashes predate a history rewrite; match culprits by commit subject (e.g. #3 `eb3a92e` = `b4369d9`).
 - **Hero recording** (Snipping Tool, `Videos\Screen Recordings`): usable, but Bob's chat shows the WRONG culprit
   ("initial spec") at one point → cut that part; show the dashboard's culprit card instead. Retake if coins allow.
 - After changing MCP code: rebuild (`npm run build -w bugproof-mcp`) and restart the MCP server in Bob (Settings → MCP).
@@ -86,9 +99,12 @@ All three fixes are committed on demo repo `main`.
 | 05 | Run bug #4 | shoplite | ? | `bugproof_task05_first_run_bug04_summary.png` ✅ |
 | 06 | Run bug #6 | shoplite | 2.78 | `bugproof_task06_run_bug06_summary.png` (check saved) |
 | 07 | Run bug #1 hero | shoplite | ~5 | `bugproof_task07_run_bug01_hero_summary.png` (check saved) |
-Tasks 03–05 together ≈ 6.7 coins (40 − 1.53 − 2.78 − 5 − 24).
+| 08 | Run bug #3 (delivery date, PDF intake) | shoplite | 2.00 | `bugproof_task08_run_bug03_summary.png` ✅ |
+| 09 | Run bug #8 (coupon twice, screenshot intake) | shoplite | 6.00 (incl. stalled duplicate run + 3 bisect timeouts) | `bugproof_task09_run_bug08_summary.png` ✅ |
+Tasks 03–05 together ≈ 6.7 coins (40 − 1.53 − 2.78 − 5 − 24). Task 08: 2.00 coins (24 → 22 left).
 
 ## Session log
 - 09-25 22:00–22:45 · Opus · research + planning docs
 - 09-25 22:50–23:35 · Sonnet subagent · Phase 0 scaffold
 - 09-25 23:40 → 09-26 03:50 · Opus (+ Sonnet subagents: backend, Granite) · cloud PRs merged, backend, Bob tasks 02–07, watsonx, 3 proven runs
+- 09-26 08:00–10:00 · Sonnet → Opus · bugs #3, #8 proven (Bob tasks 08–09); diagnosed stalls from Bob's task DB; fixed modes, bisect (`c:` casing), evidence tabs
