@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T05:50:46.882Z",
+  "generatedAt": "2026-09-26T06:04:00.845Z",
   "summary": {
     "bugsAttempted": 6,
     "proven": 6,
@@ -57,7 +57,8 @@
       "humanInterventions": 0,
       "bisectCalls": 3,
       "bisectTimeouts": 2,
-      "fixCommit": "35a91bf"
+      "fixCommit": "35a91bf",
+      "reproTest": "tests/bugproof/case_20260925_34fd.test.ts"
     },
     {
       "bug": 6,
@@ -88,7 +89,8 @@
       "humanInterventions": 0,
       "bisectCalls": 1,
       "bisectTimeouts": 0,
-      "fixCommit": "e21313f"
+      "fixCommit": "e21313f",
+      "reproTest": "tests/bugproof/case_20260925_318b.test.ts"
     },
     {
       "bug": 1,
@@ -119,7 +121,8 @@
       "humanInterventions": 0,
       "bisectCalls": 2,
       "bisectTimeouts": 2,
-      "fixCommit": "6d6c87a"
+      "fixCommit": "6d6c87a",
+      "reproTest": "tests/bugproof/bug-01-empty-coupon-nan.test.ts"
     },
     {
       "bug": 3,
@@ -150,7 +153,8 @@
       "humanInterventions": 3,
       "bisectCalls": 2,
       "bisectTimeouts": 2,
-      "fixCommit": "31835d5"
+      "fixCommit": "31835d5",
+      "reproTest": "tests/bugproof/bug-03-delivery-estimate.test.ts"
     },
     {
       "bug": 8,
@@ -181,7 +185,8 @@
       "humanInterventions": 4,
       "bisectCalls": 3,
       "bisectTimeouts": 3,
-      "fixCommit": "0944d88"
+      "fixCommit": "0944d88",
+      "reproTest": "tests/bugproof/bug-08-duplicate-coupon.test.ts"
     },
     {
       "bug": 5,
@@ -212,7 +217,8 @@
       "humanInterventions": 0,
       "bisectCalls": 1,
       "bisectTimeouts": 0,
-      "fixCommit": "6ff3e78"
+      "fixCommit": "6ff3e78",
+      "reproTest": "tests/bugproof/bug-05-search-case.test.ts"
     }
   ]
 }

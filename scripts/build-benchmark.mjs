@@ -56,6 +56,12 @@ const cases = bob.runs.map((run) => {
   const fixGreen = milestone("FIX_GREEN")?.title.match(/(\d+)\/(\d+)/);
   const key = answerKey[run.bug];
   const found = culprit && { sha: String(culprit.data.sha ?? culprit.data.commit).slice(0, 7), subject: String(culprit.data.subject) };
+  // Most REPRO_READY milestones carry data.file; bug #1's only names the file in its title.
+  const testPath = /tests\/bugproof\/[\w.-]+\.test\.ts/;
+  const reproTest =
+    d.events.filter((e) => e.title.startsWith("REPRO_READY")).map((e) => e.data?.file ?? e.data?.testFile ?? e.data?.path).find(Boolean) ??
+    d.events.filter((e) => e.title.startsWith("REPRO_READY")).map((e) => e.title.match(testPath)?.[0]).find(Boolean) ??
+    null;
   return {
     bug: run.bug,
     title: key.title,
@@ -83,6 +89,7 @@ const cases = bob.runs.map((run) => {
     bisectCalls: run.bisectCalls,
     bisectTimeouts: run.bisectTimeouts,
     fixCommit: run.fixCommit,
+    reproTest,
   };
 });
 
