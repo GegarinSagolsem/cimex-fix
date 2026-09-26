@@ -1,0 +1,295 @@
+{
+  "case": {
+    "id": "case_20260926_9afc",
+    "repo": "bugproof-demo-shoplite",
+    "issue": "case_20260926_9afc",
+    "title": "Double-clicking Place order creates two orders and charges twice",
+    "severity": "high",
+    "source": "issue",
+    "status": "proven",
+    "startedAt": "2026-09-26T13:03:14.028Z",
+    "provenAt": "2026-09-26T13:11:15.710Z",
+    "summary": "Race condition in OrderService.placeOrder() allowed two concurrent requests for the same cart to both pass the hasOrderFor() guard before either payment resolved, creating duplicate orders and charges. Fixed by adding a `private readonly pending = new Set()` guard: checked synchronously before the payment await, populated before the await, and cleared in a finally block. The repro test (tests/bugproof/bug-07-double-order.test.ts) fires two concurrent placeOrder calls with a 10ms payment delay to force the race window, asserting exactly 1 order and 1 charge. Test suite went from 117 pass / 1 fail → 118 pass / 0 fail. Bisect was attempted but the culprit commit could not be identified due to module resolution failures in the git worktree.",
+    "plainSummary": {
+      "text": "When a customer clicked the \"Place order\" button twice very quickly, a second identical order was created, causing the customer to be charged twice. This happened because the order service did not properly prevent two ordering attempts from overlapping and racing for the same open cart. The code was changed to track ordering attempts in progress and block new attempts until the first one finishes, ensuring only one order is created and charged per cart even when two ordering attempts happen at the same time.",
+      "model": "ibm/granite-4-h-small",
+      "generatedAt": "2026-09-26T13:11:18.007Z"
+    }
+  },
+  "events": [
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:03:57.129Z",
+      "agent": "historian",
+      "kind": "spawn",
+      "title": "Historian started for case_20260926_9afc"
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:04:06.329Z",
+      "agent": "historian",
+      "kind": "tool",
+      "title": "Running git log and git blame on src/orders/service.ts suspect lines",
+      "data": {
+        "suspect_file": "src/orders/service.ts",
+        "suspect_lines": [
+          49,
+          51,
+          77,
+          78
+        ],
+        "reason": "placeOrder idempotency check (hasOrderFor) fires BEFORE async payment charge; concurrent calls can both pass the check before either writes to this.orders"
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:04:11.531Z",
+      "agent": "historian",
+      "kind": "milestone",
+      "title": "Root race condition identified in placeOrder",
+      "data": {
+        "file": "src/orders/service.ts",
+        "buggy_lines": "49-65",
+        "mechanism": "hasOrderFor() checked synchronously BEFORE await this.payments.charge(); two concurrent calls both pass the guard and then both push to this.orders",
+        "fix_hint": "Mark the cart as 'in-flight' (e.g. add cartId to a pending Set) before the await, remove it on failure"
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:04:25.093Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "TRIAGE_COMPLETE",
+      "data": {
+        "summary": "Race condition in OrderService.placeOrder(): hasOrderFor() checks committed orders only. Two concurrent requests both pass the guard before either payment completes. Both proceed to charge and push orders, creating duplicates. Fix: add a pending Set guard before the async payment call.",
+        "rootCauseFile": "src/orders/service.ts",
+        "method": "placeOrder",
+        "lines": "49-66",
+        "blastRadius": [
+          "src/orders/service.ts",
+          "src/orders/payments.ts",
+          "ui/src/main.ts"
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:04:41.223Z",
+      "agent": "lead",
+      "kind": "spawn",
+      "title": "Spawning bugproof-reproducer subtask"
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:05:39.168Z",
+      "agent": "reproducer",
+      "kind": "milestone",
+      "title": "REPRO_READY",
+      "data": {
+        "file": "tests/bugproof/bug-07-double-order.test.ts",
+        "assertionFailure": "AssertionError: expected 2 to be 1 // Object.is equality — orders.length is 2 instead of 1 (line 28)"
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:06:50.508Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "BISECT_DONE",
+      "data": {
+        "result": "culprit commit not found",
+        "reason": "bisect exceeded budget — module resolution failure in temp worktree (cannot find src/orders/service in older commits)",
+        "steps": 12
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:06:55.906Z",
+      "agent": "lead",
+      "kind": "spawn",
+      "title": "Spawning bugproof-fixer subtask"
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:09:06.485Z",
+      "agent": "fixer",
+      "kind": "milestone",
+      "title": "FIX_GREEN",
+      "data": {
+        "passed": 118,
+        "failed": 0,
+        "total": 118
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:09:28.374Z",
+      "agent": "lead",
+      "kind": "spawn",
+      "title": "Spawning bugproof-critic subtask"
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:10:52.089Z",
+      "agent": "critic",
+      "kind": "milestone",
+      "title": "APPROVED"
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:11:19.701Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "PUBLISHED",
+      "data": {
+        "proofUrl": "https://bugproof-web.vercel.app/cases/case_20260926_9afc"
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "ts": "2026-09-26T13:22:50.608Z",
+      "agent": "reproducer",
+      "kind": "milestone",
+      "title": "BISECT_DONE",
+      "data": {
+        "culpritSha": "985e24791e05902a1b472644aeebeacf2c38c3f0",
+        "subject": "refactor(orders): derive duplicate-order check from order history",
+        "author": "GegarinSagolsem",
+        "date": "2026-09-25 18:56:15 +0000",
+        "testFile": "tests/bugproof/bug-07-symptom.test.ts",
+        "steps": 6
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "caseId": "case_20260926_9afc",
+      "kind": "triage",
+      "data": {
+        "expected": "One order and one payment per cart. A second concurrent request for the same cart should be rejected while the first is in-flight.",
+        "actual": "Two orders (ORD-0001, ORD-0002) and two charges created for the same cart when Place Order is double-clicked within the ~1-second payment window.",
+        "stepsToReproduce": [
+          "Add Bluetooth Speaker to cart",
+          "Double-click Place Order within ~1 second"
+        ],
+        "source": "intake/bug-07-issue.md — issue with log excerpt showing duplicate POST /api/orders at req_a1 and req_a2, and reconciliation warning about duplicate charge"
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "kind": "blast",
+      "data": {
+        "files": [
+          "src/orders/service.ts",
+          "src/orders/payments.ts",
+          "ui/src/main.ts"
+        ],
+        "callers": [
+          "OrderService.placeOrder() lines 49-66",
+          "OrderService.hasOrderFor() lines 77-79",
+          "FakePaymentGateway.charge() src/orders/payments.ts"
+        ],
+        "notes": "Race window: hasOrderFor() checks only committed orders in this.orders. Two concurrent callers both pass the guard before either payment await resolves. Both push to this.orders after the await. No in-flight/pending-Set guard exists. UI button also lacks disable-during-submit."
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "kind": "red",
+      "data": {
+        "passed": 0,
+        "failed": 1,
+        "total": 1,
+        "durationMs": 4946,
+        "failures": [
+          {
+            "name": "OrderService.placeOrder concurrent duplicate guard places only one order and charges only once when two calls race for the same cart",
+            "message": "AssertionError: expected 2 to be 1 // Object.is equality\n    at C:/dev/bugproof-demo-shoplite/tests/bugproof/bug-07-double-order.test.ts:28:27\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "kind": "suite",
+      "data": {
+        "passed": 117,
+        "failed": 1,
+        "total": 118,
+        "durationMs": 25224,
+        "failures": [
+          {
+            "name": "OrderService.placeOrder concurrent duplicate guard places only one order and charges only once when two calls race for the same cart",
+            "message": "AssertionError: expected 2 to be 1 // Object.is equality\n    at C:/dev/bugproof-demo-shoplite/tests/bugproof/bug-07-double-order.test.ts:28:27\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "kind": "green",
+      "data": {
+        "passed": 118,
+        "failed": 0,
+        "total": 118,
+        "durationMs": 26369,
+        "failures": []
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "kind": "diff",
+      "data": {
+        "files": [
+          "src/orders/service.ts"
+        ],
+        "diff": "diff --git a/src/orders/service.ts b/src/orders/service.ts\nindex 463e9ca..02765f0 100644\n--- a/src/orders/service.ts\n+++ b/src/orders/service.ts\n@@ -36,6 +36,7 @@ export interface OrderServiceOptions {\n \n export class OrderService {\n   private readonly orders: Order[] = [];\n+  private readonly pending = new Set<string>();\n   private readonly payments: PaymentGateway;\n   private readonly clock: () => Date;\n   private seq = 0;\n@@ -49,9 +50,16 @@ export class OrderService {\n   async placeOrder(cart: Cart): Promise<Order> {\n     if (cart.items.length === 0) throw new EmptyCartError();\n     if (this.hasOrderFor(cart.id)) throw new DuplicateOrderError(cart.id);\n+    if (this.pending.has(cart.id)) throw new DuplicateOrderError(cart.id);\n+    this.pending.add(cart.id);\n     const totals = computeTotals(cart);\n     const placedAt = this.clock();\n-    const { paymentId } = await this.payments.charge(totals.total, cart.id);\n+    let paymentId: string;\n+    try {\n+      ({ paymentId } = await this.payments.charge(totals.total, cart.id));\n+    } finally {\n+      this.pending.delete(cart.id);\n+    }\n     const order: Order = {\n       id: `ORD-${String(++this.seq).padStart(4, \"0\")}`,\n       cartId: cart.id,"
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "kind": "green",
+      "data": {
+        "passed": 118,
+        "failed": 0,
+        "total": 118,
+        "durationMs": 29843,
+        "failures": []
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "kind": "critic",
+      "data": {
+        "verdict": "APPROVE",
+        "reasons": [
+          "Test correctly encodes the race condition: FakePaymentGateway(10) forces both concurrent calls past the synchronous guard before either resolves; assertions on orders.length, charges.length, and fulfilled.length all map to the three symptoms documented in the bug report.",
+          "Fix is minimal and correct: the pending Set is checked and populated synchronously before the first await, and cleaned up in a finally block; no concurrent JS coroutine can interleave inside the synchronous segment (lines 51-54), so the guard is race-proof within Node.js single-threaded execution.",
+          "All 118 tests pass; no existing behaviour is altered — hasOrderFor() and DuplicateOrderError semantics are unchanged, and the new pending check is purely additive."
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "kind": "green",
+      "data": {
+        "passed": 1,
+        "failed": 0,
+        "total": 1,
+        "durationMs": 5164,
+        "failures": []
+      }
+    },
+    {
+      "caseId": "case_20260926_9afc",
+      "kind": "culprit",
+      "data": {
+        "sha": "985e24791e05902a1b472644aeebeacf2c38c3f0",
+        "subject": "refactor(orders): derive duplicate-order check from order history",
+        "author": "GegarinSagolsem",
+        "date": "2026-09-25 18:56:15 +0000",
+        "diff": "commit 985e24791e05902a1b472644aeebeacf2c38c3f0\nAuthor: GegarinSagolsem <176033453+GegarinSagolsem@users.noreply.github.com>\nDate:   Fri Sep 25 18:56:15 2026 +0000\n\n    refactor(orders): derive duplicate-order check from order history\n---\n src/orders/service.ts | 37 ++++++++++++++++---------------------\n 1 file changed, 16 insertions(+), 21 deletions(-)\n\ndiff --git a/src/orders/service.ts b/src/orders/service.ts\nindex 98566e1..463e9ca 100644\n--- a/src/orders/service.ts\n+++ b/src/orders/service.ts\n@@ -36,7 +36,6 @@ export interface OrderServiceOptions {\n \n export class OrderService {\n   private readonly orders: Order[] = [];\n-  private readonly inFlight = new Map<string, Promise<Order>>();\n   private readonly payments: PaymentGateway;\n   private readonly clock: () => Date;\n   private seq = 0;\n@@ -46,27 +45,10 @@ export class OrderService {\n     this.clock = options.clock ?? (() => new Date());\n   }\n \n-  /** Places an order for the cart. Concurrent calls for the same cart share one submission. */\n-  placeOrder(cart: Cart): Promise<Order> {\n-    const pending = this.inFlight.get(cart.id);\n-    if (pending) return pending;\n-    const submission = this.submit(cart).finally(() => this.inFlight.delete(cart.id));\n-    this.inFlight.set(cart.id, submission);\n-    return submission;\n-  }\n-\n-  /** All orders, newest first. */\n-  listOrders(): Order[] {\n-    return [...this.orders].sort((a, b) => b.placedAt.localeCompare(a.placedAt) || b.id.localeCompare(a.id));\n-  }\n-\n-  getOrder(id: string): Order | undefined {\n-    return this.orders.find((order) => order.id === id);\n-  }\n-\n-  private async submit(cart: Cart): Promise<Order> {\n+  /** Places an order for the cart. A cart can only be ordered once. */\n+  async placeOrder(cart: Cart): Promise<Order> {\n     if (cart.items.length === 0) throw new EmptyCartError();\n-    if (this.orders.some((order) => order.cartId === cart.id)) throw new DuplicateOrderError(cart.id);\n+    if (this.hasOrderFor(cart.id)) throw new DuplicateOrderError(cart.id);\n     const totals = computeTotals(cart);\n     const placedAt = this.clock();\n     const { paymentId } = await this.payments.charge(totals.total, cart.id);\n@@ -82,4 +64,17 @@ export class OrderService {\n     this.orders.push(order);\n     return order;\n   }\n+\n+  /** All orders, newest first. */\n+  listOrders(): Order[] {\n+    return [...this.orders].sort((a, b) => b.placedAt.localeCompare(a.placedAt) || b.id.localeCompare(a.id));\n+  }\n+\n+  getOrder(id: string): Order | undefined {\n+    return this.orders.find((order) => order.id === id);\n+  }\n+\n+  private hasOrderFor(cartId: string): boolean {\n+    return this.orders.some((order) => order.cartId === cartId);\n+  }\n }\n",
+        "steps": 6
+      }
+    }
+  ]
+}

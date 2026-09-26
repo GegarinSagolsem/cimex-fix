@@ -1,20 +1,20 @@
 # Benchmark — BugProof on the ShopLite demo repo
 
-_Generated 2026-09-26 06:16 UTC by `scripts/build-benchmark.mjs` from the exported case events
+_Generated 2026-09-26 13:25 UTC by `scripts/build-benchmark.mjs` from the exported case events
 (`apps/web/data/cases/*.json`), IBM Bob's task log (`docs/benchmark/bob-runs.json`) and the answer key
 (`docs/answer-key/bugs.md`). Do not edit by hand: re-run `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs`._
 
 ## Headline numbers
 
-- **Bugs attempted:** 6 · **proven:** 6 · **unproven:** 0
-- **Culprit commit matches the answer key:** 6/6 (5 established by `git bisect`, 1 named by the Historian from git history)
-- **Culprit named correctly during the run itself:** 3/6 — bisect found it live in 1 run; earlier runs hit a bisect bug (see caveats) and were re-bisected afterwards
-- **Median time to a failing (RED) reproduction test:** 4m 49s
-- **Median time to proof:** 17m 52s (fastest 7m 40s; includes time runs waited on a human)
+- **Bugs attempted:** 7 · **proven:** 7 · **unproven:** 0
+- **Culprit commit matches the answer key:** 7/7 (6 established by `git bisect`, 1 named by the Historian from git history)
+- **Culprit named correctly during the run itself:** 3/7 — bisect found it live in 1 run; earlier runs hit a bisect bug (see caveats) and were re-bisected afterwards
+- **Median time to a failing (RED) reproduction test:** 4m 32s
+- **Median time to proof:** 14m 39s (fastest 7m 40s; includes time runs waited on a human)
 - **Run after the pipeline fixes (bug #5):** culprit by bisect at 4m 01s, proven at 7m 44s, 0 human interventions, 3.06 Bobcoins
-- **Runs with zero human interventions:** 4/6
-- **Bobcoins per run:** median 2.95 (range 2.39–5.36) · all 6 runs 21.34 · follow-up re-bisects 0.35 · building the Bob pack 4.83 · every Bob task 26.52
-- **Test suite at the end:** 117 tests, all passing (each proven bug added its repro test)
+- **Runs with zero human interventions:** 5/7
+- **Bobcoins per run:** median 2.84 (range 2.39–5.36) · all 7 runs 23.88 · follow-up re-bisects 0.9 · building the Bob pack 4.83 · every Bob task 29.61
+- **Largest suite in a run's GREEN evidence:** 118 tests, all passing (each proven bug added its repro test)
 
 ## Per case
 
@@ -26,6 +26,7 @@ _Generated 2026-09-26 06:16 UTC by `scripts/build-benchmark.mjs` from the export
 | #3 Delivery date one day early after 8 PM IST | PDF (QA report) | `case_20260926_2c6c` | 5m 06s | 43m 49s | 113 | 3 | 2.39 | `b4369d9` perf(delivery): compute IST date without Intl.DateTimeFormat | ✅ | bisect (follow-up Bob task) |
 | #8 Coupon applies twice → discount over 100% | screenshot | `case_20260926_db4f` | 4m 32s | 34m 01s | 114 | 4 | 5.36 | `185f248` feat(cart): allow stacking multiple coupon codes | ✅ | bisect (follow-up Bob task) |
 | #5 Search became case-sensitive | issue text | `case_20260926_7e5e` | 3m 12s | 7m 44s | 117 | 0 | 3.06 | `649b24a` perf(catalog): memoize search index | ✅ | bisect (live, during the run) |
+| #7 Double-click "Place order" → two orders | issue text + log | `case_20260926_9afc` | 2m 25s | 8m 02s | 118 | 0 | 2.54 | `985e247` refactor(orders): derive duplicate-order check from order history | ✅ | bisect (follow-up Bob task) |
 
 ## Raw timestamps (UTC, from the case events)
 
@@ -37,6 +38,7 @@ _Generated 2026-09-26 06:16 UTC by `scripts/build-benchmark.mjs` from the export
 | #3 | 2026-09-26 02:29:18 | 2026-09-26 02:34:24 | — | 2026-09-26 03:13:08 |
 | #8 | 2026-09-26 03:23:50 | 2026-09-26 03:28:22 | — | 2026-09-26 03:57:51 |
 | #5 | 2026-09-26 05:14:21 | 2026-09-26 05:17:32 | 2026-09-26 05:18:22 | 2026-09-26 05:22:05 |
+| #7 | 2026-09-26 13:03:14 | 2026-09-26 13:05:39 | — | 2026-09-26 13:11:15 |
 
 ## Culprit vs answer key
 
@@ -48,6 +50,7 @@ _Generated 2026-09-26 06:16 UTC by `scripts/build-benchmark.mjs` from the export
 | #3 | perf(delivery): compute IST date without Intl.DateTimeFormat | `b4369d9` | none — bisect timed out; Lead recorded the root-cause line, not a commit | bisect (follow-up Bob task) |  |
 | #8 | feat(cart): allow stacking multiple coupon codes | `185f248` | wrong — Lead named the initial commit from git log after bisect timed out | bisect (follow-up Bob task) |  |
 | #5 | perf(catalog): memoize search index | `649b24a` | correct — found by bisect during the run | bisect (live, during the run) |  |
+| #7 | refactor(orders): derive duplicate-order check from order history | `985e247` | none — bisect aborted after 8 untestable commits: the repro test also required the second call to be rejected, which the code before the regression did not do, so it failed on every commit | bisect (follow-up Bob task) | follow-up used a symptom-only test (one order, one charge); the Reproducer rules now require symptom-only tests |
 
 ## Bobcoins (IBM Bob task log)
 
@@ -59,14 +62,16 @@ _Generated 2026-09-26 06:16 UTC by `scripts/build-benchmark.mjs` from the export
 | `3f521cac` | Run bug #3 | 2.39 |
 | `80751800` | Run bug #8 | 5.36 |
 | `630c6c30` | Run bug #5 | 3.06 |
+| `fbb5639e` | Run bug #7 | 2.54 |
 | `9537be04` | re-bisect bugs #3 and #8 (fix already committed, bad = fix commit's parent) | 0.17 |
 | `6e20b35a` | re-bisect bug #4 | 0.09 |
 | `ad18a84d` | re-bisect bug #1 | 0.09 |
+| `1247fe95` | symptom-only test + re-bisect bug #7 | 0.55 |
 | `794925d4` | Setup: /init → AGENTS.md | 1.13 |
 | `3c8fbd68` | Setup: custom modes + rules | 0.40 |
 | `bd8ce5cf` | Setup: skills | 0.40 |
 | `f49dc8b4` | Setup: MCP server | 2.90 |
-|  | **Total** | **26.52** |
+|  | **Total** | **29.61** |
 
 ## Definitions and caveats
 
@@ -81,4 +86,4 @@ _Generated 2026-09-26 06:16 UTC by `scripts/build-benchmark.mjs` from the export
 - Bug #8's RED/GREEN evidence recorded 0 tests (`run_tests` hit the same bug); its tests-after comes from the FIX_GREEN milestone.
   Bug #4's early run attached no RED/GREEN evidence (early MCP version); same fallback.
 - **Manual baseline: not measured yet** (Plan.md §9) — no human-vs-Bob time comparison is claimed.
-- Bugs #2 and #7 were not attempted (Bobcoin budget).
+- Bug #2 was not attempted (Bobcoin budget).

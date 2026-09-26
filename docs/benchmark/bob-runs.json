@@ -43,12 +43,21 @@
       "bisectCalls": 1, "bisectTimeouts": 0, "bisectFound": 1,
       "liveCulprit": "correct", "liveCulpritNote": "found by bisect during the run",
       "finalCulpritMethod": "bisect (live, during the run)"
+    },
+    {
+      "bug": 7, "caseId": "case_20260926_9afc", "intake": "issue text + log", "bobTask": "fbb5639e", "fixCommit": "0f5546f",
+      "coins": 2.54, "humanInterventions": 0, "subtasks": 3, "spawnSubagent": 3, "startSubtask": 3,
+      "bisectCalls": 1, "bisectTimeouts": 0, "bisectFound": 0,
+      "liveCulprit": "none", "liveCulpritNote": "bisect aborted after 8 untestable commits: the repro test also required the second call to be rejected, which the code before the regression did not do, so it failed on every commit",
+      "finalCulpritMethod": "bisect (follow-up Bob task)", "followUpTask": "1247fe95",
+      "finalCulpritNote": "follow-up used a symptom-only test (one order, one charge); the Reproducer rules now require symptom-only tests"
     }
   ],
   "followUps": [
     { "bobTask": "9537be04", "what": "re-bisect bugs #3 and #8 (fix already committed, bad = fix commit's parent)", "coins": 0.17, "bisectCalls": 2, "bisectFound": 2 },
     { "bobTask": "6e20b35a", "what": "re-bisect bug #4", "coins": 0.09, "bisectCalls": 1, "bisectFound": 1 },
-    { "bobTask": "ad18a84d", "what": "re-bisect bug #1", "coins": 0.09, "bisectCalls": 1, "bisectFound": 1 }
+    { "bobTask": "ad18a84d", "what": "re-bisect bug #1", "coins": 0.09, "bisectCalls": 1, "bisectFound": 1 },
+    { "bobTask": "1247fe95", "what": "symptom-only test + re-bisect bug #7", "coins": 0.55, "bisectCalls": 1, "bisectFound": 1 }
   ],
   "setup": [
     { "bobTask": "794925d4", "what": "/init → AGENTS.md", "coins": 1.13 },

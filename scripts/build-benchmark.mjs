@@ -52,7 +52,8 @@ const cases = bob.runs.map((run) => {
   const bisectDone = live ? milestone("BISECT_DONE") : undefined;
   const culprit = last("culprit");
   // Some runs recorded 0-test RED/GREEN evidence (see caveats); fall back to the FIX_GREEN milestone.
-  const green = last("green", (e) => e.data.total > 0);
+  // A run can record GREEN for the repro file alone and for the full suite; the full suite is the larger one.
+  const green = d.evidence.filter((e) => e.kind === "green" && e.data.total > 0).sort((a, b) => b.data.total - a.data.total)[0];
   const fixGreen = milestone("FIX_GREEN")?.title.match(/(\d+)\/(\d+)/);
   const key = answerKey[run.bug];
   const found = culprit && { sha: String(culprit.data.sha ?? culprit.data.commit).slice(0, 7), subject: String(culprit.data.subject) };
@@ -94,6 +95,7 @@ const cases = bob.runs.map((run) => {
 });
 
 const sum = (xs) => round2(xs.reduce((a, b) => a + b, 0));
+const notAttempted = Object.keys(answerKey).map(Number).filter((n) => !cases.some((c) => c.bug === n));
 const liveRun = cases.find((c) => c.finalCulpritMethod.includes("live"));
 const summary = {
   bugsAttempted: cases.length,
@@ -142,7 +144,7 @@ const md = [
     : "",
   `- **Runs with zero human interventions:** ${s.runsWithoutHumanIntervention}/${s.bugsAttempted}`,
   `- **Bobcoins per run:** median ${s.coinsPerRunMedian} (range ${s.coinsPerRunMin}–${s.coinsPerRunMax}) · all ${s.bugsAttempted} runs ${s.coinsRuns} · follow-up re-bisects ${s.coinsFollowUps} · building the Bob pack ${s.coinsSetup} · every Bob task ${s.coinsAllTasks}`,
-  `- **Test suite at the end:** ${s.testsInSuiteAtEnd} tests, all passing (each proven bug added its repro test)`,
+  `- **Largest suite in a run's GREEN evidence:** ${s.testsInSuiteAtEnd} tests, all passing (each proven bug added its repro test)`,
   "",
   "## Per case",
   "",
@@ -186,7 +188,9 @@ const md = [
   "- Bug #8's RED/GREEN evidence recorded 0 tests (`run_tests` hit the same bug); its tests-after comes from the FIX_GREEN milestone.",
   "  Bug #4's early run attached no RED/GREEN evidence (early MCP version); same fallback.",
   "- **Manual baseline: not measured yet** (Plan.md §9) — no human-vs-Bob time comparison is claimed.",
-  "- Bugs #2 and #7 were not attempted (Bobcoin budget).",
+  notAttempted.length
+    ? `- ${notAttempted.map((n) => `Bug #${n}`).join(" and ")} ${notAttempted.length === 1 ? "was" : "were"} not attempted (Bobcoin budget).`
+    : "- Every bug in the answer key was attempted.",
   "",
 ].filter((l) => l !== null).join("\n");
 writeFileSync(path.join(root, "docs/benchmark.md"), md);

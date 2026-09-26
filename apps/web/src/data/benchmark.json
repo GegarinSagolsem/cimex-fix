@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-09-26T06:16:27.849Z",
+  "generatedAt": "2026-09-26T13:25:23.301Z",
   "summary": {
-    "bugsAttempted": 6,
-    "proven": 6,
+    "bugsAttempted": 7,
+    "proven": 7,
     "unproven": 0,
-    "culpritCorrect": 6,
-    "culpritCorrectByBisect": 5,
+    "culpritCorrect": 7,
+    "culpritCorrectByBisect": 6,
     "liveCulpritCorrect": 3,
-    "medianMinutesToRed": 4.82,
-    "medianMinutesToProof": 17.87,
+    "medianMinutesToRed": 4.53,
+    "medianMinutesToProof": 14.65,
     "fastestMinutesToProof": 7.67,
     "liveBisectRun": {
       "bug": 5,
@@ -17,15 +17,15 @@
       "humanInterventions": 0,
       "coins": 3.06
     },
-    "runsWithoutHumanIntervention": 4,
-    "coinsPerRunMedian": 2.95,
+    "runsWithoutHumanIntervention": 5,
+    "coinsPerRunMedian": 2.84,
     "coinsPerRunMin": 2.39,
     "coinsPerRunMax": 5.36,
-    "coinsRuns": 21.34,
-    "coinsFollowUps": 0.35,
+    "coinsRuns": 23.88,
+    "coinsFollowUps": 0.9,
     "coinsSetup": 4.83,
-    "testsInSuiteAtEnd": 117,
-    "coinsAllTasks": 26.52
+    "testsInSuiteAtEnd": 118,
+    "coinsAllTasks": 29.61
   },
   "cases": [
     {
@@ -219,6 +219,38 @@
       "bisectTimeouts": 0,
       "fixCommit": "6ff3e78",
       "reproTest": "tests/bugproof/bug-05-search-case.test.ts"
+    },
+    {
+      "bug": 7,
+      "title": "Double-click \"Place order\" → two orders",
+      "caseId": "case_20260926_9afc",
+      "intake": "issue text + log",
+      "status": "proven",
+      "startedAt": "2026-09-26T13:03:14.028Z",
+      "redAt": "2026-09-26T13:05:39.168Z",
+      "liveCulpritAt": null,
+      "provenAt": "2026-09-26T13:11:15.710Z",
+      "minutesToRed": 2.419,
+      "minutesToLiveCulprit": null,
+      "minutesToProof": 8.028033333333333,
+      "testsAfter": 118,
+      "testsAfterSource": "GREEN evidence",
+      "culprit": {
+        "sha": "985e247",
+        "subject": "refactor(orders): derive duplicate-order check from order history"
+      },
+      "answerKeySubject": "refactor(orders): derive duplicate-order check from order history",
+      "culpritCorrect": true,
+      "liveCulprit": "none",
+      "liveCulpritNote": "bisect aborted after 8 untestable commits: the repro test also required the second call to be rejected, which the code before the regression did not do, so it failed on every commit",
+      "finalCulpritMethod": "bisect (follow-up Bob task)",
+      "finalCulpritNote": "follow-up used a symptom-only test (one order, one charge); the Reproducer rules now require symptom-only tests",
+      "coins": 2.54,
+      "humanInterventions": 0,
+      "bisectCalls": 1,
+      "bisectTimeouts": 0,
+      "fixCommit": "0f5546f",
+      "reproTest": "tests/bugproof/bug-07-double-order.test.ts"
     }
   ]
 }
