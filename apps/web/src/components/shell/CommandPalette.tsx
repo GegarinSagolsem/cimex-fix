@@ -32,10 +32,10 @@ export function CommandPalette({ cases }: { cases: Case[] }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="text-[var(--muted)]">
+        <Button variant="outline" size="sm" className="text-[var(--muted)]" aria-label="Jump to case">
           <Search className="size-3.5" aria-hidden="true" />
-          Jump to case
-          <kbd className="ml-2 rounded border border-[var(--border)] bg-[var(--bg)] px-1.5 py-0.5 font-mono text-[10px]">
+          <span className="hidden sm:inline">Jump to case</span>
+          <kbd className="ml-2 hidden rounded border border-[var(--border)] bg-[var(--bg)] px-1.5 py-0.5 font-mono text-[10px] sm:inline">
             ⌘K
           </kbd>
         </Button>
