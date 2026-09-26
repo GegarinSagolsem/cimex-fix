@@ -94,8 +94,8 @@ export default function ImpactPage() {
           <CardHeader>
             <CardTitle>Compared with one-shot models</CardTitle>
             <p className="max-w-3xl text-sm text-[var(--muted)]">
-              {comparison.contenders.length - 1} models on IBM watsonx.ai each answered every bug once, with all the source
-              code handed to them. Every answer looked complete, but only {comparison.oneShotTotals.fixed} of{" "}
+              {comparison.contenders.length - 1} models (five on IBM watsonx.ai, plus Gemini 3.1 Pro) each answered every
+              bug once, with all the source code handed to them. Every answer looked complete, but only {comparison.oneShotTotals.fixed} of{" "}
               {comparison.oneShotTotals.answers} fixed the bug. The best model, {bestModel.name}, got{" "}
               {bestModel.fixWithProof}/{comparison.bugs.length} fixes with proof,{" "}
               {bestModel.fixWithProof >= cimex.fixWithProof ? "matching" : "against"} Cimex Fix&apos;s {cimex.fixWithProof}/
@@ -113,8 +113,10 @@ export default function ImpactPage() {
                 visible text.
               </li>
               <li>
-                One answer per model at temperature {comparison.temperature}, asked on {comparison.askedOn} (watsonx.ai{" "}
-                {comparison.region}): a single sample, not an average. Prompts and raw answers are in the repo.
+                One answer per model, asked on {comparison.askedOn}: a single sample, not an average. watsonx.ai models ran
+                at temperature {comparison.temperature} ({comparison.region}); Gemini ran through Google&apos;s Antigravity CLI
+                (headless, one fresh session per bug, default temperature, no commands run). Prompts and raw answers are in
+                the repo.
               </li>
               <li>
                 Bob&apos;s culprit count is the final result, including follow-up bisects; {cimex.culpritDuringRun}/

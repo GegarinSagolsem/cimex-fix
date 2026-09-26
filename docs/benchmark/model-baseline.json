@@ -151,6 +151,39 @@
       "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-01.md"
     },
     {
+      "bug": 1,
+      "model": "google/gemini-3.1-pro-high",
+      "base": "df66390",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), gemini-3.1-pro-high",
+      "conversationId": "0cbaf3e6-1a8d-4217-b727-d7600c9095f1",
+      "finishReason": "SUCCESS",
+      "promptTokens": 35539,
+      "completionTokens": 12908,
+      "thinkingTokens": 11994,
+      "seconds": 92,
+      "askedAt": "2026-09-26T16:14:09.299Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": false,
+      "rootCause": "The `applyCoupon` function retained a `code &&` check from an earlier version where an empty string was used to clear the coupon. When multiple coupons were introduced, this caused empty string inputs to bypass validation and get appended to the `couponCodes` array, leading to `NaN` in discount calculations because there is no rule for an empty string.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": false,
+      "suite": {
+        "passed": 110,
+        "failed": 0,
+        "total": 110,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/coupons.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-01.md"
+    },
+    {
       "bug": 2,
       "model": "ibm/granite-4-h-small",
       "base": "f2a3033",
@@ -300,6 +333,39 @@
       ],
       "rejectedFiles": [],
       "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-02.md"
+    },
+    {
+      "bug": 2,
+      "model": "google/gemini-3.1-pro-high",
+      "base": "f2a3033",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), gemini-3.1-pro-high",
+      "conversationId": "b65afe67-3e79-439f-bd15-6a1a7a8e9e02",
+      "finishReason": "SUCCESS",
+      "promptTokens": 36558,
+      "completionTokens": 10175,
+      "thinkingTokens": 9405,
+      "seconds": 72.2,
+      "askedAt": "2026-09-26T16:13:50.045Z",
+      "culprit": "98e2fce",
+      "culpritSubject": "feat(cart): sum multiple line items in cart totals",
+      "culpritCorrect": true,
+      "rootCause": "The cart computed total tax by multiplying floating-point numbers (`lineTotal * GST_RATE`) and summing them, which suffers from precision loss, instead of applying the integer-based `calculateGst` helper on the subtotal.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 119,
+        "failed": 0,
+        "total": 119,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-02.md"
     },
     {
       "bug": 3,
@@ -452,6 +518,39 @@
       "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-03.md"
     },
     {
+      "bug": 3,
+      "model": "google/gemini-3.1-pro-high",
+      "base": "6d6c87a",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), gemini-3.1-pro-high",
+      "conversationId": "e6bd3336-5d73-42a0-ac77-f8fe08df2731",
+      "finishReason": "SUCCESS",
+      "promptTokens": 36384,
+      "completionTokens": 10625,
+      "thinkingTokens": 9582,
+      "seconds": 74.7,
+      "askedAt": "2026-09-26T16:13:51.574Z",
+      "culprit": "b4369d9",
+      "culpritSubject": "perf(delivery): compute IST date without Intl.DateTimeFormat",
+      "culpritCorrect": true,
+      "rootCause": "The `estimateDelivery` function incorrectly checks the UTC hour of the order (`orderedAt.getUTCHours()`) against the 20:00 IST cutoff instead of the IST hour (`ist.getUTCHours()`). This causes evening orders (which have afternoon UTC times) to bypass the next-day dispatch delay.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 112,
+        "failed": 0,
+        "total": 112,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/delivery/estimate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-03.md"
+    },
+    {
       "bug": 4,
       "model": "ibm/granite-4-h-small",
       "base": "5dd2952",
@@ -600,6 +699,39 @@
       ],
       "rejectedFiles": [],
       "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-04.md"
+    },
+    {
+      "bug": 4,
+      "model": "google/gemini-3.1-pro-high",
+      "base": "5dd2952",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), gemini-3.1-pro-high",
+      "conversationId": "62c9e6f7-252b-48ed-a239-b23f337bb992",
+      "finishReason": "SUCCESS",
+      "promptTokens": 35608,
+      "completionTokens": 4842,
+      "thinkingTokens": 4314,
+      "seconds": 36.5,
+      "askedAt": "2026-09-26T16:13:14.004Z",
+      "culprit": "882203d",
+      "culpritSubject": "refactor(catalog): compute pagination bounds explicitly",
+      "culpritCorrect": true,
+      "rootCause": "The `totalPages` calculation incorrectly divides `items.length - 1` by `pageSize`, causing the last page to be completely omitted if it contains exactly one item.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 104,
+        "failed": 0,
+        "total": 104,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/paginate.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-04.md"
     },
     {
       "bug": 5,
@@ -752,6 +884,39 @@
       "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-05.md"
     },
     {
+      "bug": 5,
+      "model": "google/gemini-3.1-pro-high",
+      "base": "5d1cea2",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), gemini-3.1-pro-high",
+      "conversationId": "45a2c79c-a40f-4583-b72d-7a182db7e910",
+      "finishReason": "SUCCESS",
+      "promptTokens": 36108,
+      "completionTokens": 5053,
+      "thinkingTokens": 4541,
+      "seconds": 36.5,
+      "askedAt": "2026-09-26T16:13:14.061Z",
+      "culprit": "649b24a",
+      "culpritSubject": "perf(catalog): memoize search index",
+      "culpritCorrect": true,
+      "rootCause": "The memoization refactor for the search index accidentally omitted `.toLowerCase()` on both the query and the indexed strings, making substring matching strictly case-sensitive.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 114,
+        "failed": 0,
+        "total": 114,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/catalog/search.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-05.md"
+    },
+    {
       "bug": 6,
       "model": "ibm/granite-4-h-small",
       "base": "35a91bf",
@@ -900,6 +1065,39 @@
       ],
       "rejectedFiles": [],
       "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-06.md"
+    },
+    {
+      "bug": 6,
+      "model": "google/gemini-3.1-pro-high",
+      "base": "35a91bf",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), gemini-3.1-pro-high",
+      "conversationId": "045f9f17-7009-44ba-af11-5a4e40f07bfc",
+      "finishReason": "SUCCESS",
+      "promptTokens": 36249,
+      "completionTokens": 10271,
+      "thinkingTokens": 9232,
+      "seconds": 76.2,
+      "askedAt": "2026-09-26T16:13:53.502Z",
+      "culprit": "c3fb68f",
+      "culpritSubject": "refactor(cart): accept numeric strings for quantities",
+      "culpritCorrect": true,
+      "rootCause": "The `parseQuantity` function parses numeric strings but fails to check if the resulting value is negative, allowing API consumers to bypass quantity constraints and create orders with negative totals.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 107,
+        "failed": 0,
+        "total": 107,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/cart.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-06.md"
     },
     {
       "bug": 7,
@@ -1052,6 +1250,39 @@
       "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-07.md"
     },
     {
+      "bug": 7,
+      "model": "google/gemini-3.1-pro-high",
+      "base": "fee040c",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), gemini-3.1-pro-high",
+      "conversationId": "d559ad76-19ff-4df4-b0e8-71cf9be3f680",
+      "finishReason": "SUCCESS",
+      "promptTokens": 36649,
+      "completionTokens": 10604,
+      "thinkingTokens": 9391,
+      "seconds": 77.9,
+      "askedAt": "2026-09-26T16:13:55.930Z",
+      "culprit": "985e247",
+      "culpritSubject": "refactor(orders): derive duplicate-order check from order history",
+      "culpritCorrect": true,
+      "rootCause": "The duplicate-order check was refactored to look at completed orders (`this.orders`), missing orders that are currently in progress awaiting payment. This race condition allowed multiple concurrent `placeOrder` calls for the same cart to proceed before the first one completes.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 117,
+        "failed": 0,
+        "total": 117,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/orders/service.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-07.md"
+    },
+    {
       "bug": 8,
       "model": "ibm/granite-4-h-small",
       "base": "31835d5",
@@ -1200,6 +1431,40 @@
       ],
       "rejectedFiles": [],
       "rawFile": "docs/benchmark/model-baseline/openai_gpt-oss-120b/bug-08.md"
+    },
+    {
+      "bug": 8,
+      "model": "google/gemini-3.1-pro-high",
+      "base": "31835d5",
+      "via": "Antigravity CLI 1.2.11 headless (agy -p), gemini-3.1-pro-high",
+      "conversationId": "ee31c34f-b707-4c7a-8cad-eb524aee14dc",
+      "finishReason": "SUCCESS",
+      "promptTokens": 35824,
+      "completionTokens": 16189,
+      "thinkingTokens": 14653,
+      "seconds": 111.3,
+      "askedAt": "2026-09-26T16:14:29.458Z",
+      "culprit": "185f248",
+      "culpritSubject": "feat(cart): allow stacking multiple coupon codes",
+      "culpritCorrect": true,
+      "rootCause": "The commit `185f248` allowed stacking multiple coupons but failed to prevent applying the exact same coupon multiple times, and it failed to cap the total accumulated discount at the cart's subtotal, causing negative totals.",
+      "testWritten": true,
+      "red": true,
+      "green": true,
+      "probe": true,
+      "suite": {
+        "passed": 113,
+        "failed": 0,
+        "total": 113,
+        "loadErrors": 0,
+        "ok": true
+      },
+      "filesChanged": [
+        "src/cart/coupons.ts",
+        "src/cart/totals.ts"
+      ],
+      "rejectedFiles": [],
+      "rawFile": "docs/benchmark/model-baseline/google_gemini-3.1-pro-high/bug-08.md"
     }
   ],
   "bob": [
@@ -1436,6 +1701,11 @@
       "mistralai/mistral-small-3-1-24b-instruct-2503",
       "openai/gpt-oss-120b"
     ],
+    "manualModels": {
+      "google/gemini-3.1-pro-high": {
+        "via": "Antigravity CLI 1.2.11 headless (agy -p), one fresh session per bug in a folder holding only the prompts, commands auto-denied, default temperature"
+      }
+    },
     "temperature": 0,
     "maxTokens": 16384,
     "region": "https://us-south.ml.cloud.ibm.com"

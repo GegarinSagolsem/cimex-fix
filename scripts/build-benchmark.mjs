@@ -131,12 +131,16 @@ const MODEL_LABELS = {
   "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": "Llama 4 Maverick",
   "mistralai/mistral-small-3-1-24b-instruct-2503": "Mistral Small 3.1",
   "openai/gpt-oss-120b": "gpt-oss-120b",
+  "google/gemini-3.1-pro-high": "Gemini 3.1 Pro (High)",
 };
 const baselineFile = path.join(root, "docs/benchmark/model-baseline.json");
 const baseline = existsSync(baselineFile) ? JSON.parse(readFileSync(baselineFile, "utf8")) : null;
 let comparison = null;
 if (baseline) {
   const bugs = cases.map((c) => c.bug).sort((a, b) => a - b);
+  // watsonx.ai models are called by the script; manual ones (Gemini via the Antigravity CLI) are collected separately.
+  const manualModels = baseline.setup.manualModels ?? {};
+  const allModels = [...baseline.setup.models, ...Object.keys(manualModels)];
   const checks = (x) => ({
     fixed: Boolean(x?.probe),
     suiteGreen: Boolean(x?.suite?.ok),
@@ -159,7 +163,7 @@ if (baseline) {
       probeFailsAtBase: bobScore?.control.probeFailsAtBase ?? null,
       cimex: { ...checks(bobScore?.bob), culpritCorrect: c.culpritCorrect, culpritDuringRun: c.liveCulprit === "correct" },
       models: Object.fromEntries(
-        baseline.setup.models.map((m) => {
+        allModels.map((m) => {
           const a = baseline.attempts.find((x) => x.bug === bug && x.model === m);
           return [m, a ? { ...checks(a), culpritCorrect: a.culpritCorrect, answered: true } : { ...checks(null), culpritCorrect: false, answered: false }];
         }),
@@ -180,6 +184,7 @@ if (baseline) {
     bugs,
     temperature: baseline.setup.temperature,
     askedOn: baseline.attempts.map((a) => a.askedAt).sort()[0]?.slice(0, 10) ?? null,
+    manualVia: Object.values(manualModels)[0]?.via ?? null,
     region: (baseline.setup.region ?? "").replace(/^https:\/\//, "").split(".")[0],
     controlsOk: perBug.every((p) => p.probeFailsAtBase === true),
     contenders: [
@@ -192,12 +197,13 @@ if (baseline) {
         cost: `${summary.coinsPerRunMedian} Bobcoins median per bug`,
         time: `${mmss(summary.medianMinutesToProof)} median to proof`,
       },
-      ...baseline.setup.models.map((m) => {
+      ...allModels.map((m) => {
         const xs = attemptsOn(m);
         return {
           id: m,
           name: MODEL_LABELS[m] ?? m,
           kind: "one-shot",
+          provider: manualModels[m] ? "Google Antigravity CLI" : "IBM watsonx.ai",
           answered: xs.length,
           ...tally(perBug.map((p) => p.models[m])),
           medianSeconds: round2(median(xs.map((x) => x.seconds))),
@@ -224,9 +230,11 @@ function comparisonMd(cmp) {
   const cimex = cmp.contenders.find((c) => c.kind === "pipeline");
   const t = cmp.oneShotTotals;
   return [
-    "## Compared with one-shot models (IBM watsonx.ai)",
+    "## Compared with one-shot models",
     "",
-    `Each model got **one** answer per bug (${cmp.askedOn}, watsonx.ai ${cmp.region}, temperature ${cmp.temperature}). It received the bug report,`,
+    `Each model got **one** answer per bug (from ${cmp.askedOn}). ${models.filter((m) => m.provider === "IBM watsonx.ai").length} models ran on IBM watsonx.ai (${cmp.region}, temperature ${cmp.temperature});`,
+    ...models.filter((m) => m.provider !== "IBM watsonx.ai").map((m) => `${m.name} ran through the ${m.provider} 1.2.11 in headless mode (\`agy -p\`).`),
+    "Each received the bug report,",
     "every file under `src/` at the commit Bob's fix was applied to, and the git history with the `src/` files each commit changed, and",
     "had to name the culprit commit, return the fixed files and write a regression test. Bob's committed fixes and the models' answers",
     "are scored by the same script (`scripts/model-baseline.mjs`) in a clean worktree of the demo repo:",
@@ -263,7 +271,9 @@ function comparisonMd(cmp) {
     "- The models were handed every file under `src/` up front; Bob started from the report alone and had to find the code.",
     "- Bob read the two screenshots as images; the models got their visible text, transcribed without interpretation",
     "  (`SCREENSHOT_TEXT` in the script). For bug #3 the models got the Markdown source of the QA report PDF.",
-    "- One answer per model at temperature 0 is a single sample, not an average over tries. Exact prompts and raw answers are in",
+    "- Gemini ran through Google's Antigravity CLI, not watsonx.ai: same prompt file, one fresh session per bug, in a folder that held",
+    "  only the 8 prompts; commands were auto-denied and no run was refused a tool. Its temperature can't be set there, and it thinks before answering.",
+    "- One answer per model is a single sample, not an average over tries. Exact prompts and raw answers are in",
     "  `docs/benchmark/model-baseline/`.",
     "- The models could not run code; Bob ran tests and `git bisect`. The comparison shows what one answer gets right without that loop.",
     `- Bob's culprit count is the final result; ${cimex.culpritDuringRun}/${n} were named during the runs themselves (see the bisect caveat below).`,

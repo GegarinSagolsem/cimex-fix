@@ -34,7 +34,7 @@ export const MODELS = [
 // Models we can't call from here: their answers are pasted in by hand (one fresh chat per bug, no tools), saved as
 // docs/benchmark/model-baseline/<id>/bug-0N.md, and then scored like the rest.
 export const MANUAL_MODELS = {
-  "google/gemini-3-pro": { via: "Google Antigravity chat, one fresh chat per bug, tools not used, default temperature" },
+  "google/gemini-3.1-pro-high": { via: "Antigravity CLI 1.2.11 headless (agy -p), one fresh session per bug in a folder holding only the prompts, commands auto-denied, default temperature" },
 };
 const ALL_MODELS = [...MODELS, ...Object.keys(MANUAL_MODELS)];
 const TEMPERATURE = 0;

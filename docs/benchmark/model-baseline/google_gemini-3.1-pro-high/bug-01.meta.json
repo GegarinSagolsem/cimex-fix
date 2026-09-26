@@ -1,0 +1,10 @@
+{
+  "via": "Antigravity CLI 1.2.11 headless (agy -p), gemini-3.1-pro-high",
+  "conversationId": "0cbaf3e6-1a8d-4217-b727-d7600c9095f1",
+  "finishReason": "SUCCESS",
+  "promptTokens": 35539,
+  "completionTokens": 12908,
+  "thinkingTokens": 11994,
+  "seconds": 92,
+  "askedAt": "2026-09-26T16:14:09.299Z"
+}

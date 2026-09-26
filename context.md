@@ -7,15 +7,12 @@ _Last updated: Sat 26 Sep 2026 ~22:00 IST · Claude Opus 5.5 · all 8 bugs prove
 `https://cimex-fix.vercel.app` added (old `bugproof-web.vercel.app` still serves; Vercel project name unchanged, Git
 connection survived the rename). Demo repo keeps `bugproof-demo-shoplite`. Local folders, MCP ID, mode slugs unchanged.
 
-**Task now: add Gemini to the model comparison (manual, via Antigravity — no Gemini API key).**
-- `scripts/model-baseline.mjs` has `MANUAL_MODELS` (id `google/gemini-3-pro` = placeholder until the user confirms the
-  exact model Antigravity shows). Missing answers are skipped with a hint; present ones get a `.meta.json` and are scored alike.
-- Clean workspace `C:\dev\gemini-baseline\` (only the 8 prompts + `answers/`). The user runs one fresh Antigravity chat per
-  bug there and has Gemini write `answers/bug-0N.md`. Never run it in the demo repo (main contains all 8 fixes).
-- Then: copy answers to `docs/benchmark/model-baseline/<id>/`, `node scripts/model-baseline.mjs --models <id> --no-bob`,
-  add a label in `build-benchmark.mjs` `MODEL_LABELS`, reword "5 models on IBM watsonx.ai" (benchmark.md heading,
-  `/impact`, README, submission) to name Gemini as a separate provider with its caveats (no temperature control, chat UI).
-  Publish the result whatever it is.
+**Gemini added to the model comparison (done 09-26):** Gemini 3.1 Pro (High) via the Antigravity CLI headless
+(`agy --model gemini-3.1-pro-high --output-format json -p=...`), 8 parallel sessions in `C:\dev\gemini-baseline\` (only the
+prompts), commands auto-denied, 0 denied actions, 1 turn each. Result: **7/8 fixed with proof, culprit 7/8**; #1 miss = empty
+coupon now throws (own test green, probe red), culprit `185f248`. Raw JSON in `C:\dev\gemini-baselineaw\`, answers +
+meta in `docs/benchmark/model-baseline/google_gemini-3.1-pro-high/`. 48 answers total: 31 fixed, 23 with proof.
+Same CLI also offers Claude Sonnet/Opus 4.6 and GPT-OSS 120B if more contenders are ever wanted.
 
 **Then:** slides + cover, video script → Bob hooks only if coins remain (**7 Bobcoins left**, user 09-26). Both repos
 still **private**; make them public just before submitting (Sun, after the freeze).
