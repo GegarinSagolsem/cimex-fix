@@ -48,6 +48,8 @@ _Last updated: Sat 26 Sep 2026 ~11:45 IST · Claude Opus 5.5 · 6 bugs proven, c
 | 09-26 | **Root cause of bisect timeouts + "0 tests":** Bob passes `repoPath: "c:\\dev\\..."` (lowercase drive). Vitest then loads twice and every test errors (`Cannot read properties of undefined (reading 'config')`): bisect skipped all ~41 commits (BISECT_LOG in the stale worktrees), overran Bob's ~60 s MCP limit and orphaned 13 worktrees; `run_tests` returned 0 tests in bug #8. Fix: `resolveRepoPath` uppercases the drive letter. | Reproduced (`c:` vs `C:` is the only difference) and verified with Bob's exact path: #3 → `b4369d9`, #8 → `185f248` (both = answer key), ~25 s each |
 | 09-26 | bisect hardening: pre-flight (test must fail on an assertion at `bad`), abort after 8 skips, 45 s budget, async (server stays responsive), clears stale Temp worktrees. `bad` is accepted again but validated; `good` is still always the root commit. | fail fast with a reason instead of a silent timeout; lets us re-bisect bugs whose fix is already committed (`bad=<fix>^`) |
 | 09-26 | Bob pack: Reproducer/Fixer/Critic get `subtask` + `todo` groups and must `end_subtask`; Lead must delegate with `start_subtask` and record "culprit commit not found" if bisect fails | fixes the stalled hand-offs and the wrong bug #8 culprit guess |
+| 09-26 | Palette changed to "sky & lime" (Aeline reference), **light-first**; dark stays via the toggle (storage key `bugproof-theme-v2`). Text/link blue `#0a62e0`, sky `#1f7aff` only on big surfaces, lime `#d4f25a` only as a background under black text. Replaces the 09-25 "dark-first IBM Blue" choice | user's choice from the WebDemo references; every text colour checked ≥ 4.5:1, chart colours re-validated for both themes |
+| 09-26 | `* { border-color }` moved into `@layer base` | unlayered, it overrode every border-colour utility in Tailwind v4 (e.g. the PROVEN stamp's green border rendered grey) |
 | 09-26 | Manual human baseline dropped (Plan.md §9): no human-vs-Bob time comparison is claimed anywhere | user can't do a fair manual debug; a single rushed attempt would be a weak, attackable number. Problem framing uses cited industry stats instead (Plan.md §2, verify each source first) |
 | 09-26 | Granite summaries now get the Lead's technical summary + the full diff; new `POST /api/cases/[id]/summary` (bearer) regenerates only `plainSummary` (keeps `status`/`provenAt`). Regenerated #4, #5, #6 and checked each by hand | #5's summary stated the wrong root cause (diff was cut at 600 chars of JSON), #6's contradicted itself, #4 had none. `/publish` must not be re-run: it resets `provenAt` |
 | 09-26 | Case page evidence tabs read the real MCP/Bob fields (`diff`, `sha`/`subject`, `reasons`, `APPROVE`/`pass`, `failures`, `stepsToReproduce`) | tabs were written against mock data: Diff/Culprit showed empty, Critic badge red |
@@ -78,8 +80,9 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
    All checked at 1440 px and a true 390 px. Bug #1 re-bisected in Bob (task 13) → 5/6 culprits by Bob's bisect.
 6. ~~Manual baseline~~ dropped (see Decisions). ✅ Industry stats verified against primary sources → `docs/sources.md`
    (SO 2025: 66% / 45.2% · Cambridge 2013: 50% of programming time, $312bn · Stripe 2018: >17 h/week maintenance).
-7. ✅ UI refresh from the `WebDemo/` references (framed hero with glow, floating stats, evidence-card fan, bento
-   results, trace replay, contrast band, pill nav). `WebDemo/` is gitignored — never commit it.
+7. ✅ UI refresh from the `WebDemo/` references: landing (sky hero, floating stats, evidence-card fan, bento results,
+   trace replay, contrast band) and the app pages (sky & lime light theme, pill nav with lime active tab, pill buttons,
+   rounded cards). Checked in light and dark at 1440 px. `WebDemo/` is gitignored — never commit it.
 
 **Remaining (as of Sat 26 Sep ~12:30 IST; feature freeze Sun 14:00, submit by Sun 18:30):**
 8. 🅲 README.md (348 bytes today) — what it is, live links, results from benchmark.md, how to install the Bob pack.
