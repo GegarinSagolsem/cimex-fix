@@ -85,7 +85,7 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
    rounded cards). Checked in light and dark at 1440 px. `WebDemo/` is gitignored — never commit it.
 
 **Remaining (as of Sat 26 Sep ~12:30 IST; feature freeze Sun 14:00, submit by Sun 18:30):**
-8. 🅲 README.md (348 bytes today) — what it is, live links, results from benchmark.md, how to install the Bob pack.
+8. ✅ README.md — problem (cited), 7-step flow with mode permissions, results, verify-it-yourself, architecture, setup, demo-repo transparency note, how Bob was used.
 9. 🅲 Draft submission texts: title, short + long description (≤500 words), Bob Usage Statement (≤500 words), tags.
 10. 🅲 Slides (10, Plan.md §12) + cover image.
 11. 👤 Video (≤3:00, ≥90 s live demo): raw take `bugproof_video_run_bug05_raw.mp4` + re-shoot the new landing / Impact /
@@ -94,6 +94,10 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 13. Optional 🅱: Bob Review task on the bugproof repo (~1 coin) · bug #2 run (~3 coins; 12.9 left, keep ~10).
 
 ## Notes / open items
+- Demo repo history contains the original build spec (`docs/SPEC.md` in root commit `32d13b1`, deleted in `49f8447`):
+  it lists the 8 bug symptoms and example commit messages (incl. `perf: memoize search index`) but no culprit SHAs.
+  Bob's task DB shows no run ever opened it (0 hits across 34 run tasks). Disclosed in README → "About the demo repo".
+  Don't rewrite history now (every SHA, culprit, verify command and piece of evidence would break).
 - **Raw video take of the clean bug #5 run:** `Videos\Screen Recordings\bugproof_video_run_bug05_raw.mp4` (split screen:
   Mission Control + Bob). Best candidate for the 0:25–2:05 live-demo segment (speed up, label "⏩").
 - ✅ Cases list cards now show "proof in Xm Ys" (from `startedAt`→`provenAt`); bug #4's repo corrected to `bugproof-demo-shoplite`.
