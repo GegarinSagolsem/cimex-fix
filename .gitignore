@@ -30,3 +30,6 @@ WebDemo/
 *.log
 coverage/
 graphify-out/cache/
+
+# Raw screen recordings and rendered videos (large; hosted elsewhere)
+rawvideo/

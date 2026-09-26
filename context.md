@@ -40,6 +40,11 @@ re-asked one at a time (`raw-opus-solo\`, all SUCCESS). Totals now: 7 models, 56
   `work/` (render.mjs = headless Chrome → ffmpeg; music.mjs = synthesized 120 BPM D-minor score + SFX). Real bug #5
   data only; numbers from docs/benchmark.md. Untracked (not committed). It's a teaser: the submission video still
   needs ≥90 s of live demo (use the raw bug #5 take) — the brag clip can open it.
+- 📝 Submission video planned (09-26 ~23:55): `docs/video-script.md` = 2:55 detective-style short film, 92 s live run
+  from `rawvideo/bugproof_video_run_bug05_raw.mp4` (8:11, no audio, gitignored now; crop out the stale old-UI Mission
+  Control panel; raw time ≈ case time), 7 chapters with real milestone times, VO script (~330 words), burned-in
+  captions + SRT, D-minor score continuous with the teaser. **Waiting on the user:** voice (Watson TTS expressive vs
+  own voice vs captions only) and go-ahead to build.
 - Judge's other notes kept for slides/video: pitch "we don't trust any model's answer, we prove it", not "we beat the
   models"; no hooks / "PR per fix" claims; setup coins 0.40/0.40 verified in bob.db (real, not placeholders).
 
@@ -101,6 +106,7 @@ still **private**; make them public just before submitting (Sun, after the freez
 | 09-26 | GitHub repo renamed to `cimex-fix`, Vercel domain `cimex-fix.vercel.app` added; demo repo name kept | product rename; demo repo name is in every case record and verify command |
 | 09-26 | Gemini added to the comparison by hand via Antigravity (clean folder, one chat per bug, no tools) | user has no Gemini API key; same prompts and scoring, caveats disclosed |
 | 09-26 | Claude Opus 4.6 (Thinking) added as a 7th contender via the same Antigravity CLI | strongest thinking model on the list and a third vendor; Sonnet weaker, Flash = second Google model, GPT-OSS already in |
+| 09-26 | Video script replaced (docs/video-script.md): detective framing, model-comparison payoff, no hooks/PR claims; old Mission Control panel cropped from the raw take | raw take shows the pre-rename dark UI whose board never updates; the judge said pitch "we prove it", not "we beat models" |
 | 09-26 | Case page evidence tabs read the real MCP/Bob fields (`diff`, `sha`/`subject`, `reasons`, `APPROVE`/`pass`, `failures`, `stepsToReproduce`) | tabs were written against mock data: Diff/Culprit showed empty, Critic badge red |
 
 ## Results so far (all verified against the answer key)
