@@ -137,7 +137,7 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 | 12 | Run bug #5 (search case-sensitive, issue intake) — clean run, recorded | shoplite | 3.06 (16 → 13) | `bugproof_task12_run_bug05_summary.png` ✅ |
 | 13 | Re-bisect bug #1 (hero culprit now Bob-verified, `c3f394a`) | shoplite | 0.09 | `bugproof_task13_rebisect_bug01_summary.png` ✅ |
 | 14 | Run bug #7 (race condition) with the leaner pack — proven, culprit not found live | shoplite | 2.54 (13 → 10) | `bugproof_task14_run_bug07_summary.png` ✅ |
-| 15 | Bug #7 follow-up: symptom-only test + bisect → `985e247` | shoplite | 0.55 | `bugproof_task15_rebisect_bug07_summary.png` (not saved yet) |
+| 15 | Bug #7 follow-up: symptom-only test + bisect → `985e247` | shoplite | 0.55 | `bugproof_task15_rebisect_bug07_summary.png` ✅ |
 Costs from Bob's task DB `~/.bob/db/bob.db` (`tasks.costs`): a Lead's total includes its subagents and every subtask that
 returned via `end_subtask`; subtasks that never returned (#3, #8) must be added. Each model call re-sends the whole thread
 (~0.03/step early, ~0.10 late). In run 12 the Lead's own turns ≈1.2, Historian subagent 0.72, a git-diff subagent 0.33,
