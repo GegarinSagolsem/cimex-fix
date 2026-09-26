@@ -8,7 +8,7 @@ _Last updated: Sat 26 Sep 2026 ~10:00 IST · Claude Opus 5.5 · bugs #3 and #8 p
   Proof of Fix is published. The "Mission Control" website shows every case live.
 - **Deadline:** **Sun 27 Sep 2026, 19:30 IST** (10:00 AM ET, IBM form) · our target **18:30 IST**.
   The IBM Cloud / watsonx account also closes at that moment.
-- **Team:** solo · Claude Pro (5-h window + weekly) + $100 cloud-session credit (backup only) · Bobcoins **16 / 40 left**.
+- **Team:** solo · Claude Pro (5-h window + weekly) + $100 cloud-session credit (backup only) · Bobcoins **13 / 40 left**.
 - **Phase:** 3 (real runs + numbers). Phases 0–2 done. Plan: `Plan.md` §7.
 - **Links:** repo https://github.com/GegarinSagolsem/bugproof (private) · live https://bugproof-web.vercel.app
   (auto-deploys from main) · demo repo https://github.com/GegarinSagolsem/bugproof-demo-shoplite (private)
@@ -107,7 +107,7 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 | 09 | Run bug #8 (coupon twice, screenshot intake) | shoplite | 5.36 (≈1.8 caused by the `c:` bug + stalled hand-offs) | `bugproof_task09_run_bug08_summary.png` ✅ |
 | 10 | Re-bisect bugs #3 + #8 (culprits attached) | shoplite | 0.17 | `bugproof_task10_rebisect_bug03_bug08_summary.png` ✅ |
 | 11 | Re-bisect bug #4 (culprit attached) | shoplite | 0.09 | `bugproof_task11_rebisect_bug04_summary.png` ✅ |
-| 12 | Run bug #5 (search case-sensitive, issue intake) — clean run, recorded | shoplite | 3.06 | `bugproof_task12_run_bug05_summary.png` (not saved yet) |
+| 12 | Run bug #5 (search case-sensitive, issue intake) — clean run, recorded | shoplite | 3.06 (16 → 13) | `bugproof_task12_run_bug05_summary.png` ✅ |
 Costs from Bob's task DB `~/.bob/db/bob.db` (`tasks.costs`): a Lead's total includes its subagents and every subtask that
 returned via `end_subtask`; subtasks that never returned (#3, #8) must be added. Each model call re-sends the whole thread
 (~0.03/step early, ~0.10 late). In run 12 the Lead's own turns ≈1.2, Historian subagent 0.72, a git-diff subagent 0.33,
