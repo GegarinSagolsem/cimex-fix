@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ShieldCheck } from "lucide-react";
 import type { Case } from "@bugproof/shared";
 import { StatusChip } from "@/components/cases/StatusChip";
 import { SourceIcon } from "@/components/cases/SourceIcon";
@@ -29,6 +31,15 @@ export function CaseHeader({ case: c }: { case: Case }) {
           <Badge variant="accent" title={c.culprit.message}>
             culprit {c.culprit.shortSha}
           </Badge>
+        )}
+        {c.status === "proven" && (
+          <Link
+            href={`/cases/${c.id}/proof`}
+            className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-[var(--success)]/40 px-2.5 py-1 text-sm font-medium text-[var(--success)] hover:bg-[var(--success)]/10"
+          >
+            <ShieldCheck className="size-4" aria-hidden="true" />
+            Proof of Fix
+          </Link>
         )}
       </div>
     </div>

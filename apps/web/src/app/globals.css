@@ -56,6 +56,47 @@ body {
   outline-offset: 2px;
 }
 
+.proven-stamp {
+  transform: rotate(-3deg);
+  animation: proven-stamp 450ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+@keyframes proven-stamp {
+  from {
+    opacity: 0;
+    transform: scale(1.6) rotate(-3deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(-3deg);
+  }
+}
+
+/* Staggered reveal: set --i on each item. */
+.reveal-step {
+  animation: reveal-step 400ms ease-out both;
+  animation-delay: calc(var(--i, 0) * 450ms);
+}
+
+@keyframes reveal-step {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The global rule below shortens durations but not delays, so switch these off outright. */
+@media (prefers-reduced-motion: reduce) {
+  .proven-stamp,
+  .reveal-step {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
