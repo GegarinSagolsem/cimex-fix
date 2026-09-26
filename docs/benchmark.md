@@ -1,6 +1,6 @@
 # Benchmark — Cimex Fix on the ShopLite demo repo
 
-_Generated 2026-09-26 16:39 UTC by `scripts/build-benchmark.mjs` from the exported case events
+_Generated 2026-09-26 16:58 UTC by `scripts/build-benchmark.mjs` from the exported case events
 (`apps/web/data/cases/*.json`), IBM Bob's task log (`docs/benchmark/bob-runs.json`) and the answer key
 (`docs/answer-key/bugs.md`). Do not edit by hand: re-run `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs`._
 
@@ -15,6 +15,7 @@ _Generated 2026-09-26 16:39 UTC by `scripts/build-benchmark.mjs` from the export
 - **Runs with zero human interventions:** 6/8
 - **Bobcoins per run:** median 2.93 (range 2.39–5.36) · all 8 runs 26.91 · follow-up re-bisects 0.9 · building the Bob pack 4.83 · every Bob task 32.64
 - **Largest suite in a run's GREEN evidence:** 120 tests, all passing (each proven bug added its repro test)
+- **Fixes that changed an existing test:** 0/8 (`git diff --name-status <fix>~1 <fix> -- tests` in the demo repo: each fix commit only adds its repro test)
 
 ## Per case
 

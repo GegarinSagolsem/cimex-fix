@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import type { Case } from "@bugproof/shared";
 import { StatusChip } from "@/components/cases/StatusChip";
 import { SourceIcon } from "@/components/cases/SourceIcon";
+import { caseTitle } from "@/lib/display";
 
 function formatDuration(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -34,7 +35,7 @@ export function CaseCard({ case: c }: { case: Case }) {
         <p className="truncate font-mono text-xs text-[var(--muted)]">
           {c.issue} · {c.repo}
         </p>
-        <h2 className="mt-1 line-clamp-2 text-lg font-semibold leading-snug">{c.title}</h2>
+        <h2 className="mt-1 line-clamp-2 text-lg font-semibold leading-snug">{caseTitle(c)}</h2>
       </div>
       <div className="mt-auto flex items-end justify-between gap-3 border-t border-[var(--border)] pt-4">
         <div>

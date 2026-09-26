@@ -5,6 +5,7 @@ import { StatusChip } from "@/components/cases/StatusChip";
 import { SourceIcon } from "@/components/cases/SourceIcon";
 import { Badge } from "@/components/ui/badge";
 import { formatDuration } from "@/lib/timeline";
+import { caseTitle } from "@/lib/display";
 
 export function CaseHeader({ case: c }: { case: Case }) {
   return (
@@ -15,7 +16,7 @@ export function CaseHeader({ case: c }: { case: Case }) {
         <span>{c.issue}</span>
         <SourceIcon source={c.source} showLabel />
       </div>
-      <h1 className="text-xl font-semibold">{c.title}</h1>
+      <h1 className="text-xl font-semibold">{caseTitle(c)}</h1>
       <div className="flex flex-wrap items-center gap-2">
         <StatusChip status={c.status} />
         <Badge>{c.severity} severity</Badge>

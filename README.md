@@ -37,11 +37,15 @@ Drop a bug report into IBM Bob and pick the **🕵️ Cimex Lead** mode:
 | 2 | **Investigate in parallel** — what broke, where the code runs, what changed recently | Triage · Locator · Historian subagents | read-only |
 | 3 | **Reproduce (RED)** — the smallest test that fails on an assertion, not a crash | 🧪 Reproducer | only `tests/bugproof/*.test.ts` |
 | 4 | **Pinpoint** — `git bisect` runs that test through history and names the culprit commit | Cimex Fix MCP server | temporary worktree |
-| 5 | **Fix (GREEN)** — the smallest change that turns the test green without breaking any other test | 🔧 Fixer | only `src/**/*.ts` — tests are read-only |
-| 6 | **Challenge** — adversarial review of edge cases and side effects; can send the fix back once | ⚖️ Critic | nothing (read-only) |
+| 5 | **Fix (GREEN)** — the smallest change that turns the test green without breaking any other test | 🔧 Fixer | only `src/**/*.ts` |
+| 6 | **Challenge** — adversarial review of edge cases and side effects; can send the fix back once | ⚖️ Critic | nothing (no edit permission) |
 | 7 | **Proof** — a shareable Proof of Fix; IBM watsonx.ai Granite explains it in plain English | Lead + watsonx.ai | — |
 
 Every step is recorded as evidence on the case, so the Proof of Fix page is built only from what actually happened.
+
+**Why the fix can't pass by weakening the test.** Bob's edit tool can't write outside a mode's files, but the
+Reproducer, Fixer and Critic can also run shell commands. So when the repro test goes RED, the MCP server hashes every
+file under `tests/`, and `publish_proof` refuses to mark a case proven if any of them changed or disappeared since then.
 
 ## Results — 8 real bugs
 
@@ -59,6 +63,7 @@ numbers that aren't there):
 | Runs with zero human prompts | 6/8 |
 | Bobcoins per fix | median 2.93 (range 2.39–5.36) |
 | Largest test suite in a run | 120 tests, all passing |
+| Fixes that changed an existing test | **0/8**: each fix commit only adds its repro test (`git diff` of the fix commit) |
 
 | Bug | Arrived as | Time to proof | Culprit commit (found) |
 |---|---|---|---|
@@ -104,6 +109,9 @@ alone; each model gave one answer (watsonx.ai at temperature 0, Gemini and Opus 
 - #7 (a race condition) was proven, but its first repro test also required the second click to be rejected, which
   the code before the regression didn't do, so bisect found nothing. A follow-up Bob task wrote a symptom-only test
   (one order, one charge) and bisect named the culprit; the Reproducer rules now require symptom-only tests.
+- The test lock in the MCP server was added after these 8 runs. For them, the evidence is git: each committed fix only
+  adds its repro test and changes no existing test.
+- The Critic approved all 8 fixes on its first review, so its send-back path was never exercised in these runs.
 - There is **no manual human baseline**, so we claim no "N× faster than a developer" number.
 
 ## Verify it yourself

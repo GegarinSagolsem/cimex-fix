@@ -9,13 +9,14 @@ import { StatusChip } from "@/components/cases/StatusChip";
 import { DiffViewer } from "@/components/case-detail/DiffViewer";
 import { CopyButton } from "@/components/proof/CopyButton";
 import { mmss } from "@/components/impact/format";
+import { caseTitle } from "@/lib/display";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const detail = await dataSource.getCase(id);
   if (!detail) return { title: "Proof of Fix · Cimex Fix" };
   return {
-    title: `Proof of Fix · ${detail.case.title}`,
+    title: `Proof of Fix · ${caseTitle(detail.case)}`,
     description: detail.case.plainSummary?.text ?? detail.case.summary,
   };
 }
@@ -43,7 +44,7 @@ export default async function ProofPage({ params }: { params: Promise<{ id: stri
             {c.repo} · {c.id}
           </p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">Proof of Fix</h1>
-          <p className="mt-1 text-[var(--text)]">{c.title}</p>
+          <p className="mt-1 text-[var(--text)]">{caseTitle(c)}</p>
         </div>
         {proven ? (
           <div className="flex shrink-0 flex-col items-start gap-1 sm:items-end">
@@ -86,11 +87,11 @@ export default async function ProofPage({ params }: { params: Promise<{ id: stri
         </Card>
       )}
 
-      <section aria-label="The four checks" className="grid gap-4 sm:grid-cols-2">
+      <section aria-label="The checks" className="grid gap-4 sm:grid-cols-2">
         {checks.map((check) => {
           const { Icon, className, label } = CHECK_ICON[check.state];
           return (
-            <Card key={check.id}>
+            <Card key={check.id} className={check.id === "tests" ? "sm:col-span-2" : undefined}>
               <CardContent className="flex gap-3 p-4">
                 <Icon className={`mt-0.5 size-5 shrink-0 ${className}`} aria-label={label} />
                 <div className="flex min-w-0 flex-col gap-1">
@@ -127,7 +128,8 @@ export default async function ProofPage({ params }: { params: Promise<{ id: stri
           <CardHeader>
             <CardTitle>The fix</CardTitle>
             <p className="text-xs text-[var(--muted)]">
-              Written by the Fixer, which may edit <span className="font-mono">src/</span> only — tests are read-only for it.
+              Written by the Fixer, whose edit permission covers <span className="font-mono">src/</span> only; the check above
+              confirms no existing test changed.
             </p>
           </CardHeader>
           <CardContent>

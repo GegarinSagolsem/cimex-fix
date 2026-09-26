@@ -16,12 +16,12 @@ const STEPS = [
   ["Reproduce — RED", "The smallest test that fails on an assertion, not a crash or a typo.", "Reproducer · tests only"],
   ["Pinpoint", "git bisect runs that test through history and names the exact culprit commit.", "MCP · git bisect"],
   ["Fix — GREEN", "The smallest change that turns the test green without breaking any other test.", "Fixer · src/ only"],
-  ["Challenge", "An adversarial review hunts for edge cases and can send the fix back once.", "Critic · read-only"],
+  ["Challenge", "An adversarial review hunts for edge cases and can send the fix back once.", "Critic · no edits"],
   ["Proof", "A shareable Proof of Fix with every piece of evidence, explained in plain English.", "watsonx.ai Granite"],
 ] as const;
 
 const BOB_FEATURES = [
-  [ShieldCheck, "Custom modes", "4 modes, each with file-level edit permissions — the Fixer physically can't touch tests."],
+  [ShieldCheck, "Custom modes", "4 modes with file-level edit permissions; the MCP server refuses a proof if a test changed after RED."],
   [Wand2, "Skills", "repro-test, root-cause and proof-of-fix guide each step."],
   [Plug, "MCP server", "6 tools: open_case, record, evidence, run_tests, bisect, publish_proof."],
   [Network, "Subagents & subtasks", "Parallel investigation, then hand-offs between permission-scoped modes."],
@@ -59,8 +59,8 @@ export default async function Home() {
   const check = (id: string) => checks.find((c) => c.id === id);
 
   const heroStats = [
-    [`${s.culpritCorrect}/${s.bugsAttempted}`, "culprit commits correct"],
-    [mmss(s.liveBisectRun?.minutesToProof ?? s.fastestMinutesToProof), `report to proof, bug #${showcase.bug}`],
+    [`${s.culpritCorrect}/${s.bugsAttempted}`, `culprit commits correct (${s.liveCulpritCorrect} during the run)`],
+    [mmss(s.liveBisectRun?.minutesToProof ?? s.fastestMinutesToProof), `report to proof, bug #${showcase.bug}${s.liveBisectRun?.humanInterventions === 0 ? ", no human prompts" : ""}`],
     [String(s.testsInSuiteAtEnd), "tests green at the end"],
   ];
 
@@ -188,7 +188,8 @@ export default async function Home() {
                   {s.culpritCorrect}/{s.bugsAttempted}
                 </span>
                 <span className="max-w-sm text-base font-medium">
-                  culprit commits match the seeded answer key — {s.culpritCorrectByBisect} pinned by git bisect in Bob
+                  culprit commits match the seeded answer key — {s.culpritCorrectByBisect} pinned by git bisect in Bob;{" "}
+                  {s.liveCulpritCorrect}/{s.bugsAttempted} named correctly during the run itself
                 </span>
               </p>
             </div>

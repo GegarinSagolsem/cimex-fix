@@ -3,6 +3,7 @@ import type { Case } from "@bugproof/shared";
 import { StatusChip } from "@/components/cases/StatusChip";
 import { SourceIcon } from "@/components/cases/SourceIcon";
 import { cn } from "@/lib/utils";
+import { caseTitle } from "@/lib/display";
 
 export function CaseRailItem({ case: c, active }: { case: Case; active?: boolean }) {
   return (
@@ -19,7 +20,7 @@ export function CaseRailItem({ case: c, active }: { case: Case; active?: boolean
         <span className="font-mono text-xs text-[var(--muted)]">{c.issue}</span>
         <SourceIcon source={c.source} showLabel />
       </div>
-      <span className="line-clamp-2 text-sm font-medium text-[var(--text)]">{c.title}</span>
+      <span className="line-clamp-2 text-sm font-medium text-[var(--text)]">{caseTitle(c)}</span>
       <span className="self-start">
         <StatusChip status={c.status} />
       </span>

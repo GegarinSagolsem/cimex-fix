@@ -8,6 +8,7 @@ import type { Case } from "@bugproof/shared";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { StatusChip } from "@/components/cases/StatusChip";
+import { caseTitle } from "@/lib/display";
 
 export function CommandPalette({ cases }: { cases: Case[] }) {
   const [open, setOpen] = React.useState(false);
@@ -57,13 +58,13 @@ export function CommandPalette({ cases }: { cases: Case[] }) {
             {cases.map((c) => (
               <Command.Item
                 key={c.id}
-                value={`${c.issue} ${c.title}`}
+                value={`${c.issue} ${caseTitle(c)}`}
                 onSelect={() => go(c.id)}
                 className="flex cursor-pointer items-center justify-between gap-3 rounded-md px-3 py-2 text-sm data-[selected=true]:bg-[var(--accent)]/10"
               >
                 <span className="flex min-w-0 items-center gap-2">
                   <span className="font-mono text-xs text-[var(--muted)]">{c.issue}</span>
-                  <span className="truncate">{c.title}</span>
+                  <span className="truncate">{caseTitle(c)}</span>
                 </span>
                 <StatusChip status={c.status} />
               </Command.Item>

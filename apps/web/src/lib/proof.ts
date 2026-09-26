@@ -1,5 +1,6 @@
 import type { Case, Event, Evidence } from "@bugproof/shared";
 import benchmark from "@/data/benchmark.json";
+import { isApproved, verdictLabel } from "@/lib/display";
 
 export const REPO_URLS: Record<string, string> = {
   "bugproof-demo-shoplite": "https://github.com/GegarinSagolsem/bugproof-demo-shoplite",
@@ -8,7 +9,7 @@ export const REPO_URLS: Record<string, string> = {
 export type CheckState = "pass" | "fail" | "missing";
 
 export interface ProofCheck {
-  id: "red" | "culprit" | "green" | "critic";
+  id: "red" | "culprit" | "green" | "critic" | "tests";
   label: string;
   state: CheckState;
   detail: string;
@@ -56,7 +57,13 @@ export function buildProof(d: Detail) {
   const critic = last("critic");
   const verdict = text(critic?.data.verdict) ?? (milestone("APPROVED") ? "APPROVED" : undefined);
   const reasons = critic && Array.isArray(critic.data.reasons) ? (critic.data.reasons as unknown[]).filter((r): r is string => typeof r === "string") : [];
-  const approved = verdict !== undefined && /^(approved?|pass(ed)?)$/i.test(verdict);
+  const approved = isApproved(verdict);
+
+  // Runs since the test lock was added record the MCP server's check at publish time; for earlier runs, the
+  // committed fix is checked in git instead (scripts/build-benchmark.mjs).
+  const testsEvent = d.events.filter((e) => e.kind === "milestone" && /^TESTS_(UNCHANGED|CHANGED)/.test(e.title)).at(-1);
+  const testsOk = testsEvent ? testsEvent.title.startsWith("TESTS_UNCHANGED") : undefined;
+  const guard = bench?.testGuard;
 
   const checks: ProofCheck[] = [
     {
@@ -88,7 +95,22 @@ export function buildProof(d: Detail) {
       label: "Reviewed — the Critic approved",
       state: verdict === undefined ? "missing" : approved ? "pass" : "fail",
       detail: verdict === undefined ? "No review recorded" : reasons[0] ?? `Verdict: ${verdict}`,
-      code: verdict,
+      code: verdict && verdictLabel(verdict),
+    },
+    {
+      id: "tests",
+      label: "Tests untouched — the fix changed no existing test",
+      state: testsEvent ? (testsOk ? "pass" : "fail") : guard ? (guard.existingTestsChanged.length ? "fail" : "pass") : "missing",
+      detail: testsEvent
+        ? testsOk
+          ? `Every test file matched the RED run when the proof was published (checked by the MCP server, ${Number(testsEvent.data?.files ?? 0)} files)`
+          : testsEvent.title
+        : guard
+          ? guard.existingTestsChanged.length
+            ? `The fix commit changed existing tests: ${guard.existingTestsChanged.join(", ")}`
+            : "The fix commit only adds the repro test; no existing test was modified or deleted (git diff of the fix commit)"
+          : "No test check recorded",
+      code: !testsEvent && guard ? guard.testsAdded.map((f) => `+ ${f}`).join(", ") || undefined : undefined,
     },
   ];
 

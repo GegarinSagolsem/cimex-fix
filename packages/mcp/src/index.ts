@@ -72,7 +72,7 @@ server.registerTool(
   {
     description:
       "Run vitest in repoPath and return pass/fail counts plus up to 5 failure details. " +
-      "When expect='red' verifies at least one assertion failure. " +
+      "When expect='red' verifies at least one assertion failure and snapshots the test files (see publish_proof). " +
       "When expect='green' verifies all tests pass. Records evidence when a caseId is known.",
     inputSchema: {
       file: z.string().optional().describe("Optional test file or glob"),
@@ -123,7 +123,9 @@ server.registerTool(
   "publish_proof",
   {
     description:
-      "Publish the proof for a case. Calls POST /api/cases/<id>/publish and returns a proofUrl.",
+      "Publish the proof for a case. Calls POST /api/cases/<id>/publish and returns a proofUrl. " +
+      "For status 'proven' it first checks every file under tests/ against the snapshot taken at the last " +
+      "run_tests expect='red' run, and refuses if any test changed or was deleted since then.",
     inputSchema: {
       summary: z.string().min(1).describe("Plain-English summary of the proof"),
       status: z.enum(["proven", "unproven"]).describe("Final case status"),

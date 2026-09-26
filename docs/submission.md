@@ -25,23 +25,26 @@ who file bugs. A bug report — a customer screenshot, a QA PDF, a server log or
 developer picks the Cimex Lead mode. The Lead spawns three subagents in parallel (Triage reads the report, Locator
 maps the code path, Historian checks recent changes), then hands off to permission-scoped modes: the Reproducer may
 only write test files and must produce a test that fails on an assertion; git bisect, run through our MCP server,
-uses that test to name the exact culprit commit; the Fixer may only edit source files — tests are read-only for it,
-so it cannot "fix" the bug by weakening the test; a read-only Critic reviews the fix and can send it back once.
-Mission Control, a web dashboard, shows the agents working live and publishes a shareable Proof of Fix page with the
-failing test, the culprit commit, the diff, the review, a plain-English summary from IBM watsonx.ai Granite, and two
-commands anyone can run to verify the proof themselves.
+uses that test to name the exact culprit commit; the Fixer may only edit source files, and the MCP server refuses a
+proof if any test changed after RED, so the bug can't be "fixed" by weakening the test; a Critic with no edit rights
+reviews the fix and can send it back once.
+Mission Control shows the agents working live and publishes a shareable Proof of Fix page with the
+failing test, the culprit commit, the diff, the review, a plain-English summary from IBM watsonx.ai Granite, and
+commands anyone can run to verify it.
 
-**What is new.** Cimex Fix treats a fix as unproven until there is evidence. The pipeline's guarantees come from Bob
-itself: file-level edit permissions per mode make the separation between "write the test" and "write the fix"
-enforceable, not a prompt suggestion. Every claim on the Proof page is backed by recorded evidence, and failures stay
-visible — when bisect could not name a culprit during a run, the case says so and a follow-up bisect is recorded as
-such.
+**What is new.** Cimex Fix treats every fix, from any model, as unproven until there is evidence. The test/fix
+separation is enforced, not suggested: per-mode edit permissions plus a test snapshot at RED. Every claim on the Proof
+page is backed by recorded evidence, and failures stay visible: when bisect missed a culprit during a run, the case
+says so.
 
 **Impact so far.** On a demo shop with 8 planted bugs, Bob proved all 8, from screenshots, a QA PDF, a
-server log and issue text. All 8 culprit commits match the seeded answer key. The median time from report to a failing
+server log and issue text. All 8 culprit commits match the seeded answer key (4 named during
+the run, 4 by a follow-up bisect). The median time from report to a failing
 test was 4m 02s; the cleanest run went from customer issue to published proof in 7m 44s with no human prompts. The
-median cost was 2.93 Bobcoins per fix. Seven models (five on IBM watsonx.ai, plus Gemini 3.1 Pro and Claude Opus 4.6) each gave one answer per bug
-with all the code handed to them: 38 of 56 answers fixed the bug, Gemini and Opus got 7/8, and only gpt-oss-120b matched Cimex Fix's 8/8. Every number is generated from raw case events in the public repo.
+median cost was 2.93 Bobcoins per fix. Seven models (five on IBM watsonx.ai, plus Gemini 3.1 Pro and
+Claude Opus 4.6) answered each bug once, given all the code: 38 of 56 answers fixed it and only gpt-oss-120b matched
+Cimex Fix's 8/8. Nothing in an answer tells you which one is right; running the checks does. Every number is generated
+by a script from the case events and Bob's task log.
 
 ## IBM Bob Usage Statement
 
@@ -50,8 +53,8 @@ with all the code handed to them: 38 of 56 answers fixed the bug, Gemini and Opu
 
 - **Custom modes with file-level permissions.** Four modes — Lead, Reproducer, Fixer, Critic — each with its own
   role, instructions and edit scope: the Lead may only write `.bugproof/`, the Reproducer only
-  `tests/bugproof/*.test.ts`, the Fixer only `src/**/*.ts`, and the Critic nothing. This is what makes "the fix
-  cannot touch the test" enforceable.
+  `tests/bugproof/*.test.ts`, the Fixer only `src/**/*.ts`, and the Critic nothing. Because modes can still run shell
+  commands, the MCP server also snapshots the tests at RED and refuses a proof if any changed.
 - **Parallel subagents.** The Lead launches Triage, Locator and Historian in the same turn and synthesises their
   reports.
 - **Subtasks and hand-offs.** The Lead delegates to the Reproducer, Fixer and Critic with `start_subtask`; each hands

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T16:39:46.134Z",
+  "generatedAt": "2026-09-26T16:58:48.553Z",
   "summary": {
     "bugsAttempted": 8,
     "proven": 8,
@@ -29,6 +29,8 @@
     "coinsFollowUps": 0.9,
     "coinsSetup": 4.83,
     "testsInSuiteAtEnd": 120,
+    "fixesCheckedForTestChanges": 8,
+    "fixesChangingExistingTests": 0,
     "coinsAllTasks": 32.64
   },
   "cases": [
@@ -62,7 +64,13 @@
       "bisectCalls": 3,
       "bisectTimeouts": 2,
       "fixCommit": "35a91bf",
-      "reproTest": "tests/bugproof/case_20260925_34fd.test.ts"
+      "reproTest": "tests/bugproof/case_20260925_34fd.test.ts",
+      "testGuard": {
+        "testsAdded": [
+          "tests/bugproof/case_20260925_34fd.test.ts"
+        ],
+        "existingTestsChanged": []
+      }
     },
     {
       "bug": 6,
@@ -94,7 +102,13 @@
       "bisectCalls": 1,
       "bisectTimeouts": 0,
       "fixCommit": "e21313f",
-      "reproTest": "tests/bugproof/case_20260925_318b.test.ts"
+      "reproTest": "tests/bugproof/case_20260925_318b.test.ts",
+      "testGuard": {
+        "testsAdded": [
+          "tests/bugproof/case_20260925_318b.test.ts"
+        ],
+        "existingTestsChanged": []
+      }
     },
     {
       "bug": 1,
@@ -126,7 +140,13 @@
       "bisectCalls": 2,
       "bisectTimeouts": 2,
       "fixCommit": "6d6c87a",
-      "reproTest": "tests/bugproof/bug-01-empty-coupon-nan.test.ts"
+      "reproTest": "tests/bugproof/bug-01-empty-coupon-nan.test.ts",
+      "testGuard": {
+        "testsAdded": [
+          "tests/bugproof/bug-01-empty-coupon-nan.test.ts"
+        ],
+        "existingTestsChanged": []
+      }
     },
     {
       "bug": 3,
@@ -158,7 +178,13 @@
       "bisectCalls": 2,
       "bisectTimeouts": 2,
       "fixCommit": "31835d5",
-      "reproTest": "tests/bugproof/bug-03-delivery-estimate.test.ts"
+      "reproTest": "tests/bugproof/bug-03-delivery-estimate.test.ts",
+      "testGuard": {
+        "testsAdded": [
+          "tests/bugproof/bug-03-delivery-estimate.test.ts"
+        ],
+        "existingTestsChanged": []
+      }
     },
     {
       "bug": 8,
@@ -190,7 +216,13 @@
       "bisectCalls": 3,
       "bisectTimeouts": 3,
       "fixCommit": "0944d88",
-      "reproTest": "tests/bugproof/bug-08-duplicate-coupon.test.ts"
+      "reproTest": "tests/bugproof/bug-08-duplicate-coupon.test.ts",
+      "testGuard": {
+        "testsAdded": [
+          "tests/bugproof/bug-08-duplicate-coupon.test.ts"
+        ],
+        "existingTestsChanged": []
+      }
     },
     {
       "bug": 5,
@@ -222,7 +254,13 @@
       "bisectCalls": 1,
       "bisectTimeouts": 0,
       "fixCommit": "6ff3e78",
-      "reproTest": "tests/bugproof/bug-05-search-case.test.ts"
+      "reproTest": "tests/bugproof/bug-05-search-case.test.ts",
+      "testGuard": {
+        "testsAdded": [
+          "tests/bugproof/bug-05-search-case.test.ts"
+        ],
+        "existingTestsChanged": []
+      }
     },
     {
       "bug": 7,
@@ -254,7 +292,13 @@
       "bisectCalls": 1,
       "bisectTimeouts": 0,
       "fixCommit": "0f5546f",
-      "reproTest": "tests/bugproof/bug-07-double-order.test.ts"
+      "reproTest": "tests/bugproof/bug-07-double-order.test.ts",
+      "testGuard": {
+        "testsAdded": [
+          "tests/bugproof/bug-07-double-order.test.ts"
+        ],
+        "existingTestsChanged": []
+      }
     },
     {
       "bug": 2,
@@ -286,7 +330,13 @@
       "bisectCalls": 1,
       "bisectTimeouts": 0,
       "fixCommit": "decb79c",
-      "reproTest": "tests/bugproof/case_20260926_b86b.test.ts"
+      "reproTest": "tests/bugproof/case_20260926_b86b.test.ts",
+      "testGuard": {
+        "testsAdded": [
+          "tests/bugproof/case_20260926_b86b.test.ts"
+        ],
+        "existingTestsChanged": []
+      }
     }
   ],
   "comparison": {

@@ -8,6 +8,7 @@
 //
 // Usage: node scripts/export-cases.mjs && node scripts/build-benchmark.mjs
 
+import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -15,6 +16,24 @@ import { fileURLToPath } from "node:url";
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p) => readFileSync(path.join(root, p), "utf8");
 const bob = JSON.parse(read("docs/benchmark/bob-runs.json"));
+const demoRepo = path.resolve(root, "..", "bugproof-demo-shoplite");
+const previous = existsSync(path.join(root, "apps/web/src/data/benchmark.json"))
+  ? JSON.parse(read("apps/web/src/data/benchmark.json"))
+  : null;
+
+// Which test files each committed fix touched: an added repro test is expected; a modified or deleted existing test
+// would mean the fix passed by changing a test. Kept from the last build when the demo repo isn't checked out here.
+function testGuard(caseId, fixCommit) {
+  const r = fixCommit && existsSync(demoRepo)
+    ? spawnSync("git", ["diff", "--name-status", `${fixCommit}~1`, fixCommit, "--", "tests"], { cwd: demoRepo, encoding: "utf8" })
+    : null;
+  if (!r || r.status !== 0) return previous?.cases.find((c) => c.caseId === caseId)?.testGuard ?? null;
+  const rows = r.stdout.split(/\r?\n/).filter(Boolean).map((l) => l.split("\t"));
+  return {
+    testsAdded: rows.filter(([st]) => st === "A").map(([, f]) => f),
+    existingTestsChanged: rows.filter(([st]) => st !== "A").map(([, ...f]) => f.join(" → ")),
+  };
+}
 
 // "## 3. Delivery date …" followed by "- **Commit:** `eb3a92e` — `perf(delivery): …`"
 const answerKey = {};
@@ -92,6 +111,7 @@ const cases = bob.runs.map((run) => {
     bisectTimeouts: run.bisectTimeouts,
     fixCommit: run.fixCommit,
     reproTest,
+    testGuard: testGuard(run.caseId, run.fixCommit),
   };
 });
 
@@ -121,6 +141,8 @@ const summary = {
   coinsFollowUps: sum(bob.followUps.map((f) => f.coins)),
   coinsSetup: sum(bob.setup.map((s) => s.coins)),
   testsInSuiteAtEnd: Math.max(...cases.map((c) => c.testsAfter ?? 0)),
+  fixesCheckedForTestChanges: cases.filter((c) => c.testGuard).length,
+  fixesChangingExistingTests: cases.filter((c) => c.testGuard?.existingTestsChanged.length).length,
 };
 summary.coinsAllTasks = round2(summary.coinsRuns + summary.coinsFollowUps + summary.coinsSetup);
 
@@ -306,6 +328,7 @@ const md = [
   `- **Runs with zero human interventions:** ${s.runsWithoutHumanIntervention}/${s.bugsAttempted}`,
   `- **Bobcoins per run:** median ${s.coinsPerRunMedian} (range ${s.coinsPerRunMin}–${s.coinsPerRunMax}) · all ${s.bugsAttempted} runs ${s.coinsRuns} · follow-up re-bisects ${s.coinsFollowUps} · building the Bob pack ${s.coinsSetup} · every Bob task ${s.coinsAllTasks}`,
   `- **Largest suite in a run's GREEN evidence:** ${s.testsInSuiteAtEnd} tests, all passing (each proven bug added its repro test)`,
+  `- **Fixes that changed an existing test:** ${s.fixesChangingExistingTests}/${s.fixesCheckedForTestChanges} (\`git diff --name-status <fix>~1 <fix> -- tests\` in the demo repo${s.fixesChangingExistingTests === 0 ? ": each fix commit only adds its repro test" : ""})`,
   "",
   "## Per case",
   "",

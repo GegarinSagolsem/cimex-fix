@@ -4,6 +4,7 @@ import type { Evidence, EvidenceKind } from "@bugproof/shared";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { DiffViewer } from "@/components/case-detail/DiffViewer";
+import { isApproved, verdictLabel } from "@/lib/display";
 
 const TAB_ORDER: EvidenceKind[] = ["triage", "red", "culprit", "diff", "green", "critic"];
 const TAB_LABEL: Record<EvidenceKind, string> = {
@@ -115,7 +116,7 @@ function EvidenceBody({ evidence }: { evidence: Evidence }) {
       const notes = isStringArray(d.notes) ? d.notes : isStringArray(d.reasons) ? d.reasons : [];
       return (
         <div className="flex flex-col gap-3 text-sm">
-          <Badge variant={/^(approved?|pass(ed)?)$/i.test(verdict) ? "success" : "danger"}>{verdict}</Badge>
+          <Badge variant={isApproved(verdict) ? "success" : "danger"}>{verdictLabel(verdict)}</Badge>
           {notes.length > 0 && (
             <ul className="list-disc space-y-1 pl-5">
               {notes.map((note, i) => (

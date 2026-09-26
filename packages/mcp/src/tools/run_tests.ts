@@ -6,6 +6,7 @@ import { z } from "zod";
 import { readActiveCaseId, resolveRepoPath, writeActiveCaseId } from "../session.js";
 import type { Config } from "../config.js";
 import { postIngest } from "../ingest.js";
+import { lockTests } from "../testLock.js";
 
 export const runTestsInput = z.object({
   file: z.string().optional(),
@@ -141,6 +142,9 @@ export async function runTests(cfg: Config, input: RunTestsInput) {
     if (!ok) reason = `${failed} test(s) failed.`;
   }
 
+  // A confirmed RED run locks the test files; publish_proof checks them against this snapshot.
+  const testsLocked = input.expect === "red" && ok && caseId ? lockTests(repoPath, caseId) : undefined;
+
   // Record evidence when caseId is known
   if (caseId) {
     const evidenceKind =
@@ -154,7 +158,7 @@ export async function runTests(cfg: Config, input: RunTestsInput) {
       evidence: {
         caseId,
         kind: evidenceKind,
-        data: { passed, failed, total, durationMs, failures },
+        data: { passed, failed, total, durationMs, failures, ...(testsLocked !== undefined ? { testsLocked } : {}) },
       },
     });
   }
@@ -167,6 +171,7 @@ export async function runTests(cfg: Config, input: RunTestsInput) {
     durationMs,
     failures,
     ...(reason ? { reason } : {}),
+    ...(testsLocked !== undefined ? { testsLocked } : {}),
     ...(caseId ? { caseId } : {}),
   };
 }
