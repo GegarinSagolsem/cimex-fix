@@ -91,7 +91,9 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 11. 👤 Video (≤3:00, ≥90 s live demo): raw take `bugproof_video_run_bug05_raw.mp4` + re-shoot the new landing / Impact /
     Proof pages; voiceover choice (own voice or Watson TTS) still open; label sped-up footage "⏩".
 12. 👤 lablab team name (default `bugproof`), then make both repos public just before submitting.
-13. Optional 🅱: Bob Review task on the bugproof repo (~1 coin) · bug #2 run (~3 coins; 12.9 left, keep ~10).
+13. Sat 18:17 plan (user): ✅ leaner Bob pack (Historian capped, Fixer attaches diff, Critic attaches verdict, no
+    duplicate milestones, deterministic tests for timing bugs) → 🅱 bug #7 (dry run: deterministic RED 3/3, bisect finds
+    `985e247` = answer key in 29.6 s) → 🅱 Bob hooks only if coins remain. Bug #2 skipped.
 
 ## Notes / open items
 - Demo repo history contains the original build spec (`docs/SPEC.md` in root commit `32d13b1`, deleted in `49f8447`):
