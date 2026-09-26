@@ -65,7 +65,7 @@ Approvals caption (II, once): "Bob asks before each tool runs: one click to appr
 
 **D · Live run**
 - I: "Case five. A customer writes in: search is broken. Type 'mug', get nothing. We hand the report to Bob's Lead. That's the last thing we type."
-- II: "Triage reads the report. Locator maps the code. Historian digs through the commits. All at once."
+- II: "Triage reads the report. Locator maps the code. Historian checks every recent commit. All at once."
 - III: "Before anyone fixes anything, the Reproducer recreates the crime: a test that fails exactly the way the customer saw it. Three assertions. Three failures. Red."
 - IV: "Then git bisect walks that test back through history. Six steps. One suspect: a commit that memoized the search index, and quietly dropped the lowercase."
 - V: "The Fixer may edit source, never tests. Three lines later, the repro test passes. So does the full suite: one hundred seventeen of one hundred seventeen."
@@ -77,7 +77,7 @@ Approvals caption (II, once): "Bob asks before each tool runs: one click to appr
 - "Plus the commands to check it yourself. Don't trust us either."
 
 **F · The payoff**
-- "We gave the same eight bugs to seven AI models, one answer each."
+- "We gave the same eight bugs to seven language models, one answer each."
 - "Two frontier models wrote the same wrong fix for the same bug, and their own tests passed. Only the checks caught it."
 - "Cimex Fix: eight bugs, eight proofs."
 
@@ -87,6 +87,22 @@ Approvals caption (II, once): "Bob asks before each tool runs: one click to appr
 Every claim is checked against docs/benchmark.md / docs/sources.md: 66% "almost right" (SO 2025); 3 of 3
 repro tests RED; 6 bisect steps; 3-line fix; 117/117; Critic APPROVE; 7m 44s; 0 human prompts; 3.06 Bobcoins;
 Gemini 3.1 Pro and Claude Opus 4.6 both missed bug #1 with an empty-coupon-throws fix whose own tests passed.
+
+## As built (27 Sep, ~01:00 IST)
+
+- **Voice:** IBM Watson Text to Speech, `en-GB_GeorgeExpressive`, generated from the account's own TTS instance
+  (brag-output/work/vo.mjs, cues in vo-cues.mjs). SSML fixes: "Cimex" = /ˈsaɪmɛks/, "Lead" = /liːd/, "Triage",
+  "git bisect", "memoized". QA: every clip transcribed back with Watson Speech to Text (vo-check.mjs); IPA tags
+  verified to take effect ("dog" with a "cat" phoneme is heard as "cat"). Two lines reworded for clarity (II, F1).
+- **Chapter I:** the take opens on Bob's welcome screen; the prompt lands at raw ~4 s. While the report is read
+  out, the real `intake/bug-05-issue.md` covers the Bob window (badge "INTAKE"), then slides away on "We hand the
+  report to Bob's Lead" as the prompt appears in real time. **Chapter III** freezes on "All 3 assertions fail
+  cleanly" so "Red." lands on it.
+- **Chapter IV:** Bob shows "Bisect found the culprit…" only at raw ~256–261 s before switching to the Fixer's
+  view, so the cut plays into it and **freezes** on that frame (badge "PAUSED"); the last 6 s of VII hold on the
+  final screen (badge "FINAL SCREEN"). Every other speed change carries its factor (e.g. "8.6×").
+- **Mix:** voice 13 dB above the music while speaking (music ducks ~15 dB under the voice), music back up in
+  the gaps; final loudness −14 LUFS. Deliverables: brag-output/cimex-fix-submission.mp4 + cimex-fix-video.srt.
 
 ## Captions
 

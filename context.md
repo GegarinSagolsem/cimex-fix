@@ -43,8 +43,11 @@ re-asked one at a time (`raw-opus-solo\`, all SUCCESS). Totals now: 7 models, 56
 - 📝 Submission video planned (09-26 ~23:55): `docs/video-script.md` = 2:55 detective-style short film, 92 s live run
   from `rawvideo/bugproof_video_run_bug05_raw.mp4` (8:11, no audio, gitignored now; crop out the stale old-UI Mission
   Control panel; raw time ≈ case time), 7 chapters with real milestone times, VO script (~330 words), burned-in
-  captions + SRT, D-minor score continuous with the teaser. **Waiting on the user:** voice (Watson TTS expressive vs
-  own voice vs captions only) and go-ahead to build.
+  captions + SRT, D-minor score continuous with the teaser. User said "act like a professional editor" → built it:
+  Watson TTS en-GB_GeorgeExpressive (account's own TTS instance, STT round-trip QA), footage time-remapped per
+  chapter (chapter IV freezes on the culprit message, labelled PAUSED), case-file sidebar driven by real event times,
+  mix: voice 13 dB over the bed, −14 LUFS. Pipeline in `brag-output/work/film/` (timeline.mjs = single source of truth,
+  extract.mjs, index.html, render.mjs, audio.mjs, srt.mjs). Output: `brag-output/cimex-fix-submission.mp4` + `.srt`.
 - Judge's other notes kept for slides/video: pitch "we don't trust any model's answer, we prove it", not "we beat the
   models"; no hooks / "PR per fix" claims; setup coins 0.40/0.40 verified in bob.db (real, not placeholders).
 
