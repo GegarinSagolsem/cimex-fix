@@ -22,6 +22,9 @@ build/
 # hackathon guides (private, not for the repo)
 docs/hackathon/
 
+# UI reference images (third-party designs, not ours to publish)
+WebDemo/
+
 # misc
 .DS_Store
 *.log
