@@ -9,7 +9,12 @@
     "status": "proven",
     "startedAt": "2026-09-25T20:47:43.851Z",
     "provenAt": "2026-09-25T21:02:22.553Z",
-    "summary": "Bug: commit 882203d introduced `const lastIndex = items.length - 1` and replaced `Math.ceil(items.length / pageSize)` with `Math.ceil(lastIndex / pageSize)` in src/catalog/paginate.ts. For 25 products at 6 per page, this computed totalPages=4 instead of 5, making the Next button disable one page too early and leaving the Wool Pashmina Shawl unreachable. Fix: removed the erroneous `lastIndex` variable and restored `Math.ceil(items.length / pageSize)`. Repro test (3 assertions) went RED→GREEN. Full suite: 107/107 passed. Critic: APPROVED."
+    "summary": "Bug: commit 882203d introduced `const lastIndex = items.length - 1` and replaced `Math.ceil(items.length / pageSize)` with `Math.ceil(lastIndex / pageSize)` in src/catalog/paginate.ts. For 25 products at 6 per page, this computed totalPages=4 instead of 5, making the Next button disable one page too early and leaving the Wool Pashmina Shawl unreachable. Fix: removed the erroneous `lastIndex` variable and restored `Math.ceil(items.length / pageSize)`. Repro test (3 assertions) went RED→GREEN. Full suite: 107/107 passed. Critic: APPROVED.",
+    "plainSummary": {
+      "text": "The catalog pagination stopped showing the final product, hiding one product for customers. The bug was caused by a recent code change that used the wrong math to calculate how many pages there are. The page calculation was reverted to its original correct form, and the Next button now correctly shows all products, including the previously hidden Wool Pashmina Shawl.",
+      "model": "ibm/granite-4-h-small",
+      "generatedAt": "2026-09-26T06:15:40.996Z"
+    }
   },
   "events": [
     {

@@ -1,6 +1,6 @@
 # context.md — living project state (read this FIRST every session)
 
-_Last updated: Sat 26 Sep 2026 ~10:00 IST · Claude Opus 5.5 · bugs #3 and #8 proven; pipeline fixed; resume from "Next steps"_
+_Last updated: Sat 26 Sep 2026 ~11:45 IST · Claude Opus 5.5 · 6 bugs proven, culprits 6/6; Impact, Proof and Landing pages live; resume from "Next steps"_
 
 ## Snapshot
 - **Project:** BugProof — "No fix without proof." IBM Bob reproduces a bug with a failing test, finds
@@ -48,6 +48,7 @@ _Last updated: Sat 26 Sep 2026 ~10:00 IST · Claude Opus 5.5 · bugs #3 and #8 p
 | 09-26 | **Root cause of bisect timeouts + "0 tests":** Bob passes `repoPath: "c:\\dev\\..."` (lowercase drive). Vitest then loads twice and every test errors (`Cannot read properties of undefined (reading 'config')`): bisect skipped all ~41 commits (BISECT_LOG in the stale worktrees), overran Bob's ~60 s MCP limit and orphaned 13 worktrees; `run_tests` returned 0 tests in bug #8. Fix: `resolveRepoPath` uppercases the drive letter. | Reproduced (`c:` vs `C:` is the only difference) and verified with Bob's exact path: #3 → `b4369d9`, #8 → `185f248` (both = answer key), ~25 s each |
 | 09-26 | bisect hardening: pre-flight (test must fail on an assertion at `bad`), abort after 8 skips, 45 s budget, async (server stays responsive), clears stale Temp worktrees. `bad` is accepted again but validated; `good` is still always the root commit. | fail fast with a reason instead of a silent timeout; lets us re-bisect bugs whose fix is already committed (`bad=<fix>^`) |
 | 09-26 | Bob pack: Reproducer/Fixer/Critic get `subtask` + `todo` groups and must `end_subtask`; Lead must delegate with `start_subtask` and record "culprit commit not found" if bisect fails | fixes the stalled hand-offs and the wrong bug #8 culprit guess |
+| 09-26 | Granite summaries now get the Lead's technical summary + the full diff; new `POST /api/cases/[id]/summary` (bearer) regenerates only `plainSummary` (keeps `status`/`provenAt`). Regenerated #4, #5, #6 and checked each by hand | #5's summary stated the wrong root cause (diff was cut at 600 chars of JSON), #6's contradicted itself, #4 had none. `/publish` must not be re-run: it resets `provenAt` |
 | 09-26 | Case page evidence tabs read the real MCP/Bob fields (`diff`, `sha`/`subject`, `reasons`, `APPROVE`/`pass`, `failures`, `stepsToReproduce`) | tabs were written against mock data: Diff/Culprit showed empty, Critic badge red |
 
 ## Results so far (all verified against the answer key)
@@ -71,9 +72,9 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
    `docs/answer-key/bugs.md`, run `npx vitest run`, commit the fix in the demo repo, log coins here.
 4. ✅ Cases exported to `apps/web/data/cases/`; `docs/benchmark.md` generated (6/6 proven, culprits 6/6, median RED 4m 49s,
    median proof 17m 52s, bug #5 clean run 7m 44s, 2.95 coins/fix median).
-5. ✅ Impact page live (`/impact`, checked at 1440 px and a true 390 px). 🅲 Still to do: landing page `/` (placeholder
-   today) and a Proof of Fix page. Optional 🅱 (~0.1 coin): re-bisect bug #1 in Bob (`tests/bugproof/bug-01-empty-coupon-nan.test.ts`,
-   `bad=6d6c87a^`, caseId `case_20260925_bf62`) so the hero's culprit is Bob-verified — dry run finds `c3f394a` ✅.
+5. ✅ Impact page (`/impact`), Proof of Fix page (`/cases/[id]/proof`: PROVEN stamp, 4 checks, fix diff, tested
+   verify-it-yourself commands, copy link) and real landing page (`/`: results, bug #5 replay, how it works, Bob features).
+   All checked at 1440 px and a true 390 px. Bug #1 re-bisected in Bob (task 13) → 5/6 culprits by Bob's bisect.
 6. 👤 Manual baseline: fix one bug by hand with a timer.
 7. 🅱 Bob Review task on the bugproof repo (more Bob evidence).
 8. Video + slides + texts + make repos public (Plan.md §12). Feature freeze Sun 14:00.
@@ -113,6 +114,7 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 | 10 | Re-bisect bugs #3 + #8 (culprits attached) | shoplite | 0.17 | `bugproof_task10_rebisect_bug03_bug08_summary.png` ✅ |
 | 11 | Re-bisect bug #4 (culprit attached) | shoplite | 0.09 | `bugproof_task11_rebisect_bug04_summary.png` ✅ |
 | 12 | Run bug #5 (search case-sensitive, issue intake) — clean run, recorded | shoplite | 3.06 (16 → 13) | `bugproof_task12_run_bug05_summary.png` ✅ |
+| 13 | Re-bisect bug #1 (hero culprit now Bob-verified, `c3f394a`) | shoplite | 0.09 | `bugproof_task13_rebisect_bug01_summary.png` ✅ |
 Costs from Bob's task DB `~/.bob/db/bob.db` (`tasks.costs`): a Lead's total includes its subagents and every subtask that
 returned via `end_subtask`; subtasks that never returned (#3, #8) must be added. Each model call re-sends the whole thread
 (~0.03/step early, ~0.10 late). In run 12 the Lead's own turns ≈1.2, Historian subagent 0.72, a git-diff subagent 0.33,

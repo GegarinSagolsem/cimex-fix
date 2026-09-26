@@ -11,9 +11,9 @@
     "provenAt": "2026-09-26T05:22:05.412Z",
     "summary": "Regression: product search became case-sensitive after commit 649b24a (\"perf(catalog): memoize search index\") silently removed .toLowerCase() normalization from both the search needle and haystack while refactoring to add index memoization. Fixed by restoring .toLowerCase() on both the haystack (in indexFor) and the needle (in searchProducts), preserving the memoization. Full suite 117/117 green, repro test confirmed RED then GREEN.",
     "plainSummary": {
-      "text": "When customers searched for products using lowercase words in the search box, no results were returned, so the search appeared broken. It broke because a recent code change started converting the indexed product names and categories to lowercase, but did not also convert the user's search query to lowercase before matching it, causing case mismatches. To fix it, the search code was updated to lowercase the incoming search text just before searching, so lowercase queries now correctly match the indexed lowercase product names and categories.",
+      "text": "The product search was behaving like a strict match, only returning items that exactly matched the case used in the search query, so searching for \"mug\" would miss products containing \"Mug\" or \"MUG\". This regression was caused by a recent performance optimization that removed the code which previously converted both the search term and the catalog entries to lower case before comparison, restoring sensitivity to upper and lower case differences. The fix restores the toLowerCase() normalization on both the search query and the catalog entries being searched, ensuring the search remains case-insensitive and returns expected results regardless of the casing used in the search term.",
       "model": "ibm/granite-4-h-small",
-      "generatedAt": "2026-09-26T05:22:07.519Z"
+      "generatedAt": "2026-09-26T06:15:36.282Z"
     }
   },
   "events": [

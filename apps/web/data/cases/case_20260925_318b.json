@@ -11,9 +11,9 @@
     "provenAt": "2026-09-25T21:27:34.440Z",
     "summary": "Negative quantities (e.g. quantity=\"-3\") were silently accepted by parseQuantity in src/cart/cart.ts because the refactor commit c3fb68f replaced toQuantity() (which guarded quantity < 1) with parseQuantity() (which only checked isFinite). This allowed a PATCH request to set cart item quantity to -3, producing a cart total of -4549.46 INR, which the payment gateway accepted as a fraudulent negative charge. Fix: added `|| value < 0` to the parseQuantity guard condition. All 110 tests pass including 3 new repro tests covering numeric -3, string '-3', and direct parseQuantity calls.",
     "plainSummary": {
-      "text": "The cart allowed setting a product quantity to a negative number, which produced a negative cart total that could be used to fraudulently charge a customer. This happened because the code only checked that the quantity was an integer and greater than zero, but it did not block negative numbers. The code was updated to also reject any quantity less than zero, ensuring the quantity must be a non-negative integer, which prevents the cart total from going negative and stops the fraudulent charge vulnerability.",
+      "text": "The bug allowed shoppers to enter negative quantities for cart items, such as \"-3\", which the system interpreted as a valid quantity. This happened because a recent code change replaced the previous check that rejected negative numbers with a new one that only verified whether the quantity was a finite number, failing to detect negative values. The fix adds an additional check to reject any quantity less than zero, ensuring only valid positive quantities are accepted.",
       "model": "ibm/granite-4-h-small",
-      "generatedAt": "2026-09-25T21:27:36.567Z"
+      "generatedAt": "2026-09-26T06:15:38.772Z"
     }
   },
   "events": [

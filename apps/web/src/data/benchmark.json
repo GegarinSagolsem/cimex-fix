@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T06:04:00.845Z",
+  "generatedAt": "2026-09-26T06:16:27.849Z",
   "summary": {
     "bugsAttempted": 6,
     "proven": 6,
@@ -22,10 +22,10 @@
     "coinsPerRunMin": 2.39,
     "coinsPerRunMax": 5.36,
     "coinsRuns": 21.34,
-    "coinsFollowUps": 0.26,
+    "coinsFollowUps": 0.35,
     "coinsSetup": 4.83,
     "testsInSuiteAtEnd": 117,
-    "coinsAllTasks": 26.43
+    "coinsAllTasks": 26.52
   },
   "cases": [
     {
@@ -115,7 +115,7 @@
       "culpritCorrect": true,
       "liveCulprit": "wrong",
       "liveCulpritNote": "Lead named the initial commit after bisect timed out",
-      "finalCulpritMethod": "bisect (run outside Bob after the run)",
+      "finalCulpritMethod": "bisect (follow-up Bob task)",
       "finalCulpritNote": null,
       "coins": 4.91,
       "humanInterventions": 0,

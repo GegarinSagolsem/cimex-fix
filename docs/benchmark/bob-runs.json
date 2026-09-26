@@ -1,5 +1,5 @@
 {
-  "source": "IBM Bob task log ~/.bob/db/bob.db (tables tasks, messages), extracted 2026-09-26 ~11:30 IST. coins = the root task's recorded cost (it already includes its subagents and every subtask that handed back) + subtasks that never handed back. humanInterventions = messages typed by the human after the first prompt (automatic Lead→subtask hand-offs excluded). bisect* counts come from the tool calls and results in the task's messages. liveCulprit / finalCulpritMethod are classified from the case events and evidence shapes (the bisect tool always writes sha + steps).",
+  "source": "IBM Bob task log ~/.bob/db/bob.db (tables tasks, messages), extracted 2026-09-26 ~11:30 IST (follow-up ad18a84d added ~11:40 IST). coins = the root task's recorded cost (it already includes its subagents and every subtask that handed back) + subtasks that never handed back. humanInterventions = messages typed by the human after the first prompt (automatic Lead→subtask hand-offs excluded). bisect* counts come from the tool calls and results in the task's messages. liveCulprit / finalCulpritMethod are classified from the case events and evidence shapes (the bisect tool always writes sha + steps).",
   "runs": [
     {
       "bug": 4, "caseId": "case_20260925_34fd", "intake": "issue text", "bobTask": "e7b06407", "fixCommit": "35a91bf",
@@ -21,7 +21,7 @@
       "coins": 4.91, "humanInterventions": 0, "subtasks": 3, "spawnSubagent": 5, "startSubtask": 3,
       "bisectCalls": 2, "bisectTimeouts": 2, "bisectFound": 0,
       "liveCulprit": "wrong", "liveCulpritNote": "Lead named the initial commit after bisect timed out",
-      "finalCulpritMethod": "bisect (run outside Bob after the run)"
+      "finalCulpritMethod": "bisect (follow-up Bob task)", "followUpTask": "ad18a84d"
     },
     {
       "bug": 3, "caseId": "case_20260926_2c6c", "intake": "PDF (QA report)", "bobTask": "3f521cac", "fixCommit": "31835d5",
@@ -47,7 +47,8 @@
   ],
   "followUps": [
     { "bobTask": "9537be04", "what": "re-bisect bugs #3 and #8 (fix already committed, bad = fix commit's parent)", "coins": 0.17, "bisectCalls": 2, "bisectFound": 2 },
-    { "bobTask": "6e20b35a", "what": "re-bisect bug #4", "coins": 0.09, "bisectCalls": 1, "bisectFound": 1 }
+    { "bobTask": "6e20b35a", "what": "re-bisect bug #4", "coins": 0.09, "bisectCalls": 1, "bisectFound": 1 },
+    { "bobTask": "ad18a84d", "what": "re-bisect bug #1", "coins": 0.09, "bisectCalls": 1, "bisectFound": 1 }
   ],
   "setup": [
     { "bobTask": "794925d4", "what": "/init → AGENTS.md", "coins": 1.13 },

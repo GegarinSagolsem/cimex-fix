@@ -137,6 +137,20 @@
       "agent": "lead",
       "kind": "milestone",
       "title": "PUBLISHED — proof at https://bugproof-web.vercel.app/cases/case_20260925_bf62"
+    },
+    {
+      "caseId": "case_20260925_bf62",
+      "ts": "2026-09-26T06:04:19.816Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "BISECT_DONE",
+      "data": {
+        "sha": "c3f394aefdb584461ede8451090a7248ac6e6f28",
+        "subject": "refactor(coupons): extract coupon rule parser",
+        "author": "GegarinSagolsem",
+        "date": "2026-09-25 18:54:35 +0000",
+        "steps": 5
+      }
     }
   ],
   "evidence": [

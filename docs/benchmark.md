@@ -1,6 +1,6 @@
 # Benchmark — BugProof on the ShopLite demo repo
 
-_Generated 2026-09-26 06:04 UTC by `scripts/build-benchmark.mjs` from the exported case events
+_Generated 2026-09-26 06:16 UTC by `scripts/build-benchmark.mjs` from the exported case events
 (`apps/web/data/cases/*.json`), IBM Bob's task log (`docs/benchmark/bob-runs.json`) and the answer key
 (`docs/answer-key/bugs.md`). Do not edit by hand: re-run `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs`._
 
@@ -13,7 +13,7 @@ _Generated 2026-09-26 06:04 UTC by `scripts/build-benchmark.mjs` from the export
 - **Median time to proof:** 17m 52s (fastest 7m 40s; includes time runs waited on a human)
 - **Run after the pipeline fixes (bug #5):** culprit by bisect at 4m 01s, proven at 7m 44s, 0 human interventions, 3.06 Bobcoins
 - **Runs with zero human interventions:** 4/6
-- **Bobcoins per run:** median 2.95 (range 2.39–5.36) · all 6 runs 21.34 · follow-up re-bisects 0.26 · building the Bob pack 4.83 · every Bob task 26.43
+- **Bobcoins per run:** median 2.95 (range 2.39–5.36) · all 6 runs 21.34 · follow-up re-bisects 0.35 · building the Bob pack 4.83 · every Bob task 26.52
 - **Test suite at the end:** 117 tests, all passing (each proven bug added its repro test)
 
 ## Per case
@@ -22,7 +22,7 @@ _Generated 2026-09-26 06:04 UTC by `scripts/build-benchmark.mjs` from the export
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | #4 Pagination drops the last product | issue text | `case_20260925_34fd` | 6m 09s | 14m 39s | 107 | 0 | 2.84 | `882203d` refactor(catalog): compute pagination bounds explicitly | ✅ | bisect (follow-up Bob task) |
 | #6 Negative quantity accepted → negative total | server log | `case_20260925_318b` | 2m 58s | 7m 40s | 110 | 0 | 2.78 | `c3fb68f` refactor(cart): accept numeric strings for quantities | ✅ | Historian (git history) |
-| #1 Empty coupon field → total shows ₹NaN | screenshot | `case_20260925_bf62` | 6m 19s | 21m 06s | 112 | 0 | 4.91 | `c3f394a` refactor(coupons): extract coupon rule parser | ✅ | bisect (run outside Bob after the run) |
+| #1 Empty coupon field → total shows ₹NaN | screenshot | `case_20260925_bf62` | 6m 19s | 21m 06s | 112 | 0 | 4.91 | `c3f394a` refactor(coupons): extract coupon rule parser | ✅ | bisect (follow-up Bob task) |
 | #3 Delivery date one day early after 8 PM IST | PDF (QA report) | `case_20260926_2c6c` | 5m 06s | 43m 49s | 113 | 3 | 2.39 | `b4369d9` perf(delivery): compute IST date without Intl.DateTimeFormat | ✅ | bisect (follow-up Bob task) |
 | #8 Coupon applies twice → discount over 100% | screenshot | `case_20260926_db4f` | 4m 32s | 34m 01s | 114 | 4 | 5.36 | `185f248` feat(cart): allow stacking multiple coupon codes | ✅ | bisect (follow-up Bob task) |
 | #5 Search became case-sensitive | issue text | `case_20260926_7e5e` | 3m 12s | 7m 44s | 117 | 0 | 3.06 | `649b24a` perf(catalog): memoize search index | ✅ | bisect (live, during the run) |
@@ -44,7 +44,7 @@ _Generated 2026-09-26 06:04 UTC by `scripts/build-benchmark.mjs` from the export
 | --- | --- | --- | --- | --- | --- |
 | #4 | refactor(catalog): compute pagination bounds explicitly | `882203d` | correct — named by the Locator from git history after bisect failed | bisect (follow-up Bob task) |  |
 | #6 | refactor(cart): accept numeric strings for quantities | `c3fb68f` | correct — named by the Historian from git history; bisect returned no culprit | Historian (git history) | not bisectable with its repro test: the test imports parseQuantity, which the culprit commit itself introduced, so every earlier commit is untestable |
-| #1 | refactor(coupons): extract coupon rule parser | `c3f394a` | wrong — Lead named the initial commit after bisect timed out | bisect (run outside Bob after the run) |  |
+| #1 | refactor(coupons): extract coupon rule parser | `c3f394a` | wrong — Lead named the initial commit after bisect timed out | bisect (follow-up Bob task) |  |
 | #3 | perf(delivery): compute IST date without Intl.DateTimeFormat | `b4369d9` | none — bisect timed out; Lead recorded the root-cause line, not a commit | bisect (follow-up Bob task) |  |
 | #8 | feat(cart): allow stacking multiple coupon codes | `185f248` | wrong — Lead named the initial commit from git log after bisect timed out | bisect (follow-up Bob task) |  |
 | #5 | perf(catalog): memoize search index | `649b24a` | correct — found by bisect during the run | bisect (live, during the run) |  |
@@ -61,11 +61,12 @@ _Generated 2026-09-26 06:04 UTC by `scripts/build-benchmark.mjs` from the export
 | `630c6c30` | Run bug #5 | 3.06 |
 | `9537be04` | re-bisect bugs #3 and #8 (fix already committed, bad = fix commit's parent) | 0.17 |
 | `6e20b35a` | re-bisect bug #4 | 0.09 |
+| `ad18a84d` | re-bisect bug #1 | 0.09 |
 | `794925d4` | Setup: /init → AGENTS.md | 1.13 |
 | `3c8fbd68` | Setup: custom modes + rules | 0.40 |
 | `bd8ce5cf` | Setup: skills | 0.40 |
 | `f49dc8b4` | Setup: MCP server | 2.90 |
-|  | **Total** | **26.43** |
+|  | **Total** | **26.52** |
 
 ## Definitions and caveats
 
