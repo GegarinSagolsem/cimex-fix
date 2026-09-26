@@ -78,8 +78,17 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
    All checked at 1440 px and a true 390 px. Bug #1 re-bisected in Bob (task 13) → 5/6 culprits by Bob's bisect.
 6. ~~Manual baseline~~ dropped (see Decisions). ✅ Industry stats verified against primary sources → `docs/sources.md`
    (SO 2025: 66% / 45.2% · Cambridge 2013: 50% of programming time, $312bn · Stripe 2018: >17 h/week maintenance).
-7. 🅱 Bob Review task on the bugproof repo (more Bob evidence).
-8. Video + slides + texts + make repos public (Plan.md §12). Feature freeze Sun 14:00.
+7. ✅ UI refresh from the `WebDemo/` references (framed hero with glow, floating stats, evidence-card fan, bento
+   results, trace replay, contrast band, pill nav). `WebDemo/` is gitignored — never commit it.
+
+**Remaining (as of Sat 26 Sep ~12:30 IST; feature freeze Sun 14:00, submit by Sun 18:30):**
+8. 🅲 README.md (348 bytes today) — what it is, live links, results from benchmark.md, how to install the Bob pack.
+9. 🅲 Draft submission texts: title, short + long description (≤500 words), Bob Usage Statement (≤500 words), tags.
+10. 🅲 Slides (10, Plan.md §12) + cover image.
+11. 👤 Video (≤3:00, ≥90 s live demo): raw take `bugproof_video_run_bug05_raw.mp4` + re-shoot the new landing / Impact /
+    Proof pages; voiceover choice (own voice or Watson TTS) still open; label sped-up footage "⏩".
+12. 👤 lablab team name (default `bugproof`), then make both repos public just before submitting.
+13. Optional 🅱: Bob Review task on the bugproof repo (~1 coin) · bug #2 run (~3 coins; 12.9 left, keep ~10).
 
 ## Notes / open items
 - **Raw video take of the clean bug #5 run:** `Videos\Screen Recordings\bugproof_video_run_bug05_raw.mp4` (split screen:
