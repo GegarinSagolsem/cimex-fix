@@ -207,7 +207,7 @@
       "data": {
         "sha": "32d13b110b00543966355054f7c38031a6482fd0",
         "subject": "chore: initial spec for demo target repo",
-        "author": "SagolsemHironika <sagolsemhironika@gmail.com>",
+        "author": "SagolsemHironika",
         "date": "2025-05-25",
         "note": "applyCoupon introduced without duplicate-code guard; bug present from initial commit. MCP bisect timed out 3×."
       }
