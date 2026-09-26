@@ -1244,7 +1244,20 @@
           "ok": true
         }
       },
-      "bob": null
+      "bob": {
+        "fixCommit": "decb79c",
+        "reproTest": "tests/bugproof/case_20260926_b86b.test.ts",
+        "red": true,
+        "green": true,
+        "probe": true,
+        "suite": {
+          "passed": 120,
+          "failed": 0,
+          "total": 120,
+          "loadErrors": 0,
+          "ok": true
+        }
+      }
     },
     {
       "bug": 3,

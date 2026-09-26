@@ -37,11 +37,11 @@ enforceable, not a prompt suggestion. Every claim on the Proof page is backed by
 visible — when bisect could not name a culprit during a run, the case says so and a follow-up bisect is recorded as
 such.
 
-**Impact so far.** On a demo shop with planted bugs, Bob proved all 7 bugs it worked, from screenshots, a QA PDF, a
-server log and issue text. All 7 culprit commits match the seeded answer key. The median time from report to a failing
-test was 4m 32s; the cleanest run went from customer issue to published proof in 7m 44s with no human prompts. The
-median cost was 2.84 Bobcoins per fix. Five IBM watsonx.ai models each gave one answer per bug with all the code
-handed to them: 23 of 35 answers fixed the bug, and the best, gpt-oss-120b, matched Cimex Fix's 7/7. Every number is generated from raw case events in the public repo.
+**Impact so far.** On a demo shop with 8 planted bugs, Bob proved all 8, from screenshots, a QA PDF, a
+server log and issue text. All 8 culprit commits match the seeded answer key. The median time from report to a failing
+test was 4m 02s; the cleanest run went from customer issue to published proof in 7m 44s with no human prompts. The
+median cost was 2.93 Bobcoins per fix. Five IBM watsonx.ai models each gave one answer per bug with all the code
+handed to them: 24 of 40 answers fixed the bug, and the best, gpt-oss-120b, matched Cimex Fix's 8/8. Every number is generated from raw case events in the public repo.
 
 ## IBM Bob Usage Statement
 
@@ -70,7 +70,7 @@ rules, skills and MCP server, and ran every benchmark case. When runs stalled, B
 (a worker mode could not hand back; a lowercase drive letter broke bisect), and we fixed the pack and re-ran bisect
 in Bob. Task-session screenshots are in `bob_sessions/`.
 
-**Bobcoins.** 29.61 Bobcoins across every Bob task — 7 bug runs, follow-up bisects and building the pack — tracked
+**Bobcoins.** 32.64 Bobcoins across every Bob task — 8 bug runs, follow-up bisects and building the pack — tracked
 per task in `docs/benchmark.md`.
 
 **IBM watsonx.ai.** Granite (`ibm/granite-4-h-small`) writes each Proof of Fix's plain-English summary for

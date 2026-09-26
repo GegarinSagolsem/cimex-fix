@@ -1,20 +1,18 @@
 {
-  "generatedAt": "2026-09-26T15:25:01.687Z",
+  "generatedAt": "2026-09-26T15:36:49.421Z",
   "summary": {
-    "bugsAttempted": 7,
-    "proven": 7,
+    "bugsAttempted": 8,
+    "proven": 8,
     "unproven": 0,
-    "culpritCorrect": 7,
-    "culpritCorrectByBisect": 6,
-    "liveCulpritCorrect": 3,
-    "culpritByLiveBisect": 1,
+    "culpritCorrect": 8,
+    "culpritCorrectByBisect": 7,
+    "liveCulpritCorrect": 4,
+    "culpritByLiveBisect": 2,
     "culpritByFollowUpBisect": 5,
     "bugsPlanted": 8,
-    "bugsNotAttempted": [
-      2
-    ],
-    "medianMinutesToRed": 4.53,
-    "medianMinutesToProof": 14.65,
+    "bugsNotAttempted": [],
+    "medianMinutesToRed": 4.04,
+    "medianMinutesToProof": 13.75,
     "fastestMinutesToProof": 7.67,
     "liveBisectRun": {
       "bug": 5,
@@ -23,15 +21,15 @@
       "humanInterventions": 0,
       "coins": 3.06
     },
-    "runsWithoutHumanIntervention": 5,
-    "coinsPerRunMedian": 2.84,
+    "runsWithoutHumanIntervention": 6,
+    "coinsPerRunMedian": 2.93,
     "coinsPerRunMin": 2.39,
     "coinsPerRunMax": 5.36,
-    "coinsRuns": 23.88,
+    "coinsRuns": 26.91,
     "coinsFollowUps": 0.9,
     "coinsSetup": 4.83,
-    "testsInSuiteAtEnd": 118,
-    "coinsAllTasks": 29.61
+    "testsInSuiteAtEnd": 120,
+    "coinsAllTasks": 32.64
   },
   "cases": [
     {
@@ -257,19 +255,52 @@
       "bisectTimeouts": 0,
       "fixCommit": "0f5546f",
       "reproTest": "tests/bugproof/bug-07-double-order.test.ts"
+    },
+    {
+      "bug": 2,
+      "title": "Totals off by ₹0.01",
+      "caseId": "case_20260926_b86b",
+      "intake": "issue text",
+      "status": "proven",
+      "startedAt": "2026-09-26T13:54:35.552Z",
+      "redAt": "2026-09-26T13:58:07.906Z",
+      "liveCulpritAt": "2026-09-26T14:03:19.986Z",
+      "provenAt": "2026-09-26T14:07:26.256Z",
+      "minutesToRed": 3.5392333333333332,
+      "minutesToLiveCulprit": 8.740566666666666,
+      "minutesToProof": 12.845066666666666,
+      "testsAfter": 120,
+      "testsAfterSource": "GREEN evidence",
+      "culprit": {
+        "sha": "98e2fce",
+        "subject": "feat(cart): sum multiple line items in cart totals"
+      },
+      "answerKeySubject": "feat(cart): sum multiple line items in cart totals",
+      "culpritCorrect": true,
+      "liveCulprit": "correct",
+      "liveCulpritNote": "found by bisect during the run",
+      "finalCulpritMethod": "bisect (live, during the run)",
+      "finalCulpritNote": null,
+      "coins": 3.03,
+      "humanInterventions": 0,
+      "bisectCalls": 1,
+      "bisectTimeouts": 0,
+      "fixCommit": "decb79c",
+      "reproTest": "tests/bugproof/case_20260926_b86b.test.ts"
     }
   ],
   "comparison": {
     "oneShotTotals": {
-      "answers": 35,
-      "complete": 35,
-      "fixed": 23,
-      "fixWithProof": 15,
-      "culpritCorrect": 20,
-      "brokeTests": 4
+      "answers": 40,
+      "complete": 40,
+      "fixed": 24,
+      "fixWithProof": 16,
+      "culpritCorrect": 21,
+      "brokeTests": 5
     },
     "bugs": [
       1,
+      2,
       3,
       4,
       5,
@@ -286,79 +317,79 @@
         "id": "cimex",
         "name": "Cimex Fix (IBM Bob)",
         "kind": "pipeline",
-        "fixed": 7,
-        "suiteGreen": 7,
-        "proofTest": 7,
-        "fixWithProof": 7,
-        "culpritCorrect": 7,
-        "culpritDuringRun": 3,
-        "cost": "2.84 Bobcoins median per bug",
-        "time": "14m 39s median to proof"
+        "fixed": 8,
+        "suiteGreen": 8,
+        "proofTest": 8,
+        "fixWithProof": 8,
+        "culpritCorrect": 8,
+        "culpritDuringRun": 4,
+        "cost": "2.93 Bobcoins median per bug",
+        "time": "13m 45s median to proof"
       },
       {
         "id": "ibm/granite-4-h-small",
         "name": "Granite 4 H Small",
         "kind": "one-shot",
-        "answered": 7,
+        "answered": 8,
         "fixed": 2,
-        "suiteGreen": 5,
+        "suiteGreen": 6,
         "proofTest": 1,
         "fixWithProof": 1,
         "culpritCorrect": 0,
-        "medianSeconds": 8.2,
-        "medianTokens": 7004
+        "medianSeconds": 8.3,
+        "medianTokens": 7296
       },
       {
         "id": "meta-llama/llama-3-3-70b-instruct",
         "name": "Llama 3.3 70B",
         "kind": "one-shot",
-        "answered": 7,
+        "answered": 8,
         "fixed": 4,
-        "suiteGreen": 7,
+        "suiteGreen": 8,
         "proofTest": 2,
         "fixWithProof": 2,
-        "culpritCorrect": 5,
-        "medianSeconds": 12.7,
-        "medianTokens": 6993
+        "culpritCorrect": 6,
+        "medianSeconds": 13.05,
+        "medianTokens": 7204
       },
       {
         "id": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
         "name": "Llama 4 Maverick",
         "kind": "one-shot",
-        "answered": 7,
+        "answered": 8,
         "fixed": 5,
         "suiteGreen": 6,
         "proofTest": 3,
         "fixWithProof": 3,
         "culpritCorrect": 4,
-        "medianSeconds": 9.9,
-        "medianTokens": 7417
+        "medianSeconds": 9,
+        "medianTokens": 7461
       },
       {
         "id": "mistralai/mistral-small-3-1-24b-instruct-2503",
         "name": "Mistral Small 3.1",
         "kind": "one-shot",
-        "answered": 7,
+        "answered": 8,
         "fixed": 5,
-        "suiteGreen": 6,
+        "suiteGreen": 7,
         "proofTest": 3,
         "fixWithProof": 2,
         "culpritCorrect": 5,
-        "medianSeconds": 10.2,
-        "medianTokens": 7858
+        "medianSeconds": 9.9,
+        "medianTokens": 7907
       },
       {
         "id": "openai/gpt-oss-120b",
         "name": "gpt-oss-120b",
         "kind": "one-shot",
-        "answered": 7,
-        "fixed": 7,
-        "suiteGreen": 7,
-        "proofTest": 7,
-        "fixWithProof": 7,
+        "answered": 8,
+        "fixed": 8,
+        "suiteGreen": 8,
+        "proofTest": 8,
+        "fixWithProof": 8,
         "culpritCorrect": 6,
-        "medianSeconds": 14.2,
-        "medianTokens": 8483
+        "medianSeconds": 14,
+        "medianTokens": 8474
       }
     ],
     "perBug": [
@@ -389,6 +420,61 @@
             "proofTest": false,
             "fixWithProof": false,
             "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": {
+            "fixed": false,
+            "suiteGreen": false,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "mistralai/mistral-small-3-1-24b-instruct-2503": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "openai/gpt-oss-120b": {
+            "fixed": true,
+            "suiteGreen": true,
+            "proofTest": true,
+            "fixWithProof": true,
+            "culpritCorrect": false,
+            "answered": true
+          }
+        }
+      },
+      {
+        "bug": 2,
+        "title": "Totals off by ₹0.01",
+        "probeFailsAtBase": true,
+        "cimex": {
+          "fixed": true,
+          "suiteGreen": true,
+          "proofTest": true,
+          "fixWithProof": true,
+          "culpritCorrect": true,
+          "culpritDuringRun": true
+        },
+        "models": {
+          "ibm/granite-4-h-small": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": false,
+            "answered": true
+          },
+          "meta-llama/llama-3-3-70b-instruct": {
+            "fixed": false,
+            "suiteGreen": true,
+            "proofTest": false,
+            "fixWithProof": false,
+            "culpritCorrect": true,
             "answered": true
           },
           "meta-llama/llama-4-maverick-17b-128e-instruct-fp8": {

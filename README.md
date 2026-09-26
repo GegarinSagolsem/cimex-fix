@@ -43,22 +43,22 @@ Drop a bug report into IBM Bob and pick the **🕵️ Cimex Lead** mode:
 
 Every step is recorded as evidence on the case, so the Proof of Fix page is built only from what actually happened.
 
-## Results — 7 real bugs
+## Results — 8 real bugs
 
 From [`docs/benchmark.md`](docs/benchmark.md) (generated from the case events and Bob's task log; do not quote
 numbers that aren't there):
 
 | Metric | Result |
 |---|---|
-| Bugs attempted / proven | **7 / 7** (0 unproven) |
-| Culprit commit matches the answer key | **7/7** — 6 pinned by `git bisect`, 1 named by the Historian from git history |
-| Culprit named correctly *during* the run | 3/7 — the rest were confirmed by a follow-up bisect (see below) |
-| Median time to a failing (RED) test | **4m 32s** |
-| Median time to proof | 14m 39s (fastest 7m 40s; includes time runs waited on a human) |
+| Bugs attempted / proven | **8 / 8**: every planted bug (0 unproven) |
+| Culprit commit matches the answer key | **8/8** — 7 pinned by `git bisect`, 1 named by the Historian from git history |
+| Culprit named correctly *during* the run | 4/8 — the rest were confirmed by a follow-up bisect (see below) |
+| Median time to a failing (RED) test | **4m 02s** |
+| Median time to proof | 13m 45s (fastest 7m 40s; includes time runs waited on a human) |
 | Run after the pipeline fixes (bug #5) | culprit by bisect at 4m 01s, **proven at 7m 44s**, 0 human prompts |
-| Runs with zero human prompts | 5/7 |
-| Bobcoins per fix | median 2.84 (range 2.39–5.36) |
-| Largest test suite in a run | 118 tests, all passing |
+| Runs with zero human prompts | 6/8 |
+| Bobcoins per fix | median 2.93 (range 2.39–5.36) |
+| Largest test suite in a run | 120 tests, all passing |
 
 | Bug | Arrived as | Time to proof | Culprit commit (found) |
 |---|---|---|---|
@@ -69,6 +69,7 @@ numbers that aren't there):
 | #8 Coupon applies twice → discount over 100% | screenshot | 34m 01s | `185f248` feat(cart): allow stacking multiple coupon codes |
 | #5 Search became case-sensitive | issue text | 7m 44s | `649b24a` perf(catalog): memoize search index |
 | #7 Double-click "Place order" → two orders | issue text + log | 8m 02s | `985e247` refactor(orders): derive duplicate-order check from order history |
+| #2 Totals off by ₹0.01 | issue text | 12m 51s | `98e2fce` feat(cart): sum multiple line items in cart totals |
 
 ### Compared with one-shot models
 
@@ -77,31 +78,30 @@ history, and had to name the culprit and return a fix and a test. One script ([`
 scores their answers and Bob's committed fixes the same way. The answer key's independent probe decides "fixed"; "fix
 with proof" also needs every existing test green and the contender's own test failing before its fix and passing after.
 
-| Contender (7 bugs) | Fixed | Fix with proof | Culprit correct |
+| Contender (8 bugs) | Fixed | Fix with proof | Culprit correct |
 |---|---|---|---|
-| **Cimex Fix (IBM Bob)** | 7/7 | **7/7** | 7/7 (3/7 during the run) |
-| gpt-oss-120b | 7/7 | **7/7** | 6/7 |
-| Llama 4 Maverick | 5/7 | 3/7 | 4/7 |
-| Mistral Small 3.1 | 5/7 | 2/7 | 5/7 |
-| Llama 3.3 70B | 4/7 | 2/7 | 5/7 |
-| Granite 4 H Small | 2/7 | 1/7 | 0/7 |
+| **Cimex Fix (IBM Bob)** | 8/8 | **8/8** | 8/8 (4/8 during the run) |
+| gpt-oss-120b | 8/8 | **8/8** | 6/8 |
+| Llama 4 Maverick | 5/8 | 3/8 | 4/8 |
+| Mistral Small 3.1 | 5/8 | 2/8 | 5/8 |
+| Llama 3.3 70B | 4/8 | 2/8 | 6/8 |
+| Granite 4 H Small | 2/8 | 1/8 | 0/8 |
 
-All 35 one-shot answers named a culprit and returned a fix and a test; 23 fixed the bug, 15 came with a test that
-proves it, and 4 broke existing tests. The best model matched Cimex Fix, but only running the checks tells you which
+All 40 one-shot answers named a culprit and returned a fix and a test; 24 fixed the bug, 16 came with a test that
+proves it, and 5 broke existing tests. The best model matched Cimex Fix, but only running the checks tells you which
 answer that is. The models were handed all the code, while Bob started from the report alone; each model gave one
 answer at temperature 0. Prompts, raw answers and caveats: [`docs/benchmark.md`](docs/benchmark.md#compared-with-one-shot-models-ibm-watsonxai).
 
 **Honesty notes**
 - Early runs (#4, #1, #3, #8) hit a bug in our bisect tool: Bob passed the repo path with a lowercase drive letter
   (`c:\…`), Vitest loaded twice, and every bisect step was skipped. We fixed it, then re-ran bisect in Bob for those
-  cases; #5 ran after the fix and found its culprit live. Runs #3 and #8 also needed human prompts because of it.
+  cases; #5 and #2 ran after the fix and found their culprits live. Runs #3 and #8 also needed human prompts because of it.
 - #6 can't be bisected with its repro test (the test imports a function the culprit commit itself introduced), so its
   culprit comes from the Historian's git-history analysis.
 - #7 (a race condition) was proven, but its first repro test also required the second click to be rejected, which
   the code before the regression didn't do, so bisect found nothing. A follow-up Bob task wrote a symptom-only test
   (one order, one charge) and bisect named the culprit; the Reproducer rules now require symptom-only tests.
 - There is **no manual human baseline**, so we claim no "N× faster than a developer" number.
-- Bug #2 was not attempted (Bobcoin budget).
 
 ## Verify it yourself
 
@@ -180,7 +180,7 @@ no run ever opened it.
   subtasks, skills, the MCP server, and screenshot/PDF intake.
 - **To build the Bob-native parts.** Bob generated `AGENTS.md` (`/init`), the custom modes and rules, the skills and
   the first version of the MCP server. Session screenshots are in [`bob_sessions/`](bob_sessions).
-- **Cost.** 29.61 Bobcoins across every Bob task, including runs, follow-up re-bisects and building the pack
+- **Cost.** 32.64 Bobcoins across every Bob task, including runs, follow-up re-bisects and building the pack
   ([`docs/benchmark.md`](docs/benchmark.md)).
 - Claude Code helped build the web dashboard and the glue code.
 

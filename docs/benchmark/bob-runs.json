@@ -51,6 +51,13 @@
       "liveCulprit": "none", "liveCulpritNote": "bisect aborted after 8 untestable commits: the repro test also required the second call to be rejected, which the code before the regression did not do, so it failed on every commit",
       "finalCulpritMethod": "bisect (follow-up Bob task)", "followUpTask": "1247fe95",
       "finalCulpritNote": "follow-up used a symptom-only test (one order, one charge); the Reproducer rules now require symptom-only tests"
+    },
+    {
+      "bug": 2, "caseId": "case_20260926_b86b", "intake": "issue text", "bobTask": "5f521016", "fixCommit": "decb79c",
+      "coins": 3.03, "humanInterventions": 0, "subtasks": 3, "spawnSubagent": 3, "startSubtask": 3,
+      "bisectCalls": 1, "bisectTimeouts": 0, "bisectFound": 1,
+      "liveCulprit": "correct", "liveCulpritNote": "found by bisect during the run",
+      "finalCulpritMethod": "bisect (live, during the run)"
     }
   ],
   "followUps": [

@@ -284,7 +284,7 @@ const md = [
   "",
   `- **Bugs attempted:** ${s.bugsAttempted} · **proven:** ${s.proven} · **unproven:** ${s.unproven}`,
   `- **Culprit commit matches the answer key:** ${s.culpritCorrect}/${s.bugsAttempted} (${s.culpritCorrectByBisect} established by \`git bisect\`, ${s.culpritCorrect - s.culpritCorrectByBisect} named by the Historian from git history)`,
-  `- **Culprit named correctly during the run itself:** ${s.liveCulpritCorrect}/${s.bugsAttempted} — bisect found it live in ${cases.filter((c) => c.finalCulpritMethod.includes("live")).length} run; earlier runs hit a bisect bug (see caveats) and were re-bisected afterwards`,
+  `- **Culprit named correctly during the run itself:** ${s.liveCulpritCorrect}/${s.bugsAttempted} — bisect found it live in ${s.culpritByLiveBisect} run${s.culpritByLiveBisect === 1 ? "" : "s"}; earlier runs hit a bisect bug (see caveats) and were re-bisected afterwards`,
   `- **Median time to a failing (RED) reproduction test:** ${mmss(s.medianMinutesToRed)}`,
   `- **Median time to proof:** ${mmss(s.medianMinutesToProof)} (fastest ${mmss(s.fastestMinutesToProof)}; includes time runs waited on a human)`,
   s.liveBisectRun

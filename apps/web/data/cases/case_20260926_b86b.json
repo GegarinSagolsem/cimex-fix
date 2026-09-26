@@ -1,0 +1,269 @@
+{
+  "case": {
+    "id": "case_20260926_b86b",
+    "repo": "bugproof-demo-shoplite",
+    "issue": "case_20260926_b86b",
+    "title": "Cart total is ₹0.01 lower than it should be for some products",
+    "severity": "medium",
+    "source": "issue",
+    "status": "proven",
+    "startedAt": "2026-09-26T13:54:35.552Z",
+    "provenAt": "2026-09-26T14:07:26.256Z",
+    "summary": "The cart was under-charging GST by ₹0.01 for products with non-whole-rupee prices (e.g. Cast Iron Tawa at ₹1,049.25). The culprit commit 98e2fcea changed computeTotals() to compute tax via roundMoney(sumBy(lines, l => l.lineTotal * GST_RATE)) — floating-point multiplication per line before rounding — instead of calling the existing calculateGst() helper that converts to integer paise first. The fix restores the correct call: tax = calculateGst(subtotal), with a matching import update. The repro test (tests/bugproof/case_20260926_b86b.test.ts) went from red (₹188.86) to green (₹188.87), and all 120 tests pass.",
+    "plainSummary": {
+      "text": "The cart subtotal was being calculated incorrectly for products with non-whole-rupee prices, causing GST to be slightly off by ₹0.01. This happened because the new code multiplied the line totals by the GST rate using decimal floating-point numbers before rounding, which introduced a tiny error. The fix restores the previous correct method of converting to integer paise first and uses a dedicated helper function to calculate GST accurately.",
+      "model": "ibm/granite-4-h-small",
+      "generatedAt": "2026-09-26T15:36:28.941Z"
+    }
+  },
+  "events": [
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T13:55:21.235Z",
+      "agent": "historian",
+      "kind": "spawn",
+      "title": "Historian agent started — investigating GST rounding commits"
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T13:56:17.688Z",
+      "agent": "historian",
+      "kind": "milestone",
+      "title": "Historian report complete — GST rounding bug traced to totals.ts:27 misuse of roundMoney instead of calculateGst",
+      "data": {
+        "suspectFiles": [
+          "src/tax/gst.ts",
+          "src/cart/totals.ts",
+          "src/currency/money.ts"
+        ],
+        "relevantCommits": [
+          "32d13b1 (initial)",
+          "d39a704 (filter-branch rewrite)",
+          "31835d5 (last touched totals.ts — coupon cap)"
+        ],
+        "buggyLine": "totals.ts:27 — tax computed via roundMoney(sum * GST_RATE) not calculateGst()",
+        "fixPointer": "Replace sumBy(lines, l => l.lineTotal * GST_RATE) with sumBy(lines, l => calculateGst(l.lineTotal))"
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T13:56:26.425Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "TRIAGE_COMPLETE",
+      "data": {
+        "expected": "GST of ₹188.87 (18% of ₹1,049.25 rounded half-up) and total ₹1,238.12",
+        "actual": "GST of ₹188.86 and total ₹1,238.11 — one paisa short",
+        "rootCause": "src/cart/totals.ts line 27 computes tax as roundMoney(sumBy(lines, l => l.lineTotal * GST_RATE)) using floating-point multiplication before rounding, instead of calling the correct calculateGst() which converts to integer paise first",
+        "blastRadius": [
+          "src/cart/totals.ts computeTotals()",
+          "src/cart/lineItems.ts",
+          "src/currency/money.ts roundMoney()",
+          "src/tax/gst.ts calculateGst() is correct but unused in totals"
+        ],
+        "notes": "Whole-rupee prices unaffected. Bug likely present since initial commit — no dedicated GST/rounding commit found."
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T13:56:53.720Z",
+      "agent": "lead",
+      "kind": "spawn",
+      "title": "Spawning bugproof-reproducer subtask"
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T13:58:07.906Z",
+      "agent": "reproducer",
+      "kind": "milestone",
+      "title": "REPRO_READY",
+      "data": {
+        "file": "tests/bugproof/case_20260926_b86b.test.ts",
+        "assertionFailure": "AssertionError: expected 188.86 to be 188.87 // Object.is equality"
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T14:03:19.986Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "BISECT_DONE",
+      "data": {
+        "sha": "98e2fcea53add7e7bc6d748086d820aa2f7d485f",
+        "subject": "feat(cart): sum multiple line items in cart totals",
+        "author": "GegarinSagolsem",
+        "date": "2026-09-25",
+        "summary": "This commit replaced calculateGst(subtotal) with roundMoney(sumBy(lines, l => l.lineTotal * GST_RATE)), dropping the integer-paise rounding path and introducing the one-paisa rounding error for non-whole-rupee prices."
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T14:03:26.150Z",
+      "agent": "lead",
+      "kind": "spawn",
+      "title": "Spawning bugproof-fixer subtask"
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T14:05:19.111Z",
+      "agent": "fixer",
+      "kind": "milestone",
+      "title": "FIX_GREEN",
+      "data": {
+        "passed": 120,
+        "failed": 0,
+        "total": 120
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T14:05:39.494Z",
+      "agent": "lead",
+      "kind": "spawn",
+      "title": "Spawning bugproof-critic subtask"
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T14:06:54.100Z",
+      "agent": "critic",
+      "kind": "milestone",
+      "title": "APPROVED",
+      "data": {
+        "verdict": "APPROVE",
+        "suite": "120/120 green"
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "ts": "2026-09-26T14:07:29.978Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "PUBLISHED",
+      "data": {
+        "proofUrl": "https://bugproof-web.vercel.app/cases/case_20260926_b86b"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "caseId": "case_20260926_b86b",
+      "kind": "blast",
+      "data": {
+        "files": [
+          "src/cart/totals.ts",
+          "src/cart/lineItems.ts",
+          "src/currency/money.ts",
+          "src/tax/gst.ts"
+        ],
+        "callers": [
+          "computeTotals() in src/cart/totals.ts:27 (buggy GST path)",
+          "calculateGst() in src/tax/gst.ts (correct but not called from totals)",
+          "roundMoney() in src/currency/money.ts (used by totals, coarser than paise-first)"
+        ],
+        "notes": "Bug is in computeTotals() which uses floating-point GST_RATE multiplication then roundMoney() instead of the already-correct calculateGst(). Only non-whole-rupee prices are affected (whole-rupee amounts avoid the half-up edge case)."
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "kind": "triage",
+      "data": {
+        "expected": "GST ₹188.87 (18% of ₹1,049.25, rounded half-up) and total ₹1,238.12",
+        "actual": "GST ₹188.86 and total ₹1,238.11 — one paisa short; customers under-charged",
+        "stepsToReproduce": [
+          "Add Cast Iron Tawa (₹1,049.25, qty 1) to empty cart",
+          "Check cart summary GST and total lines"
+        ],
+        "source": "intake/bug-02-issue.md"
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "kind": "red",
+      "data": {
+        "passed": 0,
+        "failed": 1,
+        "total": 1,
+        "durationMs": 5221,
+        "failures": [
+          {
+            "name": "computeTotals GST rounding for Cast Iron Tawa ₹1,049.25 × 18% calculates GST as ₹188.87 (not ₹188.86)",
+            "message": "AssertionError: expected 188.86 to be 188.87 // Object.is equality\n    at C:/dev/bugproof-demo-shoplite/tests/bugproof/case_20260926_b86b.test.ts:22:24\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///C:/dev/bugproof-demo-shoplite/n"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "kind": "culprit",
+      "data": {
+        "sha": "98e2fcea53add7e7bc6d748086d820aa2f7d485f",
+        "subject": "feat(cart): sum multiple line items in cart totals",
+        "author": "GegarinSagolsem",
+        "date": "2026-09-25 18:55:03 +0000",
+        "diff": "commit 98e2fcea53add7e7bc6d748086d820aa2f7d485f\nAuthor: GegarinSagolsem <176033453+GegarinSagolsem@users.noreply.github.com>\nDate:   Fri Sep 25 18:55:03 2026 +0000\n\n    feat(cart): sum multiple line items in cart totals\n---\n src/cart/totals.ts        | 10 ++++++----\n tests/cart/totals.test.ts |  8 ++++++++\n 2 files changed, 14 insertions(+), 4 deletions(-)\n\ndiff --git a/src/cart/totals.ts b/src/cart/totals.ts\nindex 9fea2ff..60efd0b 100644\n--- a/src/cart/totals.ts\n+++ b/src/cart/totals.ts\n@@ -1,7 +1,8 @@\n-import { fromPaise, toPaise } from \"../currency/money\";\n-import { calculateGst } from \"../tax/gst\";\n+import { fromPaise, roundMoney, toPaise } from \"../currency/money\";\n+import { GST_RATE } from \"../tax/gst\";\n import type { Cart } from \"./cart\";\n import { couponDiscount } from \"./coupons\";\n+import { lineItems, sumBy } from \"./lineItems\";\n \n export const FREE_SHIPPING_THRESHOLD = 999;\n export const SHIPPING_FEE = 49;\n@@ -21,8 +22,9 @@ export function shippingFor(subtotal: number, lineCount: number): number {\n }\n \n export function computeTotals(cart: Cart): CartTotals {\n-  const subtotal = fromPaise(cart.items.reduce((sum, item) => sum + toPaise(item.unitPrice) * item.quantity, 0));\n-  const tax = calculateGst(subtotal);\n+  const lines = lineItems(cart);\n+  const subtotal = roundMoney(sumBy(lines, (line) => line.lineTotal));\n+  const tax = roundMoney(sumBy(lines, (line) => line.lineTotal * GST_RATE));\n \n   // Coupons come off the pre-tax subtotal; GST is charged on the list price.\n   const discount = Math.min(couponDiscount(subtotal, cart.couponCode), subtotal);\ndiff --git a/tests/cart/totals.test.ts b/tests/cart/totals.test.ts\nindex 8104b44..783acdd 100644\n--- a/tests/cart/totals.test.ts\n+++ b/tests/cart/totals.test.ts\n@@ -42,3 +42,11 @@ describe(\"computeTotals\", () => {\n     });\n   });\n });\n+\n+describe(\"computeTotals with multiple line items\", () => {\n+  it(\"sums the line totals into the subtotal\", () => {\n+    const totals = computeTotals(cartWith([\"p01\", 1], [\"p16\", 2], [\"p06\", 1]));\n+    expect(totals.subtotal).toBe(349 + 398 + 399);\n+    expect(totals.itemCount).toBe(4);\n+  });\n+});\n",
+        "steps": 6
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "kind": "suite",
+      "data": {
+        "passed": 119,
+        "failed": 1,
+        "total": 120,
+        "durationMs": 33587,
+        "failures": [
+          {
+            "name": "computeTotals GST rounding for Cast Iron Tawa ₹1,049.25 × 18% calculates GST as ₹188.87 (not ₹188.86)",
+            "message": "AssertionError: expected 188.86 to be 188.87 // Object.is equality\n    at C:/dev/bugproof-demo-shoplite/tests/bugproof/case_20260926_b86b.test.ts:22:24\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///C:/dev/bugproof-demo-shoplite/n"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "kind": "green",
+      "data": {
+        "passed": 120,
+        "failed": 0,
+        "total": 120,
+        "durationMs": 33151,
+        "failures": []
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "kind": "diff",
+      "data": {
+        "files": [
+          "src/cart/totals.ts"
+        ],
+        "diff": "--- a/src/cart/totals.ts\n+++ b/src/cart/totals.ts\n@@ -1,6 +1,6 @@\n import { fromPaise, roundMoney, toPaise } from \"../currency/money\";\n-import { GST_RATE } from \"../tax/gst\";\n+import { calculateGst } from \"../tax/gst\";\n import type { Cart } from \"./cart\";\n import { couponDiscount } from \"./coupons\";\n import { lineItems, sumBy } from \"./lineItems\";\n@@ -23,9 +23,9 @@\n \n export function computeTotals(cart: Cart): CartTotals {\n   const lines = lineItems(cart);\n   const subtotal = roundMoney(sumBy(lines, (line) => line.lineTotal));\n-  const tax = roundMoney(sumBy(lines, (line) => line.lineTotal * GST_RATE));\n+  const tax = calculateGst(subtotal);\n \n   // Coupons come off the pre-tax subtotal; GST is charged on the list price.\n   // Cap combined discount at subtotal so total can never go negative."
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "kind": "green",
+      "data": {
+        "passed": 120,
+        "failed": 0,
+        "total": 120,
+        "durationMs": 32270,
+        "failures": []
+      }
+    },
+    {
+      "caseId": "case_20260926_b86b",
+      "kind": "critic",
+      "data": {
+        "verdict": "APPROVE",
+        "reasons": [
+          "Fix is correct: calculateGst() in src/tax/gst.ts multiplies integer paise by the rate percent then divides by 100 and rounds, eliminating the floating-point precision loss that caused the one-paisa shortfall.",
+          "Fix is minimal: only the tax computation line and its import changed; no unrelated behaviour was altered in src/cart/totals.ts.",
+          "Repro test is specific: tests/bugproof/case_20260926_b86b.test.ts asserts both totals.tax === 188.87 and totals.total === 1238.12 using the exact problematic unit price (₹1,049.25), directly encoding the reported expected behaviour rather than gaming the assertion.",
+          "Full test suite: 120/120 tests pass."
+        ]
+      }
+    }
+  ]
+}

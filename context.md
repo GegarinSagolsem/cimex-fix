@@ -1,6 +1,6 @@
 # context.md — living project state (read this FIRST every session)
 
-_Last updated: Sat 26 Sep 2026 ~21:15 IST · Claude Opus 5.5 · 7 bugs proven, culprits 7/7; one-shot model comparison on /impact; bug #2 running in Bob; resume from "Next steps"_
+_Last updated: Sat 26 Sep 2026 ~21:45 IST · Claude Opus 5.5 · all 8 bugs proven, culprits 8/8; one-shot model comparison on /impact (8 bugs); resume from "Next steps"_
 
 ## Snapshot
 - **Project:** BugProof — "No fix without proof." IBM Bob reproduces a bug with a failing test, finds
@@ -8,7 +8,7 @@ _Last updated: Sat 26 Sep 2026 ~21:15 IST · Claude Opus 5.5 · 7 bugs proven, c
   Proof of Fix is published. The "Mission Control" website shows every case live.
 - **Deadline:** **Sun 27 Sep 2026, 19:30 IST** (10:00 AM ET, IBM form) · our target **18:30 IST**.
   The IBM Cloud / watsonx account also closes at that moment.
-- **Team:** solo · Claude Pro (5-h window + weekly) + $100 cloud-session credit (backup only) · Bobcoins **~9.5 / 40 left** (10 after task 14, minus 0.55).
+- **Team:** solo · Claude Pro (5-h window + weekly) + $100 cloud-session credit (backup only) · Bobcoins **~6.5 / 40 left** (≈9.5 before task 16, minus 3.03) — ask the user for the exact balance.
 - **Phase:** 3 (real runs + numbers). Phases 0–2 done. Plan: `Plan.md` §7.
 - **Links:** repo https://github.com/GegarinSagolsem/bugproof (private) · live https://bugproof-web.vercel.app
   (auto-deploys from main) · demo repo https://github.com/GegarinSagolsem/bugproof-demo-shoplite (private)
@@ -66,6 +66,7 @@ _Last updated: Sat 26 Sep 2026 ~21:15 IST · Claude Opus 5.5 · 7 bugs proven, c
 | #8 coupon twice | screenshot | case_20260926_db4f | proven | ✅ `185f248` (re-bisected in Bob, task 10; older wrong entry superseded) | 114 |
 | #5 search case-sensitive | issue text | case_20260926_7e5e | proven in 7 min 44 s (first fully clean run: subtasks hand back, bisect found culprit live) | ✅ `649b24a` | 117 |
 | #7 double order (race) | issue text + log | case_20260926_9afc | proven in 8 min 02 s, 0 human prompts, leaner pack (2.54 coins) | ✅ `985e247` via follow-up (first test over-specified) | 118 |
+| #2 GST off by ₹0.01 | issue text | case_20260926_b86b | proven in 12 min 51 s, 0 human prompts, bisect live (3.03 coins); fix = answer key (`calculateGst(subtotal)`), demo commit `decb79c` | ✅ `98e2fce` live | 120 |
 Culprit commits vs answer key: **6/6** — #1 `c3f394a`, #6 `c3fb68f`, #3 `b4369d9`, #8 `185f248`, #4 `882203d` (re-bisected, task 11), #5 `649b24a` (live).
 Bug #5 fix = answer key exactly (lower-case index haystack + query); demo repo commit `6ff3e78`, pushed.
 All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`, bug #8 = `0944d88`). Stray case `69ba` deleted.
@@ -98,8 +99,11 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
     duplicate milestones, deterministic tests for timing bugs) → 🅱 bug #7 (dry run: deterministic RED 3/3, bisect finds
     `985e247` = answer key in 29.6 s) → 🅱 Bob hooks only if coins remain. Bug #2 skipped.
 14. ✅ One-shot model comparison (see Decisions) on `/impact`, in `docs/benchmark.md`, README and the submission text.
-    After bug #2 is committed: `node scripts/model-baseline.mjs --bugs 2` (answers cached; adds Bob's #2 scoring), then
-    `node scripts/build-benchmark.mjs` → the comparison grows to 8 bugs; update README/submission numbers.
+    ✅ Bug #2 added (8 bugs): Cimex 8/8 fix with proof; gpt-oss-120b 8/8 (culprit 6/8); others 1–3/8; 40 answers, 24 fixed, 16 with proof.
+15. ✅ Bug #2 proven (task 16) and committed in the demo repo; benchmark, README, submission, /impact now say 8/8.
+    Bug #2's Granite summary regenerated twice via the summary route (1st said "penny" + "stacked across items").
+16. Next: Bob pack display rename to "Cimex …" (reinstall into the demo repo) · 🅱 Bob hooks only if coins remain · slides +
+    cover · video script (8 bugs, model comparison, no "lifecycle hooks" unless built).
 
 ## Notes / open items
 - Demo repo history contains the original build spec (`docs/SPEC.md` in root commit `32d13b1`, deleted in `49f8447`):
@@ -143,6 +147,7 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 | 13 | Re-bisect bug #1 (hero culprit now Bob-verified, `c3f394a`) | shoplite | 0.09 | `bugproof_task13_rebisect_bug01_summary.png` ✅ |
 | 14 | Run bug #7 (race condition) with the leaner pack — proven, culprit not found live | shoplite | 2.54 (13 → 10) | `bugproof_task14_run_bug07_summary.png` ✅ |
 | 15 | Bug #7 follow-up: symptom-only test + bisect → `985e247` | shoplite | 0.55 | `bugproof_task15_rebisect_bug07_summary.png` ✅ |
+| 16 | Run bug #2 (GST rounding, issue intake) — clean run, bisect live, 0 human prompts | shoplite | 3.03 | `bugproof_task16_run_bug02_summary.png` ✅ |
 Costs from Bob's task DB `~/.bob/db/bob.db` (`tasks.costs`): a Lead's total includes its subagents and every subtask that
 returned via `end_subtask`; subtasks that never returned (#3, #8) must be added. Each model call re-sends the whole thread
 (~0.03/step early, ~0.10 late). In run 12 the Lead's own turns ≈1.2, Historian subagent 0.72, a git-diff subagent 0.33,
