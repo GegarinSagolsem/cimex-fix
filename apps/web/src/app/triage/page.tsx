@@ -1,5 +1,6 @@
 import triageExamplesRaw from "../../../data/triage-examples.json";
 import { TriagePanel, type TriageExampleChip } from "@/components/triage/TriagePanel";
+import { PageHero } from "@/components/shell/PageHero";
 
 function labelFor(input: string, index: number): string {
   const firstLine = input.split(/\r?\n/, 1)[0]?.trim() ?? "";
@@ -22,12 +23,12 @@ export default function TriagePage() {
   const examples = loadExamples();
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-2 p-6">
-      <h1 className="text-lg font-semibold">Triage</h1>
-      <p className="mb-4 text-sm text-[var(--muted)]">
-        Paste a messy bug report and let IBM Granite turn it into a structured triage: severity,
-        component, expected vs actual, steps to reproduce, and what&apos;s still missing.
-      </p>
+    <div className="mx-auto flex max-w-4xl flex-col gap-6 p-4 sm:p-6">
+      <PageHero
+        label="Try it live"
+        title="Triage with IBM Granite"
+        description="Paste a messy bug report and watsonx.ai Granite turns it into a structured triage: severity, component, expected vs actual, steps to reproduce, and what's still missing."
+      />
       <TriagePanel examples={examples} />
     </div>
   );

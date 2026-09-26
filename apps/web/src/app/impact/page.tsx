@@ -5,6 +5,7 @@ import benchmark from "@/data/benchmark.json";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TimeToProofChart } from "@/components/impact/TimeToProofChart";
 import { mmss } from "@/components/impact/format";
+import { PageHero } from "@/components/shell/PageHero";
 
 export const metadata: Metadata = { title: "Impact · BugProof" };
 
@@ -28,22 +29,25 @@ export default function ImpactPage() {
   const live = s.liveBisectRun;
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <header>
-        <h1 className="text-lg font-semibold">Impact</h1>
-        <p className="mt-1 max-w-3xl text-sm text-[var(--muted)]">
-          {s.bugsAttempted} real bugs in the ShopLite demo repo, each worked by IBM Bob from the customer&apos;s
-          report to a failing test, a culprit commit and a verified fix. Every number here is computed from the
-          case events and Bob&apos;s task log —{" "}
-          <a href={BENCHMARK_DOC} className="text-[var(--accent)] underline-offset-2 hover:underline">
-            docs/benchmark.md
-          </a>
-          .
-        </p>
-      </header>
+    <div className="flex flex-col gap-6 p-4 sm:p-6">
+      <PageHero
+        label="Impact"
+        title="Measured, not claimed"
+        description={
+          <>
+            {s.bugsAttempted} real bugs in the ShopLite demo repo, each worked by IBM Bob from the customer&apos;s report to a
+            failing test, a culprit commit and a verified fix. Every number is computed from the case events and Bob&apos;s
+            task log —{" "}
+            <a href={BENCHMARK_DOC} className="underline underline-offset-2 hover:no-underline">
+              docs/benchmark.md
+            </a>
+            .
+          </>
+        }
+      />
 
       <section aria-label="Headline numbers" className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-        <Card className="border-transparent bg-[var(--accent)] text-[var(--accent-fg)]">
+        <Card className="border-transparent bg-[var(--text)] text-[var(--bg)]">
           <CardContent className="flex h-full flex-col justify-center gap-2 p-6">
             <p className="font-mono text-[11px] uppercase tracking-[0.25em]">Culprit commit matches the answer key</p>
             <p className="text-7xl font-semibold tracking-tight">

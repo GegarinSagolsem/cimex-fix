@@ -114,6 +114,19 @@ body {
   background: linear-gradient(180deg, #0a1a3a 0%, #10306e 60%, #1b4fae 100%);
 }
 
+/* App page header panel: never lighter than #0b6bf0 behind text, so white text keeps >= 4.8:1. */
+.panel-sky {
+  background:
+    radial-gradient(45% 110% at 100% 100%, rgb(255 255 255 / 0.2) 0%, transparent 70%),
+    linear-gradient(120deg, #0a52c2 0%, #0b6bf0 100%);
+}
+
+.dark .panel-sky {
+  background:
+    radial-gradient(45% 110% at 100% 100%, rgb(255 255 255 / 0.08) 0%, transparent 70%),
+    linear-gradient(120deg, #0a1a3a 0%, #133a82 100%);
+}
+
 /* Soft "clouds" drifting behind the hero cards. */
 .hero-clouds {
   background:
