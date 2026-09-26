@@ -13,7 +13,7 @@ import { mmss } from "@/components/impact/format";
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const detail = await dataSource.getCase(id);
-  if (!detail) return { title: "Proof of Fix · BugProof" };
+  if (!detail) return { title: "Proof of Fix · Cimex Fix" };
   return {
     title: `Proof of Fix · ${detail.case.title}`,
     description: detail.case.plainSummary?.text ?? detail.case.summary,
@@ -32,7 +32,7 @@ export default async function ProofPage({ params }: { params: Promise<{ id: stri
   if (!detail) notFound();
 
   const c = detail.case;
-  const { checks, fixDiff, culpritDiff, verify, bench } = buildProof(detail);
+  const { checks, fixDiff, culpritDiff, verify, bench, followUp } = buildProof(detail);
   const proven = c.status === "proven";
 
   return (
@@ -167,6 +167,12 @@ export default async function ProofPage({ params }: { params: Promise<{ id: stri
       {c.summary && (
         <details className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4">
           <summary className="cursor-pointer text-sm font-medium">Technical summary from the Lead</summary>
+          {followUp && (
+            <p className="mt-3 rounded-md border border-[var(--accent)]/30 bg-[var(--accent)]/5 p-3 text-sm">
+              Updated after publishing: a follow-up bisect on {followUp.at.slice(0, 16).replace("T", " ")} UTC identified
+              the culprit <span className="font-mono">{followUp.sha}</span>. The Lead wrote the summary below before that.
+            </p>
+          )}
           <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">{c.summary}</p>
         </details>
       )}

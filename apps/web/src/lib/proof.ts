@@ -45,7 +45,10 @@ export function buildProof(d: Detail) {
   const culpritSha = text(culprit?.data.sha) ?? text(culprit?.data.commit);
   const bisectSteps = typeof culprit?.data.steps === "number" ? culprit.data.steps : undefined;
 
-  const green = last("green", (e) => Number(e.data.total) > 0);
+  // A run can record GREEN for the repro file alone and for the full suite; show the full suite (the larger).
+  const green = d.evidence
+    .filter((e) => e.kind === "green" && Number(e.data.total) > 0)
+    .sort((a, b) => Number(b.data.total) - Number(a.data.total))[0];
   const fixGreen = milestone("FIX_GREEN")?.title.match(/(\d+)\/(\d+)/);
   const greenPassed = green ? Number(green.data.passed) : fixGreen ? Number(fixGreen[1]) : undefined;
   const greenTotal = green ? Number(green.data.total) : fixGreen ? Number(fixGreen[2]) : undefined;
@@ -89,6 +92,13 @@ export function buildProof(d: Detail) {
     },
   ];
 
+  // A culprit attached by a follow-up bisect after publishing: the Lead's summary predates it.
+  const provenAt = d.case.provenAt;
+  const followUpBisect = provenAt
+    ? d.events.filter((e) => e.kind === "milestone" && e.title.startsWith("BISECT_DONE") && e.ts > provenAt).at(-1)
+    : undefined;
+  const followUp = followUpBisect && culprit ? { at: followUpBisect.ts, sha: culpritSha?.slice(0, 7) ?? "" } : null;
+
   const fixDiff = text(last("diff")?.data.patch) ?? text(last("diff")?.data.diff);
   const repoUrl = REPO_URLS[d.case.repo];
   const verify =
@@ -96,7 +106,12 @@ export function buildProof(d: Detail) {
       ? { repoUrl, fixCommit: bench.fixCommit, test: bench.reproTest }
       : null;
 
-  return { checks, fixDiff, culpritDiff: text(culprit?.data.diff), verify, bench };
+  if (followUp) {
+    const culpritCheck = checks.find((c) => c.id === "culprit");
+    if (culpritCheck) culpritCheck.detail += " · found by a follow-up bisect after publishing";
+  }
+
+  return { checks, fixDiff, culpritDiff: text(culprit?.data.diff), verify, bench, followUp };
 }
 
 export function verifyCommands(v: { repoUrl: string; fixCommit: string; test: string }): string {
