@@ -3,34 +3,22 @@
 _Last updated: Sat 26 Sep 2026 ~22:00 IST · Claude Opus 5.5 · all 8 bugs proven, culprits 8/8; one-shot model comparison on /impact (8 bugs); **start with "▶ Start here next session"**_
 
 ## ▶ Start here next session
-**Task 1: rename the GitHub repos to the new product name.** The user noticed GitHub still shows
-`GegarinSagolsem/bugproof`. The site, README and Bob modes already say "Cimex Fix"; the repo names, the Vercel URL
-and the links do not.
-1. **Ask the user for the new names first.** Suggest `cimex-fix` for the main repo. For the demo repo, suggest keeping
-   `bugproof-demo-shoplite` (it's the target app, not the product, and every case record's `repo` field uses that
-   name), or rename it to `cimex-fix-demo-shoplite`.
-2. Rename on GitHub (`gh repo rename <new> -R GegarinSagolsem/bugproof`), then run `git remote set-url origin <new url>`
-   in each local clone. GitHub redirects old URLs, but update the links anyway.
-3. Update the links: 27 occurrences in 14 files. Find them with
-   `grep -rn "GegarinSagolsem/bugproof\|bugproof-web.vercel\|bugproof-demo-shoplite" --exclude-dir={graphify-out,node_modules,WebDemo} .`
-   and skip `apps/web/data/cases/` and `docs/benchmark/model-baseline/` (recorded data, leave as is).
-   Files: README.md, docs/submission.md (Links section), context.md, Plan.md, docs/specs/demo-app.md,
-   apps/web/src/lib/proof.ts (`REPO_URLS`: keep the key `bugproof-demo-shoplite`, it matches `case.repo`; change
-   only the URL), apps/web/src/app/page.tsx, apps/web/src/app/impact/page.tsx (`BENCHMARK_DOC`),
-   packages/shared/src/mockCase.ts, scripts/send-test-events.mjs, scripts/record-triage-examples.mjs, scripts/export-cases.mjs.
-   `scripts/model-baseline.mjs` uses the **local** demo path, so no change there.
-4. Vercel project `bugproof-web` (https://bugproof-web.vercel.app): after a GitHub rename, check Vercel → Settings →
-   Git is still connected (push a commit and watch it deploy). Optionally add a nicer domain (e.g.
-   `cimex-fix.vercel.app`, if free) and keep the old one working. Change links only once the new domain serves.
-5. **Do not rename:** the local folders `C:\dev\bugproof` and `C:\dev\bugproof-demo-shoplite` (Bob's `mcp.json` and
-   `.env.local` use these paths), the `bugproof` MCP server ID, the mode slugs (`bugproof-lead` …), `tests/bugproof/`,
-   or the theme storage key. README → "Built for …" already explains that these keep the old name.
-6. Verify: README links and mermaid on GitHub, the verify-it-yourself commands on a Proof page (the `cd <dir>` comes
-   from the repo URL's last segment), `/impact`'s benchmark link, and the landing page links. Then refresh graphify
-   and commit.
+**Repo rename done (09-26):** GitHub `GegarinSagolsem/cimex-fix` (old URL redirects), Vercel domain
+`https://cimex-fix.vercel.app` added (old `bugproof-web.vercel.app` still serves; Vercel project name unchanged, Git
+connection survived the rename). Demo repo keeps `bugproof-demo-shoplite`. Local folders, MCP ID, mode slugs unchanged.
 
-**Then:** ask the user for the exact Bobcoin balance → item 16 below (slides + cover, video script) → Bob hooks only if
-coins remain. Both repos are still **private**; make them public just before submitting (Sun, after the freeze).
+**Task now: add Gemini to the model comparison (manual, via Antigravity — no Gemini API key).**
+- `scripts/model-baseline.mjs` has `MANUAL_MODELS` (id `google/gemini-3-pro` = placeholder until the user confirms the
+  exact model Antigravity shows). Missing answers are skipped with a hint; present ones get a `.meta.json` and are scored alike.
+- Clean workspace `C:\dev\gemini-baseline\` (only the 8 prompts + `answers/`). The user runs one fresh Antigravity chat per
+  bug there and has Gemini write `answers/bug-0N.md`. Never run it in the demo repo (main contains all 8 fixes).
+- Then: copy answers to `docs/benchmark/model-baseline/<id>/`, `node scripts/model-baseline.mjs --models <id> --no-bob`,
+  add a label in `build-benchmark.mjs` `MODEL_LABELS`, reword "5 models on IBM watsonx.ai" (benchmark.md heading,
+  `/impact`, README, submission) to name Gemini as a separate provider with its caveats (no temperature control, chat UI).
+  Publish the result whatever it is.
+
+**Then:** slides + cover, video script → Bob hooks only if coins remain (**7 Bobcoins left**, user 09-26). Both repos
+still **private**; make them public just before submitting (Sun, after the freeze).
 
 ## Snapshot
 - **Project:** Cimex Fix (formerly BugProof) — "No fix without proof." IBM Bob reproduces a bug with a failing test, finds
@@ -38,10 +26,10 @@ coins remain. Both repos are still **private**; make them public just before sub
   Proof of Fix is published. The "Mission Control" website shows every case live.
 - **Deadline:** **Sun 27 Sep 2026, 19:30 IST** (10:00 AM ET, IBM form) · our target **18:30 IST**.
   The IBM Cloud / watsonx account also closes at that moment.
-- **Team:** solo · Claude Pro (5-h window + weekly) + $100 cloud-session credit (backup only) · Bobcoins **~6.5 / 40 left** (≈9.5 before task 16, minus 3.03) — ask the user for the exact balance.
+- **Team:** solo · Claude Pro (5-h window + weekly) + $100 cloud-session credit (backup only) · Bobcoins **7 / 40 left** (user, 09-26).
 - **Phase:** 3 (real runs + numbers). Phases 0–2 done. Plan: `Plan.md` §7.
-- **Links:** repo https://github.com/GegarinSagolsem/bugproof (private) · live https://bugproof-web.vercel.app
-  (auto-deploys from main) · demo repo https://github.com/GegarinSagolsem/bugproof-demo-shoplite (private)
+- **Links:** repo https://github.com/GegarinSagolsem/cimex-fix (private) · live https://cimex-fix.vercel.app
+  (also bugproof-web.vercel.app; auto-deploys from main) · demo repo https://github.com/GegarinSagolsem/bugproof-demo-shoplite (private)
 
 ## Where things are
 | Thing | Location |
@@ -84,6 +72,8 @@ coins remain. Both repos are still **private**; make them public just before sub
 | 09-26 | Manual human baseline dropped (Plan.md §9): no human-vs-Bob time comparison is claimed anywhere | user can't do a fair manual debug; a single rushed attempt would be a weak, attackable number. Problem framing uses cited industry stats instead (Plan.md §2, verify each source first) |
 | 09-26 | Granite summaries now get the Lead's technical summary + the full diff; new `POST /api/cases/[id]/summary` (bearer) regenerates only `plainSummary` (keeps `status`/`provenAt`). Regenerated #4, #5, #6 and checked each by hand | #5's summary stated the wrong root cause (diff was cut at 600 chars of JSON), #6's contradicted itself, #4 had none. `/publish` must not be re-run: it resets `provenAt` |
 | 09-26 | **One-shot model comparison** instead of a human baseline: 5 watsonx.ai models (Granite 4 H Small, Llama 3.3 70B, Llama 4 Maverick, Mistral Small 3.1, gpt-oss-120b; us-south, temp 0, one answer each) get the report + all `src/` + git history at Bob's base commit. Bob's fixes and the answers are scored by the same script: answer-key probe (fixed), full suite (nothing broken), own test RED→GREEN, culprit subject. Result on Bob's 7 bugs: Cimex 7/7 fix with proof; gpt-oss-120b 7/7 (culprit 6/7); others 1–3/7; all 35 answers looked complete, 23 fixed the bug, 4 broke tests. Published as-is | user asked for an honest metric vs other models; the probes are independent of Bob and the models, so both sides are judged alike. 0 Bobcoins, ~307k watsonx tokens |
+| 09-26 | GitHub repo renamed to `cimex-fix`, Vercel domain `cimex-fix.vercel.app` added; demo repo name kept | product rename; demo repo name is in every case record and verify command |
+| 09-26 | Gemini added to the comparison by hand via Antigravity (clean folder, one chat per bug, no tools) | user has no Gemini API key; same prompts and scoring, caveats disclosed |
 | 09-26 | Case page evidence tabs read the real MCP/Bob fields (`diff`, `sha`/`subject`, `reasons`, `APPROVE`/`pass`, `failures`, `stepsToReproduce`) | tabs were written against mock data: Diff/Culprit showed empty, Critic badge red |
 
 ## Results so far (all verified against the answer key)

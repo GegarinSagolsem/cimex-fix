@@ -31,6 +31,12 @@ export const MODELS = [
   "mistralai/mistral-small-3-1-24b-instruct-2503",
   "openai/gpt-oss-120b",
 ];
+// Models we can't call from here: their answers are pasted in by hand (one fresh chat per bug, no tools), saved as
+// docs/benchmark/model-baseline/<id>/bug-0N.md, and then scored like the rest.
+export const MANUAL_MODELS = {
+  "google/gemini-3-pro": { via: "Google Antigravity chat, one fresh chat per bug, tools not used, default temperature" },
+};
+const ALL_MODELS = [...MODELS, ...Object.keys(MANUAL_MODELS)];
 const TEMPERATURE = 0;
 const MAX_TOKENS = 16384;
 
@@ -334,7 +340,7 @@ function scoreBob(b) {
 
 async function main() {
   loadDotEnvLocal();
-  const models = option("models") ?? MODELS;
+  const models = option("models") ?? ALL_MODELS;
   const bugs = bugList().filter((b) => !option("bugs") || option("bugs").includes(String(b.bug)));
   const results = fs.existsSync(RESULTS) ? JSON.parse(fs.readFileSync(RESULTS, "utf8")) : { attempts: [], bob: [] };
   fs.mkdirSync(path.join(OUT_DIR, "prompts"), { recursive: true });
@@ -353,7 +359,16 @@ async function main() {
       const rawFile = path.join(OUT_DIR, model.replace(/[/:]/g, "_"), `bug-0${b.bug}.md`);
       const metaFile = rawFile.replace(/\.md$/, ".meta.json");
       let meta;
-      if (fs.existsSync(rawFile) && !flag("fresh")) {
+      if (MANUAL_MODELS[model]) {
+        if (!fs.existsSync(rawFile)) {
+          console.log(`#${b.bug} ${model}: no answer yet — paste prompts/bug-0${b.bug}.md into a fresh chat and save the reply as ${path.relative(ROOT, rawFile)}`);
+          continue;
+        }
+        if (!fs.existsSync(metaFile)) {
+          fs.writeFileSync(metaFile, JSON.stringify({ via: MANUAL_MODELS[model].via, askedAt: fs.statSync(rawFile).mtime.toISOString() }, null, 2));
+        }
+        meta = JSON.parse(fs.readFileSync(metaFile, "utf8"));
+      } else if (fs.existsSync(rawFile) && !flag("fresh")) {
         meta = JSON.parse(fs.readFileSync(metaFile, "utf8"));
       } else {
         try {
@@ -388,9 +403,9 @@ async function main() {
         `#${b.bug} ${model.padEnd(50)} probe ${attempt.probe ? "PASS" : "fail"} · suite ${attempt.suite ? `${attempt.suite.passed}/${attempt.suite.total}` : "—"} · test red ${attempt.red} green ${attempt.green} · culprit ${attempt.culpritCorrect ? "correct" : answer.culprit ?? "none"} · ${meta.seconds}s ${meta.completionTokens ?? "?"} tok`,
       );
     }
-    results.attempts.sort((a, b2) => a.bug - b2.bug || MODELS.indexOf(a.model) - MODELS.indexOf(b2.model));
+    results.attempts.sort((a, b2) => a.bug - b2.bug || ALL_MODELS.indexOf(a.model) - ALL_MODELS.indexOf(b2.model));
     results.bob.sort((a, b2) => a.bug - b2.bug);
-    fs.writeFileSync(RESULTS, `${JSON.stringify({ ...results, setup: { models: MODELS, temperature: TEMPERATURE, maxTokens: MAX_TOKENS, region: process.env.WATSONX_URL } }, null, 2)}\n`);
+    fs.writeFileSync(RESULTS, `${JSON.stringify({ ...results, setup: { models: MODELS, manualModels: Object.fromEntries(Object.entries(MANUAL_MODELS).filter(([m]) => results.attempts.some((a) => a.model === m))), temperature: TEMPERATURE, maxTokens: MAX_TOKENS, region: process.env.WATSONX_URL } }, null, 2)}\n`);
   }
 
   for (const b of bugs) {
