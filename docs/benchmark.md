@@ -1,6 +1,6 @@
-# Benchmark — BugProof on the ShopLite demo repo
+# Benchmark — Cimex Fix on the ShopLite demo repo
 
-_Generated 2026-09-26 13:25 UTC by `scripts/build-benchmark.mjs` from the exported case events
+_Generated 2026-09-26 13:57 UTC by `scripts/build-benchmark.mjs` from the exported case events
 (`apps/web/data/cases/*.json`), IBM Bob's task log (`docs/benchmark/bob-runs.json`) and the answer key
 (`docs/answer-key/bugs.md`). Do not edit by hand: re-run `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs`._
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T13:25:23.301Z",
+  "generatedAt": "2026-09-26T13:57:08.567Z",
   "summary": {
     "bugsAttempted": 7,
     "proven": 7,
@@ -7,6 +7,12 @@
     "culpritCorrect": 7,
     "culpritCorrectByBisect": 6,
     "liveCulpritCorrect": 3,
+    "culpritByLiveBisect": 1,
+    "culpritByFollowUpBisect": 5,
+    "bugsPlanted": 8,
+    "bugsNotAttempted": [
+      2
+    ],
     "medianMinutesToRed": 4.53,
     "medianMinutesToProof": 14.65,
     "fastestMinutesToProof": 7.67,

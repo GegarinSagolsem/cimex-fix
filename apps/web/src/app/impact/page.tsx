@@ -7,7 +7,7 @@ import { TimeToProofChart } from "@/components/impact/TimeToProofChart";
 import { mmss } from "@/components/impact/format";
 import { PageHero } from "@/components/shell/PageHero";
 
-export const metadata: Metadata = { title: "Impact · BugProof" };
+export const metadata: Metadata = { title: "Impact · Cimex Fix" };
 
 const BENCHMARK_DOC = "https://github.com/GegarinSagolsem/bugproof/blob/main/docs/benchmark.md";
 
@@ -35,9 +35,10 @@ export default function ImpactPage() {
         title="Measured, not claimed"
         description={
           <>
-            {s.bugsAttempted} real bugs in the ShopLite demo repo, each worked by IBM Bob from the customer&apos;s report to a
-            failing test, a culprit commit and a verified fix. Every number is computed from the case events and Bob&apos;s
-            task log —{" "}
+            {s.bugsPlanted} bugs were planted in the ShopLite demo repo; IBM Bob worked {s.bugsAttempted} of them from the
+            customer&apos;s report to a failing test, a culprit commit and a verified fix
+            {s.bugsNotAttempted.length > 0 && <> (bug {s.bugsNotAttempted.map((n) => `#${n}`).join(", ")} skipped for Bobcoin budget)</>}.
+            Every number is computed from the case events and Bob&apos;s task log —{" "}
             <a href={BENCHMARK_DOC} className="underline underline-offset-2 hover:no-underline">
               docs/benchmark.md
             </a>
@@ -53,11 +54,15 @@ export default function ImpactPage() {
             <p className="text-7xl font-semibold tracking-tight">
               {s.culpritCorrect}/{s.bugsAttempted}
             </p>
-            <p className="text-sm">
-              {s.culpritCorrectByBisect} pinned by <span className="font-mono">git bisect</span>,{" "}
-              {s.culpritCorrect - s.culpritCorrectByBisect} named by the Historian from git history.{" "}
-              {s.liveCulpritCorrect} of {s.bugsAttempted} were named correctly during the run itself.
-            </p>
+            <ul className="flex flex-col gap-1 text-sm">
+              <li>
+                {s.culpritByLiveBisect} found by <span className="font-mono">git bisect</span> live, during the run
+              </li>
+              <li>
+                {s.culpritByFollowUpBisect} found by <span className="font-mono">git bisect</span> in a follow-up Bob task
+              </li>
+              <li>{s.culpritCorrect - s.culpritCorrectByBisect} named by the Historian from git history</li>
+            </ul>
           </CardContent>
         </Card>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

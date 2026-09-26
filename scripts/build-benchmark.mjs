@@ -104,6 +104,10 @@ const summary = {
   culpritCorrect: cases.filter((c) => c.culpritCorrect).length,
   culpritCorrectByBisect: cases.filter((c) => c.culpritCorrect && c.finalCulpritMethod.startsWith("bisect")).length,
   liveCulpritCorrect: cases.filter((c) => c.liveCulprit === "correct").length,
+  culpritByLiveBisect: cases.filter((c) => c.culpritCorrect && c.finalCulpritMethod.includes("live")).length,
+  culpritByFollowUpBisect: cases.filter((c) => c.culpritCorrect && c.finalCulpritMethod.includes("follow-up")).length,
+  bugsPlanted: Object.keys(answerKey).length,
+  bugsNotAttempted: notAttempted,
   medianMinutesToRed: round2(median(cases.map((c) => c.minutesToRed))),
   medianMinutesToProof: round2(median(cases.map((c) => c.minutesToProof))),
   fastestMinutesToProof: round2(Math.min(...cases.map((c) => c.minutesToProof))),
@@ -126,7 +130,7 @@ writeFileSync(path.join(root, "apps/web/src/data/benchmark.json"), JSON.stringif
 const s = summary;
 const row = (cells) => `| ${cells.join(" | ")} |`;
 const md = [
-  "# Benchmark — BugProof on the ShopLite demo repo",
+  "# Benchmark — Cimex Fix on the ShopLite demo repo",
   "",
   `_Generated ${generatedAt.slice(0, 16).replace("T", " ")} UTC by \`scripts/build-benchmark.mjs\` from the exported case events`,
   "(`apps/web/data/cases/*.json`), IBM Bob's task log (`docs/benchmark/bob-runs.json`) and the answer key",
