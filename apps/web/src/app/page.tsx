@@ -8,6 +8,7 @@ import { mmss } from "@/components/impact/format";
 const REPO_URL = "https://github.com/GegarinSagolsem/bugproof";
 
 const LABEL = "font-mono text-[11px] uppercase tracking-[0.25em] text-[var(--muted)]";
+const HERO_LABEL = "font-mono text-[11px] uppercase tracking-[0.25em] text-white";
 
 const STEPS = [
   ["Report in", "A customer screenshot, a QA PDF, a server log or an issue. Bob reads images and PDFs directly.", "Lead"],
@@ -66,32 +67,31 @@ export default async function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <div className="px-2 pt-2 sm:px-4 sm:pt-4">
-        <section className="relative isolate overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface)]">
-          <div aria-hidden="true" className="hero-glow absolute -inset-[25%] -z-10 opacity-70" />
-          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,transparent_45%,var(--surface))]" />
+        <section className="hero-sky relative isolate overflow-hidden rounded-[28px] text-white">
+          <div aria-hidden="true" className="hero-clouds absolute inset-0 -z-10" />
 
           <header className="flex items-center justify-between gap-3 p-4 sm:px-8 sm:py-6">
             <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-              <span className="h-2 w-2 rounded-full bg-[var(--accent)]" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-[var(--highlight)]" aria-hidden="true" />
               BugProof
             </Link>
             <nav
               aria-label="Main"
-              className="flex items-center gap-0.5 rounded-full border border-[var(--border)] bg-[var(--bg)]/50 p-1 text-sm backdrop-blur-md"
+              className="flex items-center gap-0.5 rounded-full border border-white/25 bg-white/10 p-1 font-mono text-xs uppercase tracking-[0.12em] backdrop-blur-md"
             >
               {[
                 ["/cases", "Cases"],
                 ["/impact", "Impact"],
                 ["/triage", "Triage"],
               ].map(([href, label]) => (
-                <Link key={href} href={href} className="rounded-full px-3 py-1.5 text-[var(--muted)] hover:bg-[var(--surface)] hover:text-[var(--text)]">
+                <Link key={href} href={href} className="rounded-full px-3 py-1.5 text-white hover:bg-white/20">
                   {label}
                 </Link>
               ))}
             </nav>
             <Link
               href="/cases"
-              className="hidden items-center gap-1.5 rounded-full bg-[var(--text)] px-4 py-2 text-sm font-medium text-[var(--bg)] hover:opacity-90 md:inline-flex"
+              className="hidden items-center gap-1.5 rounded-full bg-[var(--highlight)] px-4 py-2 font-mono text-xs uppercase tracking-[0.12em] text-[var(--highlight-fg)] hover:brightness-95 md:inline-flex"
             >
               Mission Control
               <ArrowRight className="size-4" aria-hidden="true" />
@@ -99,7 +99,7 @@ export default async function Home() {
           </header>
 
           <div className="relative mx-auto max-w-6xl px-5 pb-10 pt-8 sm:px-10 sm:pb-14 sm:pt-14">
-            <p className={LABEL}>Powered by IBM Bob 2.0 · watsonx.ai</p>
+            <p className={HERO_LABEL}>Powered by IBM Bob 2.0 · watsonx.ai</p>
             <h1 className="mt-5 max-w-4xl text-[clamp(2.75rem,8vw,6rem)] font-semibold leading-[0.92] tracking-[-0.04em]">
               No fix
               <br />
@@ -109,34 +109,35 @@ export default async function Home() {
             <ul className="mt-8 grid grid-cols-3 gap-4 xl:absolute xl:right-10 xl:top-12 xl:mt-0 xl:flex xl:flex-col xl:gap-9">
               {heroStats.map(([value, label]) => (
                 <li key={label} className="flex items-center gap-4">
-                  <span className="hidden h-px w-20 bg-[linear-gradient(to_right,transparent,var(--muted))] xl:block" aria-hidden="true" />
+                  <span className="hidden h-px w-20 bg-[linear-gradient(to_right,transparent,white)] xl:block" aria-hidden="true" />
                   <p className="flex flex-col">
                     <span className="text-2xl font-semibold tracking-tight sm:text-3xl">{value}</span>
-                    <span className="text-xs text-[var(--muted)]">{label}</span>
+                    <span className="text-xs text-white">{label}</span>
                   </p>
                 </li>
               ))}
             </ul>
 
-            <p className="mt-8 max-w-xl text-base text-[var(--muted)] sm:text-lg">
+            <p className="mt-8 max-w-xl text-base text-white sm:text-lg">
               BugProof turns a bug report into a Proof of Fix. IBM Bob reproduces the bug with a failing test, pins the culprit
-              commit with <span className="font-mono text-[var(--text)]">git bisect</span>, fixes it under file-level
-              permissions, and a Critic signs off — live on Mission Control.
+              commit with <span className="font-mono">git bisect</span>, fixes it under file-level permissions, and a Critic
+              signs off — live on Mission Control.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
                 href={`/cases/${showcase.caseId}/proof`}
-                className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--bg)] hover:opacity-90"
+                className="inline-flex items-center gap-3 rounded-full bg-[var(--highlight)] py-1.5 pl-5 pr-1.5 font-mono text-xs font-medium uppercase tracking-[0.12em] text-[var(--highlight-fg)] hover:brightness-95"
               >
-                <ShieldCheck className="size-4" aria-hidden="true" />
                 See a real proof
+                <span className="flex size-8 items-center justify-center rounded-full bg-[#111111] text-white">
+                  <ArrowRight className="size-4 -rotate-45" aria-hidden="true" />
+                </span>
               </Link>
               <Link
                 href="/cases"
-                className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg)]/40 px-5 py-2.5 text-sm font-medium backdrop-blur hover:bg-[var(--surface)]"
+                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2.5 font-mono text-xs font-medium uppercase tracking-[0.12em] text-white backdrop-blur hover:bg-white/20"
               >
                 Browse all cases
-                <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
             </div>
 
@@ -180,7 +181,7 @@ export default async function Home() {
             </Link>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
-            <div className="flex flex-col justify-between gap-6 rounded-3xl bg-[var(--accent)] p-6 text-[var(--bg)] sm:col-span-2 lg:row-span-2 lg:p-8">
+            <div className="flex flex-col justify-between gap-6 rounded-3xl bg-[var(--accent)] p-6 text-[var(--accent-fg)] sm:col-span-2 lg:row-span-2 lg:p-8">
               <p className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-80">Headline</p>
               <p className="flex flex-col gap-2">
                 <span className="text-7xl font-semibold tracking-tight sm:text-8xl">
@@ -192,8 +193,8 @@ export default async function Home() {
               </p>
             </div>
             <BentoTile value={`${s.proven}/${s.bugsAttempted}`} label="bugs proven: failing test → fix → all tests green" />
-            <BentoTile value={mmss(s.medianMinutesToRed)} label="median time to a failing test" tone="success" />
-            <BentoTile value={s.coinsPerRunMedian.toFixed(2)} label="Bobcoins per fix (median)" tone="dark" />
+            <BentoTile value={mmss(s.medianMinutesToRed)} label="median time to a failing test" tone="highlight" />
+            <BentoTile value={s.coinsPerRunMedian.toFixed(2)} label="Bobcoins per fix (median)" tone="ink" />
             <BentoTile value={String(s.runsWithoutHumanIntervention)} label={`runs with zero human prompts, of ${s.bugsAttempted}`} />
           </div>
         </section>
@@ -293,7 +294,7 @@ export default async function Home() {
         </div>
         <p
           aria-hidden="true"
-          className="select-none px-2 text-center text-[clamp(4rem,19vw,16rem)] font-semibold leading-[0.8] tracking-[-0.06em] text-[var(--surface)]"
+          className="select-none px-2 text-center text-[clamp(4rem,19vw,16rem)] font-semibold leading-[0.8] tracking-[-0.06em] text-[var(--border)]"
         >
           BugProof
         </p>
@@ -317,7 +318,7 @@ function EvidenceCard({
 }) {
   return (
     <div
-      className={`float-card rounded-2xl border border-[var(--border)] bg-[var(--bg)]/70 p-4 shadow-xl shadow-black/20 backdrop-blur-md ${tilt}`}
+      className={`float-card rounded-2xl bg-[var(--surface)] p-4 text-[var(--text)] shadow-[0_12px_32px_rgb(10_60_150/0.25)] ${tilt}`}
       style={{ ["--i" as string]: i }}
     >
       <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--muted)]">
@@ -329,14 +330,14 @@ function EvidenceCard({
   );
 }
 
-function BentoTile({ value, label, tone }: { value: string; label: string; tone?: "success" | "dark" }) {
+function BentoTile({ value, label, tone }: { value: string; label: string; tone?: "highlight" | "ink" }) {
   const toneClass =
-    tone === "success"
-      ? "bg-[var(--success)] text-[var(--bg)]"
-      : tone === "dark"
-        ? "bg-[var(--bg)] border border-[var(--border)]"
+    tone === "highlight"
+      ? "bg-[var(--highlight)] text-[var(--highlight-fg)]"
+      : tone === "ink"
+        ? "bg-[var(--text)] text-[var(--bg)]"
         : "bg-[var(--surface)] border border-[var(--border)]";
-  const labelClass = tone === "success" ? "opacity-80" : "text-[var(--muted)]";
+  const labelClass = tone ? "" : "text-[var(--muted)]";
   return (
     <p className={`flex flex-col gap-2 rounded-3xl p-6 ${toneClass}`}>
       <span className="text-4xl font-semibold tracking-tight">{value}</span>

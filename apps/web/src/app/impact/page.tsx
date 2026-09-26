@@ -10,13 +10,14 @@ export const metadata: Metadata = { title: "Impact · BugProof" };
 
 const BENCHMARK_DOC = "https://github.com/GegarinSagolsem/bugproof/blob/main/docs/benchmark.md";
 
-function StatTile({ label, value, detail }: { label: string; value: string; detail: string }) {
+function StatTile({ label, value, detail, highlight }: { label: string; value: string; detail: string; highlight?: boolean }) {
+  const sub = highlight ? "" : "text-[var(--muted)]";
   return (
-    <Card>
-      <CardContent className="flex h-full flex-col gap-1 p-4">
-        <p className="text-xs text-[var(--muted)]">{label}</p>
-        <p className="text-2xl font-semibold tracking-tight">{value}</p>
-        <p className="text-xs text-[var(--muted)]">{detail}</p>
+    <Card className={highlight ? "border-transparent bg-[var(--highlight)] text-[var(--highlight-fg)]" : undefined}>
+      <CardContent className="flex h-full flex-col gap-1 p-5">
+        <p className={`text-xs ${sub}`}>{label}</p>
+        <p className="text-3xl font-semibold tracking-tight">{value}</p>
+        <p className={`text-xs ${sub}`}>{detail}</p>
       </CardContent>
     </Card>
   );
@@ -42,13 +43,13 @@ export default function ImpactPage() {
       </header>
 
       <section aria-label="Headline numbers" className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-        <Card>
+        <Card className="border-transparent bg-[var(--accent)] text-[var(--accent-fg)]">
           <CardContent className="flex h-full flex-col justify-center gap-2 p-6">
-            <p className="text-sm text-[var(--muted)]">Culprit commit matches the answer key</p>
-            <p className="text-6xl font-semibold tracking-tight">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em]">Culprit commit matches the answer key</p>
+            <p className="text-7xl font-semibold tracking-tight">
               {s.culpritCorrect}/{s.bugsAttempted}
             </p>
-            <p className="text-sm text-[var(--muted)]">
+            <p className="text-sm">
               {s.culpritCorrectByBisect} pinned by <span className="font-mono">git bisect</span>,{" "}
               {s.culpritCorrect - s.culpritCorrectByBisect} named by the Historian from git history.{" "}
               {s.liveCulpritCorrect} of {s.bugsAttempted} were named correctly during the run itself.
@@ -56,7 +57,7 @@ export default function ImpactPage() {
           </CardContent>
         </Card>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <StatTile label="Bugs proven" value={`${s.proven}/${s.bugsAttempted}`} detail={`${s.unproven} unproven · RED test → fix → all tests green`} />
+          <StatTile highlight label="Bugs proven" value={`${s.proven}/${s.bugsAttempted}`} detail={`${s.unproven} unproven · RED test → fix → all tests green`} />
           <StatTile label="Median time to a failing test" value={mmss(s.medianMinutesToRed)} detail="from the customer's report to a RED reproduction" />
           {live && (
             <StatTile

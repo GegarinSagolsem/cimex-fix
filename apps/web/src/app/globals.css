@@ -1,29 +1,38 @@
 @import "tailwindcss";
 
+/* Light is the default ("sky & lime"). Every text colour clears WCAG AA (4.5:1) on --bg and --surface. */
 :root {
-  --bg: #0b0d12;
-  --surface: #12151c;
-  --border: #232836;
-  --text: #e8eaf0;
-  --muted: #8b93a5;
+  --bg: #f4f5f2;
+  --surface: #ffffff;
+  --border: #e3e5e0;
+  --text: #111111;
+  --muted: #5f6368;
+  --accent: #0a62e0;
+  --accent-fg: #ffffff;
+  --sky: #1f7aff;
+  --highlight: #d4f25a;
+  --highlight-fg: #111111;
+  --success: #15803d;
+  --danger: #da1e28;
+  --warning: #8a6a00;
+  --agent: #8a3ffc;
+}
+
+.dark {
+  --bg: #0e0f0d;
+  --surface: #17181a;
+  --border: #2a2c2e;
+  --text: #f2f3ef;
+  --muted: #a3a6a0;
   --accent: #4589ff;
+  --accent-fg: #0e0f0d;
+  --sky: #1b4fae;
+  --highlight: #d4f25a;
+  --highlight-fg: #111111;
   --success: #42be65;
   --danger: #fa4d56;
   --warning: #f1c21b;
   --agent: #a56eff;
-}
-
-.light {
-  --bg: #ffffff;
-  --surface: #f4f4f4;
-  --border: #e0e0e0;
-  --text: #161616;
-  --muted: #525252;
-  --accent: #0f62fe;
-  --success: #198038;
-  --danger: #da1e28;
-  --warning: #b28600;
-  --agent: #8a3ffc;
 }
 
 @theme inline {
@@ -33,6 +42,10 @@
   --color-text: var(--text);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-sky: var(--sky);
+  --color-highlight: var(--highlight);
+  --color-highlight-fg: var(--highlight-fg);
   --color-success: var(--success);
   --color-danger: var(--danger);
   --color-warning: var(--warning);
@@ -47,8 +60,11 @@ body {
   font-family: var(--font-plex-sans), system-ui, sans-serif;
 }
 
-* {
-  border-color: var(--border);
+/* In the base layer so border-* colour utilities can override it (unlayered rules beat every layer). */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
 }
 
 :focus-visible {
@@ -89,13 +105,26 @@ body {
   }
 }
 
-/* Landing hero: glowing colour fields built from the theme tokens, so they follow light/dark. */
-.hero-glow {
+/* Landing hero: a sky. The top 55% stays at or darker than #0f6bf0, so white body text there keeps >= 4.8:1. */
+.hero-sky {
+  background: linear-gradient(180deg, #0a5bd6 0%, #0f6bf0 55%, #3d8bff 78%, #9ccaff 100%);
+}
+
+.dark .hero-sky {
+  background: linear-gradient(180deg, #0a1a3a 0%, #10306e 60%, #1b4fae 100%);
+}
+
+/* Soft "clouds" drifting behind the hero cards. */
+.hero-clouds {
   background:
-    radial-gradient(38% 50% at 72% 28%, color-mix(in oklab, var(--accent) 60%, transparent) 0%, transparent 70%),
-    radial-gradient(32% 42% at 22% 78%, color-mix(in oklab, var(--agent) 50%, transparent) 0%, transparent 70%),
-    radial-gradient(22% 30% at 88% 82%, color-mix(in oklab, var(--success) 30%, transparent) 0%, transparent 70%);
+    radial-gradient(30% 22% at 18% 88%, rgb(255 255 255 / 0.55) 0%, transparent 70%),
+    radial-gradient(26% 18% at 62% 96%, rgb(255 255 255 / 0.5) 0%, transparent 70%),
+    radial-gradient(24% 16% at 92% 84%, rgb(255 255 255 / 0.45) 0%, transparent 70%);
   animation: hero-drift 18s ease-in-out infinite;
+}
+
+.dark .hero-clouds {
+  opacity: 0.25;
 }
 
 @keyframes hero-drift {
@@ -128,7 +157,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .proven-stamp,
   .reveal-step,
-  .hero-glow,
+  .hero-clouds,
   .float-card {
     animation: none;
   }
