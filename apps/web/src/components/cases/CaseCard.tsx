@@ -10,7 +10,15 @@ function formatDuration(seconds: number): string {
   return `${m}m ${s}s`;
 }
 
+function secondsToProof(c: Case): number | undefined {
+  if (c.metrics?.timeToProofSec !== undefined) return c.metrics.timeToProofSec;
+  if (!c.provenAt) return undefined;
+  const sec = Math.round((Date.parse(c.provenAt) - Date.parse(c.startedAt)) / 1000);
+  return Number.isFinite(sec) && sec >= 0 ? sec : undefined;
+}
+
 export function CaseCard({ case: c }: { case: Case }) {
+  const proofSec = secondsToProof(c);
   return (
     <Link
       href={`/cases/${c.id}`}
@@ -29,9 +37,7 @@ export function CaseCard({ case: c }: { case: Case }) {
         <CardContent className="flex items-center justify-between gap-2">
           <StatusChip status={c.status} />
           <span className="font-mono text-xs text-[var(--muted)]">
-            {c.metrics?.timeToProofSec !== undefined
-              ? `proof in ${formatDuration(c.metrics.timeToProofSec)}`
-              : "no proof yet"}
+            {proofSec !== undefined ? `proof in ${formatDuration(proofSec)}` : "no proof yet"}
           </span>
         </CardContent>
       </Card>
