@@ -246,7 +246,9 @@ export default async function Home() {
           <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map(([title, text, who], i) => (
               <li key={title} className="flex flex-col gap-3 rounded-2xl border border-[var(--border)] bg-[var(--bg)] p-5">
-                <span className="font-mono text-3xl font-semibold tracking-tight text-[var(--border)]">{String(i + 1).padStart(2, "0")}</span>
+                <span className="flex size-10 items-center justify-center rounded-full bg-[var(--highlight)] font-mono text-sm font-semibold text-[var(--highlight-fg)]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <p className="font-medium">{title}</p>
                 <p className="text-sm text-[var(--muted)]">{text}</p>
                 <span className="mt-auto self-start rounded-full border border-[var(--border)] px-2.5 py-1 font-mono text-[11px] text-[var(--muted)]">{who}</span>
@@ -285,19 +287,41 @@ export default async function Home() {
         </ul>
       </section>
 
-      <footer className="overflow-hidden border-t border-[var(--border)]">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 pt-8 text-xs text-[var(--muted)] sm:px-6">
-          <span>Every number on this site is computed from real case data — see docs/benchmark.md.</span>
-          <a href={REPO_URL} className="hover:text-[var(--text)]">
-            GitHub
-          </a>
+      <section aria-labelledby="cta-title" className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-24">
+        <div className="panel-sky flex flex-col items-start gap-6 rounded-3xl p-8 text-white sm:p-12 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em]">Stop guessing</p>
+            <h2 id="cta-title" className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">
+              Prove it.
+            </h2>
+            <p className="mt-2 max-w-xl">Open a real Proof of Fix: the failing test, the culprit commit, the fix and the review.</p>
+          </div>
+          <Link
+            href={`/cases/${showcase.caseId}/proof`}
+            className="inline-flex shrink-0 items-center gap-3 rounded-full bg-[var(--highlight)] py-1.5 pl-5 pr-1.5 font-mono text-xs font-medium uppercase tracking-[0.12em] text-[var(--highlight-fg)] hover:brightness-95"
+          >
+            See a real proof
+            <span className="flex size-8 items-center justify-center rounded-full bg-[#111111] text-white">
+              <ArrowRight className="size-4 -rotate-45" aria-hidden="true" />
+            </span>
+          </Link>
         </div>
-        <p
-          aria-hidden="true"
-          className="select-none px-2 text-center text-[clamp(4rem,19vw,16rem)] font-semibold leading-[0.8] tracking-[-0.06em] text-[var(--border)]"
-        >
-          BugProof
-        </p>
+      </section>
+
+      <footer className="border-t border-[var(--border)] bg-[var(--surface)]">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
+            <span className="h-2 w-2 rounded-full bg-[var(--accent)]" aria-hidden="true" />
+            BugProof
+          </Link>
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2 text-[var(--muted)]">
+            <Link href="/cases" className="hover:text-[var(--text)]">Cases</Link>
+            <Link href="/impact" className="hover:text-[var(--text)]">Impact</Link>
+            <Link href="/triage" className="hover:text-[var(--text)]">Triage</Link>
+            <a href={REPO_URL} className="hover:text-[var(--text)]">GitHub</a>
+          </nav>
+          <p className="text-xs text-[var(--muted)]">Every number here is computed from real case data (docs/benchmark.md).</p>
+        </div>
       </footer>
     </div>
   );
