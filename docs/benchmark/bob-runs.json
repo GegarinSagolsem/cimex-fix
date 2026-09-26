@@ -1,0 +1,59 @@
+{
+  "source": "IBM Bob task log ~/.bob/db/bob.db (tables tasks, messages), extracted 2026-09-26 ~11:30 IST. coins = the root task's recorded cost (it already includes its subagents and every subtask that handed back) + subtasks that never handed back. humanInterventions = messages typed by the human after the first prompt (automatic Lead→subtask hand-offs excluded). bisect* counts come from the tool calls and results in the task's messages. liveCulprit / finalCulpritMethod are classified from the case events and evidence shapes (the bisect tool always writes sha + steps).",
+  "runs": [
+    {
+      "bug": 4, "caseId": "case_20260925_34fd", "intake": "issue text", "bobTask": "e7b06407", "fixCommit": "35a91bf",
+      "coins": 2.84, "humanInterventions": 0, "subtasks": 0, "spawnSubagent": 2, "startSubtask": 0,
+      "bisectCalls": 3, "bisectTimeouts": 2, "bisectFound": 0,
+      "liveCulprit": "correct", "liveCulpritNote": "named by the Locator from git history after bisect failed",
+      "finalCulpritMethod": "bisect (follow-up Bob task)", "followUpTask": "6e20b35a"
+    },
+    {
+      "bug": 6, "caseId": "case_20260925_318b", "intake": "server log", "bobTask": "8c239418", "fixCommit": "e21313f",
+      "coins": 2.78, "humanInterventions": 0, "subtasks": 0, "spawnSubagent": 0, "startSubtask": 0,
+      "bisectCalls": 1, "bisectTimeouts": 0, "bisectFound": 0,
+      "liveCulprit": "correct", "liveCulpritNote": "named by the Historian from git history; bisect returned no culprit",
+      "finalCulpritMethod": "Historian (git history)",
+      "finalCulpritNote": "not bisectable with its repro test: the test imports parseQuantity, which the culprit commit itself introduced, so every earlier commit is untestable"
+    },
+    {
+      "bug": 1, "caseId": "case_20260925_bf62", "intake": "screenshot", "bobTask": "63a1a929", "fixCommit": "6d6c87a",
+      "coins": 4.91, "humanInterventions": 0, "subtasks": 3, "spawnSubagent": 5, "startSubtask": 3,
+      "bisectCalls": 2, "bisectTimeouts": 2, "bisectFound": 0,
+      "liveCulprit": "wrong", "liveCulpritNote": "Lead named the initial commit after bisect timed out",
+      "finalCulpritMethod": "bisect (run outside Bob after the run)"
+    },
+    {
+      "bug": 3, "caseId": "case_20260926_2c6c", "intake": "PDF (QA report)", "bobTask": "3f521cac", "fixCommit": "31835d5",
+      "coins": 2.39, "humanInterventions": 3, "subtasks": 1, "spawnSubagent": 6, "startSubtask": 1,
+      "bisectCalls": 2, "bisectTimeouts": 2, "bisectFound": 0,
+      "liveCulprit": "none", "liveCulpritNote": "bisect timed out; Lead recorded the root-cause line, not a commit",
+      "finalCulpritMethod": "bisect (follow-up Bob task)", "followUpTask": "9537be04"
+    },
+    {
+      "bug": 8, "caseId": "case_20260926_db4f", "intake": "screenshot", "bobTask": "80751800", "fixCommit": "0944d88",
+      "coins": 5.36, "humanInterventions": 4, "subtasks": 1, "spawnSubagent": 5, "startSubtask": 1,
+      "bisectCalls": 3, "bisectTimeouts": 3, "bisectFound": 0,
+      "liveCulprit": "wrong", "liveCulpritNote": "Lead named the initial commit from git log after bisect timed out",
+      "finalCulpritMethod": "bisect (follow-up Bob task)", "followUpTask": "9537be04"
+    },
+    {
+      "bug": 5, "caseId": "case_20260926_7e5e", "intake": "issue text", "bobTask": "630c6c30", "fixCommit": "6ff3e78",
+      "coins": 3.06, "humanInterventions": 0, "subtasks": 3, "spawnSubagent": 4, "startSubtask": 3,
+      "bisectCalls": 1, "bisectTimeouts": 0, "bisectFound": 1,
+      "liveCulprit": "correct", "liveCulpritNote": "found by bisect during the run",
+      "finalCulpritMethod": "bisect (live, during the run)"
+    }
+  ],
+  "followUps": [
+    { "bobTask": "9537be04", "what": "re-bisect bugs #3 and #8 (fix already committed, bad = fix commit's parent)", "coins": 0.17, "bisectCalls": 2, "bisectFound": 2 },
+    { "bobTask": "6e20b35a", "what": "re-bisect bug #4", "coins": 0.09, "bisectCalls": 1, "bisectFound": 1 }
+  ],
+  "setup": [
+    { "bobTask": "794925d4", "what": "/init → AGENTS.md", "coins": 1.13 },
+    { "bobTask": "3c8fbd68", "what": "custom modes + rules", "coins": 0.40 },
+    { "bobTask": "bd8ce5cf", "what": "skills", "coins": 0.40 },
+    { "bobTask": "f49dc8b4", "what": "MCP server", "coins": 2.90 }
+  ],
+  "rootCauseOfEarlyBisectFailures": "Bob passed repoPath as c:\\dev\\... (lowercase drive); Vitest loaded twice and every bisect step was skipped, overrunning Bob's ~60 s MCP call limit. Fixed 2026-09-26 in packages/mcp/src/session.ts (commit 4563a3d)."
+}
