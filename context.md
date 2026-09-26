@@ -17,6 +17,25 @@ meta in `docs/benchmark/model-baseline/google_gemini-3.1-pro-high/`. 48 answers 
 coupon throws, culprit `185f248`). Parallel Opus runs all ended "stream was interrupted" → discarded unscored (`raw-opus\`),
 re-asked one at a time (`raw-opus-solo\`, all SUCCESS). Totals now: 7 models, 56 answers, 38 fixed, 30 with proof.
 
+**Judge critique fixes (09-26 ~23:30, after a read-only judge subagent review):**
+- ✅ #1 Test lock: `run_tests expect=red` hashes every file under `tests/` into `.bugproof/test-lock.json` (per case);
+  `publish_proof status=proven` re-hashes, records `TESTS_UNCHANGED` / `TESTS_CHANGED` / `TESTS_UNCHECKED` milestones and
+  refuses if a test changed or was deleted (`packages/mcp/src/testLock.ts`, tested with a scratch repo + fake API, 12/12).
+  👤 **Restart the `bugproof` MCP server in Bob** (Settings → MCP) so it loads the new `dist/`. Proof pages show a 5th
+  check "Tests untouched"; the 8 old runs use a git check (`testGuard` in benchmark.json: 0/8 fixes changed an existing test).
+  Wording fixed everywhere: no "physically can't" / "enforceable"; Critic = "no edit permission" (it has `execute`).
+- ✅ #2 Hero "culprits 8/8 (4 during the run)", bento adds "4/8 named during the run", "bug #5, no human prompts";
+  verdicts display as APPROVED (`lib/display.ts`); cases 2c6c/db4f shown with symptom titles (display only, data unchanged);
+  README honesty notes: test lock added after the runs, Critic never sent a fix back. Submission long description 494/500.
+- ✅ #5 Secrets scan (full history, both repos): 0 hits for the 3 local secret values and token patterns; only
+  `.env.example` ever committed; GitHub has only `main` in both repos. **Open for the user before going public:**
+  (a) 5 early main-repo commits (09-25 phase 0) and the demo root commit `32d13b1` are authored by
+  `SagolsemHironika <sagolsemhironika@gmail.com>` and carry `Co-Authored-By: Claude` trailers; 2 main commits use the
+  personal gmail. Main repo could be rewritten (force-push); demo root can't without breaking every SHA.
+  (b) Public CLAUDE.md says "no AI/Claude names in commits" while README discloses Claude Code; decide whether to keep.
+- Judge's other notes kept for slides/video: pitch "we don't trust any model's answer, we prove it", not "we beat the
+  models"; no hooks / "PR per fix" claims; setup coins 0.40/0.40 verified in bob.db (real, not placeholders).
+
 **Then:** slides + cover, video script → Bob hooks only if coins remain (**7 Bobcoins left**, user 09-26). Both repos
 still **private**; make them public just before submitting (Sun, after the freeze).
 
