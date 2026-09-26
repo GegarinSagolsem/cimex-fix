@@ -95,12 +95,17 @@ server.registerTool(
   {
     description:
       "Git-bisect a regression using a test file. Creates a temporary git worktree at the " +
-      "'bad' commit, then runs git bisect to locate the first bad commit. Returns sha, " +
-      "subject, author, date, diff (trimmed to 6000 chars), and step count.",
+      "'bad' commit, checks the test fails there, then runs git bisect from the root commit to " +
+      "locate the first bad commit (finishes within ~50 s or returns a warning with the reason). " +
+      "Returns sha, subject, author, date, diff (trimmed to 6000 chars), and step count.",
     inputSchema: {
       testFile: z.string().describe("Relative path to the test file inside repoPath"),
-      good: z.string().optional().describe("Known good commit (defaults to root commit)"),
-      bad: z.string().optional().default("HEAD").describe("Known bad commit (defaults to HEAD)"),
+      good: z.string().optional().describe("Ignored: the root commit is always the good baseline"),
+      bad: z
+        .string()
+        .optional()
+        .default("HEAD")
+        .describe("Commit where the test fails (defaults to HEAD). If the fix is already committed, pass '<fix commit>^'."),
       caseId: z.string().optional().describe("Case ID (defaults to active-case file)"),
       repoPath: z.string().optional().describe("Working directory (defaults to process.cwd())"),
     },

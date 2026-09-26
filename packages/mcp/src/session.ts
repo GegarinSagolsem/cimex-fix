@@ -4,7 +4,10 @@ import * as path from "node:path";
 
 // Bob may start the MCP server from its own install folder, so never trust process.cwd() alone.
 export function resolveRepoPath(repoPath?: string): string {
-  return repoPath ?? process.env.BUGPROOF_REPO ?? process.cwd();
+  const resolved = path.resolve(repoPath ?? process.env.BUGPROOF_REPO ?? process.cwd());
+  // Bob passes "c:\...". Vitest then loads twice ("c:" and "C:") and every test errors with
+  // "Cannot read properties of undefined (reading 'config')", so bisect skips every commit.
+  return resolved.replace(/^[a-z]:/, (drive) => drive.toUpperCase());
 }
 
 const globalActiveCase = path.join(os.homedir(), ".bugproof", "active-case");
