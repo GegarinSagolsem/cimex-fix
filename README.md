@@ -1,8 +1,8 @@
-# BugProof
+# Cimex Fix
 
 **No fix without proof.**
 
-BugProof turns a bug report into a **Proof of Fix**. IBM Bob reproduces the bug with a failing test, pins the
+Cimex Fix turns a bug report into a **Proof of Fix**. IBM Bob reproduces the bug with a failing test, pins the
 culprit commit with `git bisect`, fixes it under file-level permissions, and an adversarial Critic signs off —
 while **Mission Control** shows the whole investigation live.
 
@@ -11,7 +11,8 @@ while **Mission Control** shows the whole investigation live.
 - **Results:** https://bugproof-web.vercel.app/impact · raw numbers in [`docs/benchmark.md`](docs/benchmark.md)
 - **Demo target repo:** https://github.com/GegarinSagolsem/bugproof-demo-shoplite
 
-Built for the IBM Bob 2.0 hackathon (lablab.ai).
+Built for the IBM Bob 2.0 hackathon (lablab.ai). *Cimex* is the Latin genus of the bed bug. The project was first
+called BugProof, so the repo names, URLs, the `bugproof` MCP server and the Bob mode IDs still use that name.
 
 ---
 
@@ -26,16 +27,16 @@ Built for the IBM Bob 2.0 hackathon (lablab.ai).
 
 Sources, exact quotes and caveats: [`docs/sources.md`](docs/sources.md).
 
-## What BugProof does
+## What Cimex Fix does
 
-Drop a bug report into IBM Bob and pick the **🕵️ BugProof Lead** mode:
+Drop a bug report into IBM Bob and pick the **🕵️ Cimex Lead** mode:
 
 | # | Step | Who (Bob mode / tool) | What it may touch |
 |---|---|---|---|
 | 1 | **Report in** — screenshot, QA PDF, server log or issue text | Lead | only `.bugproof/` |
 | 2 | **Investigate in parallel** — what broke, where the code runs, what changed recently | Triage · Locator · Historian subagents | read-only |
 | 3 | **Reproduce (RED)** — the smallest test that fails on an assertion, not a crash | 🧪 Reproducer | only `tests/bugproof/*.test.ts` |
-| 4 | **Pinpoint** — `git bisect` runs that test through history and names the culprit commit | BugProof MCP server | temporary worktree |
+| 4 | **Pinpoint** — `git bisect` runs that test through history and names the culprit commit | Cimex Fix MCP server | temporary worktree |
 | 5 | **Fix (GREEN)** — the smallest change that turns the test green without breaking any other test | 🔧 Fixer | only `src/**/*.ts` — tests are read-only |
 | 6 | **Challenge** — adversarial review of edge cases and side effects; can send the fix back once | ⚖️ Critic | nothing (read-only) |
 | 7 | **Proof** — a shareable Proof of Fix; IBM watsonx.ai Granite explains it in plain English | Lead + watsonx.ai | — |
@@ -98,12 +99,12 @@ npx vitest run tests/bugproof/bug-05-search-case.test.ts        # passes
 
 ```mermaid
 flowchart LR
-  R[Bug report<br/>screenshot · PDF · log · issue] --> L[🕵️ BugProof Lead<br/>IBM Bob mode]
+  R[Bug report<br/>screenshot · PDF · log · issue] --> L[🕵️ Cimex Lead<br/>IBM Bob mode]
   L -->|parallel subagents| I[Triage · Locator · Historian]
   L -->|subtask| RP[🧪 Reproducer]
   L -->|subtask| F[🔧 Fixer]
   L -->|subtask| C[⚖️ Critic]
-  L & RP & F & C -->|MCP tools| M[BugProof MCP server<br/>open_case · record · evidence<br/>run_tests · bisect · publish_proof]
+  L & RP & F & C -->|MCP tools| M[Cimex Fix MCP server<br/>open_case · record · evidence<br/>run_tests · bisect · publish_proof]
   M -->|/api/ingest| W[Mission Control<br/>Next.js on Vercel]
   W --> G[watsonx.ai Granite<br/>plain-English summary · /triage]
 ```
@@ -131,7 +132,7 @@ node scripts/install-bob-pack.mjs /path/to/your/repo  # copies modes, rules, ski
    token Mission Control expects).
 2. Edit `bob/pack/mcp.json` before installing: it points at this clone's `packages/mcp/dist/index.js` and env file
    with absolute paths from the author's machine.
-3. In IBM Bob, open your repo, restart the `bugproof` MCP server (Settings → MCP), pick **🕵️ BugProof Lead**, and send
+3. In IBM Bob, open your repo, restart the `bugproof` MCP server (Settings → MCP), pick **🕵️ Cimex Lead**, and send
    e.g. `A customer opened this issue: intake/bug.md. Prove and fix the bug it describes.`
 
 **Mission Control locally:** `npm run dev` → http://localhost:3000. Optional env: `BUGPROOF_INGEST_TOKEN`,

@@ -73,7 +73,7 @@ export default async function Home() {
           <header className="flex items-center justify-between gap-3 p-4 sm:px-8 sm:py-6">
             <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
               <span className="h-2 w-2 rounded-full bg-[var(--highlight)]" aria-hidden="true" />
-              BugProof
+              Cimex Fix
             </Link>
             <nav
               aria-label="Main"
@@ -119,7 +119,7 @@ export default async function Home() {
             </ul>
 
             <p className="mt-8 max-w-xl text-base text-white sm:text-lg">
-              BugProof turns a bug report into a Proof of Fix. IBM Bob reproduces the bug with a failing test, pins the culprit
+              Cimex Fix turns a bug report into a Proof of Fix. IBM Bob reproduces the bug with a failing test, pins the culprit
               commit with <span className="font-mono">git bisect</span>, fixes it under file-level permissions, and a Critic
               signs off — live on Mission Control.
             </p>
@@ -312,7 +312,7 @@ export default async function Home() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
             <span className="h-2 w-2 rounded-full bg-[var(--accent)]" aria-hidden="true" />
-            BugProof
+            Cimex Fix
           </Link>
           <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2 text-[var(--muted)]">
             <Link href="/cases" className="hover:text-[var(--text)]">Cases</Link>

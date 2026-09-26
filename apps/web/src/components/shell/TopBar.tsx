@@ -10,7 +10,7 @@ export function TopBar({ cases }: { cases: Case[] }) {
       <div className="flex items-center gap-2 sm:gap-4">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <span className="h-2 w-2 rounded-full bg-[var(--accent)]" aria-hidden="true" />
-          BugProof
+          Cimex Fix
         </Link>
         <MainNav />
       </div>

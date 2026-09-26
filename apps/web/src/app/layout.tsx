@@ -16,7 +16,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BugProof",
+  title: "Cimex Fix",
   description:
     "No fix without proof. IBM Bob reproduces a bug with a failing test, finds the culprit commit, fixes it, and publishes a Proof of Fix.",
 };
