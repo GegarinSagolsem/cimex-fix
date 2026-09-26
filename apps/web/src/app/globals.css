@@ -89,10 +89,47 @@ body {
   }
 }
 
+/* Landing hero: glowing colour fields built from the theme tokens, so they follow light/dark. */
+.hero-glow {
+  background:
+    radial-gradient(38% 50% at 72% 28%, color-mix(in oklab, var(--accent) 60%, transparent) 0%, transparent 70%),
+    radial-gradient(32% 42% at 22% 78%, color-mix(in oklab, var(--agent) 50%, transparent) 0%, transparent 70%),
+    radial-gradient(22% 30% at 88% 82%, color-mix(in oklab, var(--success) 30%, transparent) 0%, transparent 70%);
+  animation: hero-drift 18s ease-in-out infinite;
+}
+
+@keyframes hero-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.06);
+  }
+}
+
+/* Uses `translate`, not `transform`, so it composes with Tailwind's rotate-* utilities. */
+.float-card {
+  animation: float-card 7s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -1.6s);
+}
+
+@keyframes float-card {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -8px;
+  }
+}
+
 /* The global rule below shortens durations but not delays, so switch these off outright. */
 @media (prefers-reduced-motion: reduce) {
   .proven-stamp,
-  .reveal-step {
+  .reveal-step,
+  .hero-glow,
+  .float-card {
     animation: none;
   }
 }
