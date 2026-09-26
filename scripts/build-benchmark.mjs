@@ -37,7 +37,7 @@ const median = (xs) => {
 };
 const round2 = (n) => Math.round(n * 100) / 100;
 const mmss = (m) => {
-  if (m === undefined) return "—";
+  if (m == null) return "—";
   const sec = Math.round(m * 60);
   return `${Math.floor(sec / 60)}m ${String(sec % 60).padStart(2, "0")}s`;
 };
@@ -63,21 +63,21 @@ const cases = bob.runs.map((run) => {
     intake: run.intake,
     status: d.case.status,
     startedAt: d.case.startedAt,
-    redAt: red?.ts,
-    liveCulpritAt: bisectDone?.ts,
-    provenAt: d.case.provenAt,
-    minutesToRed: red ? minutes(d.case.startedAt, red.ts) : undefined,
-    minutesToLiveCulprit: bisectDone ? minutes(d.case.startedAt, bisectDone.ts) : undefined,
-    minutesToProof: d.case.provenAt ? minutes(d.case.startedAt, d.case.provenAt) : undefined,
-    testsAfter: green ? green.data.total : fixGreen ? Number(fixGreen[2]) : undefined,
+    redAt: red?.ts ?? null,
+    liveCulpritAt: bisectDone?.ts ?? null,
+    provenAt: d.case.provenAt ?? null,
+    minutesToRed: red ? minutes(d.case.startedAt, red.ts) : null,
+    minutesToLiveCulprit: bisectDone ? minutes(d.case.startedAt, bisectDone.ts) : null,
+    minutesToProof: d.case.provenAt ? minutes(d.case.startedAt, d.case.provenAt) : null,
+    testsAfter: green ? green.data.total : fixGreen ? Number(fixGreen[2]) : null,
     testsAfterSource: green ? "GREEN evidence" : fixGreen ? "FIX_GREEN milestone" : "—",
-    culprit: found,
+    culprit: found ?? null,
     answerKeySubject: key.subject,
     culpritCorrect: found?.subject === key.subject,
     liveCulprit: run.liveCulprit,
     liveCulpritNote: run.liveCulpritNote,
     finalCulpritMethod: run.finalCulpritMethod,
-    finalCulpritNote: run.finalCulpritNote,
+    finalCulpritNote: run.finalCulpritNote ?? null,
     coins: run.coins,
     humanInterventions: run.humanInterventions,
     bisectCalls: run.bisectCalls,
@@ -98,7 +98,7 @@ const summary = {
   medianMinutesToRed: round2(median(cases.map((c) => c.minutesToRed))),
   medianMinutesToProof: round2(median(cases.map((c) => c.minutesToProof))),
   fastestMinutesToProof: round2(Math.min(...cases.map((c) => c.minutesToProof))),
-  liveBisectRun: liveRun && { bug: liveRun.bug, minutesToProof: round2(liveRun.minutesToProof), minutesToCulprit: round2(liveRun.minutesToLiveCulprit), humanInterventions: liveRun.humanInterventions, coins: liveRun.coins },
+  liveBisectRun: liveRun ? { bug: liveRun.bug, minutesToProof: round2(liveRun.minutesToProof), minutesToCulprit: round2(liveRun.minutesToLiveCulprit), humanInterventions: liveRun.humanInterventions, coins: liveRun.coins } : null,
   runsWithoutHumanIntervention: cases.filter((c) => c.humanInterventions === 0).length,
   coinsPerRunMedian: round2(median(cases.map((c) => c.coins))),
   coinsPerRunMin: Math.min(...cases.map((c) => c.coins)),
