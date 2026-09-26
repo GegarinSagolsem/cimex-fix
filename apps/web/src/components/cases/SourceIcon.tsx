@@ -9,15 +9,23 @@ const SOURCE_CONFIG: Record<CaseSource, { label: string; icon: LucideIcon }> = {
   log: { label: "Log", icon: ScrollText },
 };
 
-export function SourceIcon({ source, className }: { source: CaseSource; className?: string }) {
+export function SourceIcon({
+  source,
+  className,
+  showLabel,
+}: {
+  source: CaseSource;
+  className?: string;
+  showLabel?: boolean;
+}) {
   const { label, icon: Icon } = SOURCE_CONFIG[source];
   return (
     <span
       className={cn("inline-flex items-center gap-1.5 text-[var(--muted)]", className)}
-      title={label}
+      title={`Reported as: ${label}`}
     >
       <Icon className="size-3.5" aria-hidden="true" />
-      <span className="sr-only">{label}</span>
+      <span className={showLabel ? "text-xs" : "sr-only"}>{label}</span>
     </span>
   );
 }

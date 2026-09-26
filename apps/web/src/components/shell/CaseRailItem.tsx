@@ -17,7 +17,7 @@ export function CaseRailItem({ case: c, active }: { case: Case; active?: boolean
     >
       <div className="flex items-center justify-between gap-2">
         <span className="font-mono text-xs text-[var(--muted)]">{c.issue}</span>
-        <SourceIcon source={c.source} />
+        <SourceIcon source={c.source} showLabel />
       </div>
       <span className="line-clamp-2 text-sm font-medium text-[var(--text)]">{c.title}</span>
       <span className="self-start">

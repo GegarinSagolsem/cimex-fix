@@ -25,8 +25,8 @@ export function CaseCard({ case: c }: { case: Case }) {
       className="group flex h-full flex-col gap-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_1px_2px_rgb(17_17_17/0.04),0_4px_16px_rgb(17_17_17/0.04)] transition-[translate,box-shadow] hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgb(10_60_150/0.12)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
     >
       <div className="flex items-start justify-between gap-3">
-        <span className="flex size-10 items-center justify-center rounded-full bg-[var(--highlight)] text-[var(--highlight-fg)]">
-          <SourceIcon source={c.source} className="text-[var(--highlight-fg)] [&_svg]:size-4" />
+        <span className="inline-flex h-10 items-center rounded-full bg-[var(--highlight)] px-3.5 text-[var(--highlight-fg)]">
+          <SourceIcon source={c.source} showLabel className="text-[var(--highlight-fg)] [&_svg]:size-4" />
         </span>
         <StatusChip status={c.status} />
       </div>

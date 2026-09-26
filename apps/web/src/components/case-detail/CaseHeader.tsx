@@ -13,7 +13,7 @@ export function CaseHeader({ case: c }: { case: Case }) {
         <span>{c.repo}</span>
         <span aria-hidden="true">·</span>
         <span>{c.issue}</span>
-        <SourceIcon source={c.source} />
+        <SourceIcon source={c.source} showLabel />
       </div>
       <h1 className="text-xl font-semibold">{c.title}</h1>
       <div className="flex flex-wrap items-center gap-2">
