@@ -10,7 +10,7 @@ import { watsonxChat, getWatsonxModelId } from "@/lib/watsonx";
  * silently on any failure.
  */
 
-const SYSTEM_PROMPT = `You write short plain-English summaries of software bug fixes for a non-technical manager who has never seen the code. Given a bug's title and the evidence gathered while diagnosing and fixing it, write EXACTLY three sentences, in this order: (1) what broke, in terms a manager understands, (2) why it broke (the root cause), (3) what changed to fix it. No jargon, no code, no file paths, no markdown, no bullet points, no sentence count mentioned — just three plain sentences of prose.`;
+const SYSTEM_PROMPT = `You write short plain-English summaries of software bug fixes for a non-technical manager who has never seen the code. Given a bug's title and the evidence gathered while diagnosing and fixing it, write EXACTLY three sentences, in this order: (1) what broke, in terms a manager understands, (2) why it broke (the root cause), (3) what changed to fix it. Take the root cause from the engineer's technical summary and the code change; never guess or add causes that are not stated there. No jargon, no code, no file paths, no markdown, no bullet points, no sentence count mentioned — just three plain sentences of prose.`;
 
 function truncate(value: string, max: number): string {
   return value.length > max ? `${value.slice(0, max)}...` : value;
@@ -25,8 +25,10 @@ function describeEvidence(evidence: Evidence[]): string[] {
   const culprit = evidence.findLast((e) => e.kind === "culprit");
   if (culprit) lines.push(`Commit that introduced the bug: ${truncate(JSON.stringify(culprit.data), 400)}`);
 
+  // Send the patch as plain text: 600 chars of escaped JSON cut off half of multi-hunk fixes.
   const diff = evidence.findLast((e) => e.kind === "diff");
-  if (diff) lines.push(`Code change (diff): ${truncate(JSON.stringify(diff.data), 600)}`);
+  const patch = diff && (typeof diff.data.diff === "string" ? diff.data.diff : typeof diff.data.patch === "string" ? diff.data.patch : null);
+  if (diff) lines.push(`Code change (diff):\n${truncate(patch ?? JSON.stringify(diff.data), 2000)}`);
 
   const green = evidence.findLast((e) => e.kind === "green");
   if (green) lines.push(`Passing test after the fix: ${truncate(JSON.stringify(green.data), 400)}`);
@@ -42,6 +44,10 @@ function buildUserPrompt(caseData: Case, evidence: Evidence[]): string {
     `Bug title: ${caseData.title}`,
     `Severity: ${caseData.severity}`,
   ];
+
+  if (caseData.summary) {
+    parts.push(`Engineer's technical summary (accurate — base the root cause on this):\n${truncate(caseData.summary, 1500)}`);
+  }
 
   if (caseData.culprit) {
     parts.push(
