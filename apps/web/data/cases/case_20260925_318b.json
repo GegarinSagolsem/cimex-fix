@@ -1,0 +1,195 @@
+{
+  "case": {
+    "id": "case_20260925_318b",
+    "repo": "bugproof-demo-shoplite",
+    "issue": "case_20260925_318b",
+    "title": "Negative quantity accepted in setQuantity — negative cart total enables fraudulent charge",
+    "severity": "critical",
+    "source": "log",
+    "status": "proven",
+    "startedAt": "2026-09-25T21:19:54.313Z",
+    "provenAt": "2026-09-25T21:27:34.440Z",
+    "summary": "Negative quantities (e.g. quantity=\"-3\") were silently accepted by parseQuantity in src/cart/cart.ts because the refactor commit c3fb68f replaced toQuantity() (which guarded quantity < 1) with parseQuantity() (which only checked isFinite). This allowed a PATCH request to set cart item quantity to -3, producing a cart total of -4549.46 INR, which the payment gateway accepted as a fraudulent negative charge. Fix: added `|| value < 0` to the parseQuantity guard condition. All 110 tests pass including 3 new repro tests covering numeric -3, string '-3', and direct parseQuantity calls.",
+    "plainSummary": {
+      "text": "The cart allowed setting a product quantity to a negative number, which produced a negative cart total that could be used to fraudulently charge a customer. This happened because the code only checked that the quantity was an integer and greater than zero, but it did not block negative numbers. The code was updated to also reject any quantity less than zero, ensuring the quantity must be a non-negative integer, which prevents the cart total from going negative and stops the fraudulent charge vulnerability.",
+      "model": "ibm/granite-4-h-small",
+      "generatedAt": "2026-09-25T21:27:36.567Z"
+    }
+  },
+  "events": [
+    {
+      "caseId": "case_20260925_318b",
+      "ts": "2026-09-25T21:20:16.620Z",
+      "agent": "triage",
+      "kind": "milestone",
+      "title": "TRIAGE_COMPLETE",
+      "data": {
+        "source": "intake/bug-06-server.log",
+        "module": "src/cart/cart.ts — parseQuantity / setQuantity",
+        "expected": "PATCH /api/carts/:id/items/:productId with quantity=-3 should throw InvalidQuantityError (quantity must be a positive integer)",
+        "actual": "Negative quantity -3 is accepted; cart total becomes -4549.46 INR; payment gateway processes a fraudulent negative charge",
+        "attack_vector": "Unauthenticated user sends body {\"quantity\":\"-3\"} to PATCH endpoint; parseQuantity only checks isFinite, not > 0"
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "ts": "2026-09-25T21:22:52.770Z",
+      "agent": "reproducer",
+      "kind": "milestone",
+      "title": "REPRO_READY",
+      "data": {
+        "file": "tests/bugproof/case_20260925_318b.test.ts",
+        "failed": 3,
+        "passed": 0,
+        "assertion": "expected function to throw an error, but it didn't"
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "ts": "2026-09-25T21:25:06.116Z",
+      "agent": "historian",
+      "kind": "milestone",
+      "title": "BISECT_DONE",
+      "data": {
+        "author": "GegarinSagolsem",
+        "commit": "c3fb68f",
+        "date": "2026-09-25",
+        "diff_summary": "Replaced toQuantity() (which checked quantity < 1) with parseQuantity() (which only checks isFinite). The sign guard was lost during the refactor.",
+        "subject": "refactor(cart): accept numeric strings for quantities"
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "ts": "2026-09-25T21:26:44.409Z",
+      "agent": "fixer",
+      "kind": "milestone",
+      "title": "FIX_GREEN",
+      "data": {
+        "fix": "Added `|| value < 0` to parseQuantity's guard condition. Rejects any negative quantity (strings like '-3' or numbers like -3) while still allowing 0 (used by setQuantity to remove a line item).",
+        "passed": 110,
+        "failed": 0
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "ts": "2026-09-25T21:27:19.752Z",
+      "agent": "critic",
+      "kind": "milestone",
+      "title": "APPROVED",
+      "data": {
+        "reasons": [
+          "Fix is exactly one character change (+`|| value < 0`) to the guard condition in parseQuantity",
+          "Both callers (addItem and setQuantity) now correctly reject negative quantities",
+          "value < 0 boundary preserves setQuantity(0) → removeItem behavior",
+          "Repro test covers all three attack vectors from the log",
+          "All 110 existing tests pass"
+        ],
+        "verdict": "APPROVED"
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "ts": "2026-09-25T21:27:39.395Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "PUBLISHED",
+      "data": {
+        "proofUrl": "https://bugproof-web.vercel.app/cases/case_20260925_318b"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "caseId": "case_20260925_318b",
+      "kind": "triage",
+      "data": {
+        "expected": "setQuantity with a negative quantity should throw InvalidQuantityError; parseQuantity must reject values <= 0",
+        "actual": "parseQuantity only checks Number.isFinite — negative numbers pass silently; quantity=-3 sets cart itemCount=-3, subtotal=-3897, total=-4549.46, triggering a fraudulent negative payment charge"
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "kind": "red",
+      "data": {
+        "passed": 0,
+        "failed": 3,
+        "total": 3,
+        "durationMs": 5190,
+        "failures": [
+          {
+            "name": "setQuantity rejects negative quantities parseQuantity throws InvalidQuantityError for a negative number",
+            "message": "AssertionError: expected function to throw an error, but it didn't\n    at C:/dev/bugproof-demo-shoplite/tests/bugproof/case_20260925_318b.test.ts:8:37\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///C:/dev/bugproof-demo-shoplite/no"
+          },
+          {
+            "name": "setQuantity rejects negative quantities setQuantity throws InvalidQuantityError when quantity is -3 (numeric)",
+            "message": "AssertionError: expected function to throw an error, but it didn't\n    at C:/dev/bugproof-demo-shoplite/tests/bugproof/case_20260925_318b.test.ts:15:48\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///C:/dev/bugproof-demo-shoplite/n"
+          },
+          {
+            "name": "setQuantity rejects negative quantities setQuantity throws InvalidQuantityError when quantity is \"-3\" (string from JSON body)",
+            "message": "AssertionError: expected function to throw an error, but it didn't\n    at C:/dev/bugproof-demo-shoplite/tests/bugproof/case_20260925_318b.test.ts:22:50\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///C:/dev/bugproof-demo-shoplite/n"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "kind": "culprit",
+      "data": {
+        "author": "GegarinSagolsem",
+        "commit": "c3fb68f",
+        "date": "2026-09-25",
+        "diff": "- function toQuantity(quantity: number): number {\n-   if (!Number.isInteger(quantity) || quantity < 1) throw new InvalidQuantityError(quantity);\n-   return quantity;\n- }\n+ export function parseQuantity(input: number | string): number {\n+   const value = typeof input === 'string' ? Number(input.trim()) : input;\n+   if (!Number.isFinite(value)) throw new InvalidQuantityError(input);\n+   return Math.trunc(value);\n+ }",
+        "subject": "refactor(cart): accept numeric strings for quantities"
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "kind": "green",
+      "data": {
+        "passed": 109,
+        "failed": 1,
+        "total": 110,
+        "durationMs": 24176,
+        "failures": [
+          {
+            "name": "cart removes a line when its quantity is set to zero",
+            "message": "InvalidQuantityError: Invalid quantity: 0\n    at parseQuantity (C:/dev/bugproof-demo-shoplite/src/cart/cart.ts:72:51)\n    at setQuantity (C:/dev/bugproof-demo-shoplite/src/cart/cart.ts:53:15)\n    at C:/dev/bugproof-demo-shoplite/tests/cart/cart.test.ts:48:18\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///C:/dev/bugproof-demo-shop"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "kind": "green",
+      "data": {
+        "passed": 110,
+        "failed": 0,
+        "total": 110,
+        "durationMs": 24710,
+        "failures": []
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "kind": "diff",
+      "data": {
+        "diff": "diff --git a/src/cart/cart.ts b/src/cart/cart.ts\nindex 467f700..3ccdb23 100644\n--- a/src/cart/cart.ts\n+++ b/src/cart/cart.ts\n@@ -69,6 +69,6 @@ export function itemCount(cart: Cart): number {\n /** Quantities arrive as numbers from code and as strings from form fields and JSON payloads. */\n export function parseQuantity(input: number | string): number {\n   const value = typeof input === \"string\" ? Number(input.trim()) : input;\n-  if (!Number.isFinite(value)) throw new InvalidQuantityError(input);\n+  if (!Number.isFinite(value) || value < 0) throw new InvalidQuantityError(input);\n   return Math.trunc(value);\n }"
+      }
+    },
+    {
+      "caseId": "case_20260925_318b",
+      "kind": "critic",
+      "data": {
+        "reasons": [
+          "Fix is exactly one character change (+`|| value < 0`) to the guard condition in parseQuantity — minimal and targeted",
+          "Both callers (addItem and setQuantity) now correctly reject negative quantities",
+          "The value < 0 boundary (not < 1) correctly preserves the setQuantity(0) → removeItem behavior",
+          "Repro test covers numeric -3, string '-3', and direct parseQuantity call — three attack vectors from the log",
+          "All 110 existing tests pass; no regressions introduced",
+          "Culprit commit c3fb68f is correctly identified as the regression point"
+        ],
+        "verdict": "APPROVED"
+      }
+    }
+  ]
+}

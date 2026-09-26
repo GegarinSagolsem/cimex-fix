@@ -1,0 +1,346 @@
+{
+  "case": {
+    "id": "case_20260926_7e5e",
+    "repo": "bugproof-demo-shoplite",
+    "issue": "case_20260926_7e5e",
+    "title": "Search is case-sensitive regression",
+    "severity": "high",
+    "source": "issue",
+    "status": "proven",
+    "startedAt": "2026-09-26T05:14:21.303Z",
+    "provenAt": "2026-09-26T05:22:05.412Z",
+    "summary": "Regression: product search became case-sensitive after commit 649b24a (\"perf(catalog): memoize search index\") silently removed .toLowerCase() normalization from both the search needle and haystack while refactoring to add index memoization. Fixed by restoring .toLowerCase() on both the haystack (in indexFor) and the needle (in searchProducts), preserving the memoization. Full suite 117/117 green, repro test confirmed RED then GREEN.",
+    "plainSummary": {
+      "text": "When customers searched for products using lowercase words in the search box, no results were returned, so the search appeared broken. It broke because a recent code change started converting the indexed product names and categories to lowercase, but did not also convert the user's search query to lowercase before matching it, causing case mismatches. To fix it, the search code was updated to lowercase the incoming search text just before searching, so lowercase queries now correctly match the indexed lowercase product names and categories.",
+      "model": "ibm/granite-4-h-small",
+      "generatedAt": "2026-09-26T05:22:07.519Z"
+    }
+  },
+  "events": [
+    {
+      "caseId": "case_20260926_7e5e",
+      "ts": "2026-09-26T05:14:54.507Z",
+      "agent": "historian",
+      "kind": "spawn",
+      "title": "Historian agent started — investigating case-sensitivity regression in product search"
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "ts": "2026-09-26T05:16:11.982Z",
+      "agent": "historian",
+      "kind": "evidence",
+      "title": "Git log and blame analysis complete — culprit identified",
+      "data": {
+        "suspectFile": "src/catalog/search.ts",
+        "bugLine": 25,
+        "bugCode": "entry.haystack.includes(needle)",
+        "expectedCode": "entry.haystack.toLowerCase().includes(needle.toLowerCase())",
+        "finding": "Neither needle nor haystack is lowercased before the substring match. The index builds haystack once and caches it without normalisation. The search test suite (tests/catalog/search.test.ts) only queries with exact-case strings (e.g. 'Mug', 'Kitchen') so the regression was not caught by existing tests.",
+        "commitTimeline": [
+          {
+            "sha": "32d13b11",
+            "msg": "chore: initial spec for demo target repo",
+            "author": "SagolsemHironika"
+          },
+          {
+            "sha": "49f84473",
+            "msg": "Remove the internal build spec from the repository"
+          },
+          {
+            "sha": "5dd29526",
+            "msg": "Add the BugProof Bob pack"
+          },
+          {
+            "sha": "35a91bfe",
+            "msg": "Fix the last catalog page dropping the final product"
+          },
+          {
+            "sha": "e21313f3",
+            "msg": "Reject negative cart quantities"
+          },
+          {
+            "sha": "df663900",
+            "msg": "Add customer screenshots for the coupon bugs"
+          },
+          {
+            "sha": "6d6c87a7",
+            "msg": "Ignore empty coupon codes instead of producing NaN totals"
+          },
+          {
+            "sha": "31835d51",
+            "msg": "Use IST hour instead of UTC hour for the delivery dispatch cutoff"
+          },
+          {
+            "sha": "0944d88e",
+            "msg": "Ignore a coupon that is already applied and cap the discount at the subtotal"
+          },
+          {
+            "sha": "5d1cea2a",
+            "msg": "Update the BugProof Bob pack so helper modes hand back to the Lead"
+          }
+        ],
+        "demoBranch": {
+          "sha": "f2fde044",
+          "ref": "origin/demo-app",
+          "note": "The pre-regression reference snapshot fetched at session start"
+        }
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "ts": "2026-09-26T05:16:31.519Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "TRIAGE_COMPLETE",
+      "data": {
+        "summary": "Bug confirmed: searchProducts() in src/catalog/search.ts uses case-sensitive .includes() with no toLowerCase() normalization. Primary suspect: line 25 of search.ts. Blast radius: src/catalog/search.ts, src/index.ts (export), ui/src/catalogView.ts (consumer), tests/catalog/search.test.ts."
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "ts": "2026-09-26T05:17:32.923Z",
+      "agent": "reproducer",
+      "kind": "milestone",
+      "title": "REPRO_READY",
+      "data": {
+        "testFile": "tests/bugproof/bug-05-search-case.test.ts",
+        "failed": 3,
+        "assertionError": "AssertionError: expected [] to have a length of 1 but got +0"
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "ts": "2026-09-26T05:17:40.263Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "REPRO_READY",
+      "data": {
+        "testFile": "tests/bugproof/bug-05-search-case.test.ts",
+        "result": "3 assertions fail: mug→0 (expect 1), KITCHEN→0 (expect 5), bluetooth→0 (expect 1)"
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "ts": "2026-09-26T05:18:22.307Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "BISECT_DONE",
+      "data": {
+        "sha": "649b24a04f65f9aa6049d9235b0b9459c4c4cdb0",
+        "subject": "perf(catalog): memoize search index",
+        "author": "GegarinSagolsem",
+        "date": "2026-09-25",
+        "notes": "Removed .toLowerCase() from both needle and haystack during refactoring for memoized index. Also changed JSDoc from 'Case-insensitive' to 'Substring search'."
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "ts": "2026-09-26T05:19:46.534Z",
+      "agent": "fixer",
+      "kind": "milestone",
+      "title": "FIX_GREEN",
+      "data": {
+        "passed": 117,
+        "failed": 0,
+        "filesChanged": [
+          "src/catalog/search.ts"
+        ],
+        "linesChanged": 3
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "ts": "2026-09-26T05:19:58.318Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "FIX_GREEN",
+      "data": {
+        "result": "117 passed / 0 failed. Repro test GREEN, no regressions.",
+        "files": [
+          "src/catalog/search.ts"
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "ts": "2026-09-26T05:21:42.190Z",
+      "agent": "critic",
+      "kind": "milestone",
+      "title": "APPROVED",
+      "data": {
+        "verdict": "APPROVE",
+        "reasons": [],
+        "suiteResult": "117 passed, 0 failed"
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "ts": "2026-09-26T05:21:51.710Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "APPROVED",
+      "data": {
+        "reasons": [
+          "Repro test genuinely encodes the bug",
+          "No edge-case regressions",
+          "No caller breakage, memoization preserved",
+          "Minimal diff — 3 lines touched",
+          "Full suite: 117 passed, 0 failed"
+        ],
+        "verdict": "APPROVE"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "caseId": "case_20260926_7e5e",
+      "kind": "triage",
+      "data": {
+        "expected": "Product search is case-insensitive: searching 'mug', 'Mug', or 'MUG' all return 'Ceramic Coffee Mug'",
+        "actual": "Product search is case-sensitive: only exact-case queries match. 'mug' returns 0 results, 'KITCHEN' returns 0 results, 'bluetooth' returns 0 results.",
+        "stepsToReproduce": [
+          "Open the shop",
+          "Type 'mug' (lowercase) in the search box",
+          "Observe 'No products match mug.' instead of Ceramic Coffee Mug"
+        ],
+        "source": "intake/bug-05-issue.md"
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "kind": "blast",
+      "data": {
+        "files": [
+          "src/catalog/search.ts",
+          "src/index.ts",
+          "ui/src/catalogView.ts",
+          "tests/catalog/search.test.ts"
+        ],
+        "callers": [
+          "searchProducts() in src/catalog/search.ts (primary bug)",
+          "indexFor() in src/catalog/search.ts (builds haystack without normalization)",
+          "renderCatalog() in ui/src/catalogView.ts (consumer)",
+          "src/index.ts (public export)"
+        ],
+        "notes": "The bug is isolated to the .includes() call on line 25 of src/catalog/search.ts. Neither the needle (user query) nor the haystack (product name + category) is lowercased before comparison. All commits after initial commit are unrelated to search.ts."
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "kind": "red",
+      "data": {
+        "passed": 0,
+        "failed": 3,
+        "total": 3,
+        "durationMs": 5186,
+        "failures": [
+          {
+            "name": "searchProducts is case-insensitive finds \"Ceramic Coffee Mug\" with lowercase query \"mug\"",
+            "message": "AssertionError: expected [] to have a length of 1 but got +0\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:2148:20)\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:1945:14)\n    at Proxy.methodWrapper (file:///C:/dev/bugproof-demo-shoplite/node_modules/chai/index.js:"
+          },
+          {
+            "name": "searchProducts is case-insensitive finds all 5 Kitchen products with uppercase query \"KITCHEN\"",
+            "message": "AssertionError: expected [] to have a length of 5 but got +0\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:2148:20)\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:1945:14)\n    at Proxy.methodWrapper (file:///C:/dev/bugproof-demo-shoplite/node_modules/chai/index.js:"
+          },
+          {
+            "name": "searchProducts is case-insensitive finds Bluetooth product with lowercase query \"bluetooth\"",
+            "message": "AssertionError: expected [] to have a length of 1 but got +0\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:2148:20)\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:1945:14)\n    at Proxy.methodWrapper (file:///C:/dev/bugproof-demo-shoplite/node_modules/chai/index.js:"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "kind": "culprit",
+      "data": {
+        "sha": "649b24a04f65f9aa6049d9235b0b9459c4c4cdb0",
+        "subject": "perf(catalog): memoize search index",
+        "author": "GegarinSagolsem",
+        "date": "2026-09-25 18:55:13 +0000",
+        "diff": "commit 649b24a04f65f9aa6049d9235b0b9459c4c4cdb0\nAuthor: GegarinSagolsem <176033453+GegarinSagolsem@users.noreply.github.com>\nDate:   Fri Sep 25 18:55:13 2026 +0000\n\n    perf(catalog): memoize search index\n---\n src/catalog/search.ts | 28 ++++++++++++++++++++++------\n 1 file changed, 22 insertions(+), 6 deletions(-)\n\ndiff --git a/src/catalog/search.ts b/src/catalog/search.ts\nindex c24eb52..6a6587b 100644\n--- a/src/catalog/search.ts\n+++ b/src/catalog/search.ts\n@@ -1,11 +1,27 @@\n import type { Product } from \"./products\";\n \n-/** Case-insensitive substring search over product name and category. */\n+interface IndexEntry {\n+  product: Product;\n+  haystack: string;\n+}\n+\n+// Search runs on every keystroke, so build the searchable text once per product list.\n+const indexCache = new WeakMap<readonly Product[], IndexEntry[]>();\n+\n+function indexFor(products: readonly Product[]): IndexEntry[] {\n+  let index = indexCache.get(products);\n+  if (index === undefined) {\n+    index = products.map((product) => ({ product, haystack: `${product.name} ${product.category}` }));\n+    indexCache.set(products, index);\n+  }\n+  return index;\n+}\n+\n+/** Substring search over product name and category. */\n export function searchProducts(products: readonly Product[], query: string): Product[] {\n-  const needle = query.trim().toLowerCase();\n+  const needle = query.trim();\n   if (needle === \"\") return [...products];\n-  return products.filter(\n-    (product) =>\n-      product.name.toLowerCase().includes(needle) || product.category.toLowerCase().includes(needle),\n-  );\n+  return indexFor(products)\n+    .filter((entry) => entry.haystack.includes(needle))\n+    .map((entry) => entry.product);\n }\n",
+        "steps": 6
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "kind": "suite",
+      "data": {
+        "passed": 114,
+        "failed": 3,
+        "total": 117,
+        "durationMs": 24970,
+        "failures": [
+          {
+            "name": "searchProducts is case-insensitive finds \"Ceramic Coffee Mug\" with lowercase query \"mug\"",
+            "message": "AssertionError: expected [] to have a length of 1 but got +0\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:2148:20)\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:1945:14)\n    at Proxy.methodWrapper (file:///C:/dev/bugproof-demo-shoplite/node_modules/chai/index.js:"
+          },
+          {
+            "name": "searchProducts is case-insensitive finds all 5 Kitchen products with uppercase query \"KITCHEN\"",
+            "message": "AssertionError: expected [] to have a length of 5 but got +0\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:2148:20)\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:1945:14)\n    at Proxy.methodWrapper (file:///C:/dev/bugproof-demo-shoplite/node_modules/chai/index.js:"
+          },
+          {
+            "name": "searchProducts is case-insensitive finds Bluetooth product with lowercase query \"bluetooth\"",
+            "message": "AssertionError: expected [] to have a length of 1 but got +0\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:2148:20)\n    at Proxy.<anonymous> (file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/index.DGdajAO2.js:1945:14)\n    at Proxy.methodWrapper (file:///C:/dev/bugproof-demo-shoplite/node_modules/chai/index.js:"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "kind": "green",
+      "data": {
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "durationMs": 5061,
+        "failures": []
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "kind": "green",
+      "data": {
+        "passed": 117,
+        "failed": 0,
+        "total": 117,
+        "durationMs": 25346,
+        "failures": []
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "kind": "diff",
+      "data": {
+        "diff": "--- a/src/catalog/search.ts\n+++ b/src/catalog/search.ts\n@@ -11,12 +11,12 @@ function indexFor(products: readonly Product[]): IndexEntry[] {\n   let index = indexCache.get(products);\n   if (index === undefined) {\n-    index = products.map((product) => ({ product, haystack: `${product.name} ${product.category}` }));\n+    index = products.map((product) => ({ product, haystack: `${product.name} ${product.category}`.toLowerCase() }));\n     indexCache.set(products, index);\n   }\n   return index;\n }\n \n-/** Substring search over product name and category. */\n+/** Case-insensitive substring search over product name and category. */\n export function searchProducts(products: readonly Product[], query: string): Product[] {\n-  const needle = query.trim();\n+  const needle = query.trim().toLowerCase();\n   if (needle === \"\") return [...products];",
+        "files": [
+          "src/catalog/search.ts"
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "kind": "green",
+      "data": {
+        "passed": 117,
+        "failed": 0,
+        "total": 117,
+        "durationMs": 24935,
+        "failures": []
+      }
+    },
+    {
+      "caseId": "case_20260926_7e5e",
+      "kind": "critic",
+      "data": {
+        "reasons": [
+          "Repro test genuinely encodes the bug: three cases with lowercase/uppercase needles against real catalog data",
+          "No edge-case regressions: empty/whitespace-only query guards unchanged",
+          "No caller breakage: IndexEntry is unexported, WeakMap cache is module-private, memoization preserved",
+          "Diff is minimal: exactly 3 lines touched (haystack build + JSDoc + needle normalization)",
+          "Full suite: 117 passed, 0 failed"
+        ],
+        "verdict": "APPROVE"
+      }
+    }
+  ]
+}

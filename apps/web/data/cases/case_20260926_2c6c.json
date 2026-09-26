@@ -1,0 +1,314 @@
+{
+  "case": {
+    "id": "case_20260926_2c6c",
+    "repo": "bugproof-demo-shoplite",
+    "issue": "case_20260926_2c6c",
+    "title": "Bug 03 QA Report — ShopLite",
+    "severity": "high",
+    "source": "pdf",
+    "status": "proven",
+    "startedAt": "2026-09-26T02:29:18.700Z",
+    "provenAt": "2026-09-26T03:13:08.056Z",
+    "summary": "Bug in src/delivery/estimate.ts line 34: dispatch cutoff compared orderedAt.getUTCHours() (UTC) instead of ist.getUTCHours() (IST), causing orders placed after 20:00 IST but before midnight UTC to miss the cutoff and deliver one day early. Fix: change orderedAt to ist on that single line. Repro test (tests/bugproof/bug-03-delivery-estimate.test.ts) confirmed RED before fix and GREEN after. Full suite: 113/113 passed. Critic approved.",
+    "plainSummary": {
+      "text": "The delivery estimate feature calculated the wrong delivery date for orders placed late in the evening Indian Standard Time (IST). The code incorrectly used the order's UTC timestamp instead of the IST hour to determine whether to add a day to the estimate. The line of code was corrected to use the order's IST hour when checking the dispatch cutoff, fixing the incorrect delivery date calculation.",
+      "model": "ibm/granite-4-h-small",
+      "generatedAt": "2026-09-26T03:13:10.126Z"
+    }
+  },
+  "events": [
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T02:29:27.303Z",
+      "agent": "lead",
+      "kind": "spawn",
+      "title": "Spawning Triage, Locator, Historian subagents in parallel"
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T02:30:24.007Z",
+      "agent": "historian",
+      "kind": "evidence",
+      "title": "Historian investigation: delivery estimate cutoff uses UTC hours instead of IST hours",
+      "data": {
+        "suspectFiles": [
+          "src/delivery/estimate.ts",
+          "src/orders/service.ts",
+          "tests/delivery/estimate.test.ts"
+        ],
+        "rootFinding": "Line 34 of src/delivery/estimate.ts checks `orderedAt.getUTCHours() >= DISPATCH_CUTOFF_HOUR` (20). The cutoff is defined in IST time (20:00 IST = 14:30 UTC), but the code compares the raw UTC hour against 20. An order placed at 21:00 IST = 15:30 UTC has UTC hour 15, which is < 20, so the cutoff branch is never taken for any evening-IST order that falls before 20:30 UTC (i.e., before 02:00 IST next day). The `ist` variable IS correctly computed on line 32 via `IST_OFFSET_MS`, but line 34 ignores it and falls back to raw UTC hours.",
+        "suspiciousPattern": "The function correctly shifts the timestamp to IST for the calendar-date extraction (line 32-33) but then reverts to `orderedAt.getUTCHours()` (the unshifted UTC value) for the cutoff comparison on line 34. The fix is: use `ist.getUTCHours()` (the already-shifted Date object) instead of `orderedAt.getUTCHours()`.",
+        "missingTests": "No test in tests/delivery/estimate.test.ts covers an order placed at or after 20:00 IST (14:30 UTC). All existing test times are morning/afternoon IST, so the bug was never caught by the test suite.",
+        "noTodosOrHacksFound": true
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T02:32:17.841Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "TRIAGE_COMPLETE",
+      "data": {
+        "rootCause": "src/delivery/estimate.ts:34 uses orderedAt.getUTCHours() instead of ist.getUTCHours() for the 20:00 IST dispatch cutoff check, making evening orders appear one day early.",
+        "impact": "All orders placed at or after 20:00 IST get a delivery estimate one day too early."
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T02:32:25.010Z",
+      "agent": "lead",
+      "kind": "spawn",
+      "title": "Spawning bugproof-reproducer subtask"
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T02:34:24.746Z",
+      "agent": "reproducer",
+      "kind": "milestone",
+      "title": "REPRO_READY",
+      "data": {
+        "file": "tests/bugproof/bug-03-delivery-estimate.test.ts",
+        "assertionFailure": "AssertionError: expected '2026-03-13' to be '2026-03-14'"
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T02:44:46.678Z",
+      "agent": "lead",
+      "kind": "status",
+      "title": "bisect timed out twice — falling back to git log on suspect file"
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T02:45:12.290Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "BISECT_DONE — culprit: line 34 of src/delivery/estimate.ts uses orderedAt.getUTCHours() instead of ist.getUTCHours()",
+      "data": {
+        "file": "src/delivery/estimate.ts",
+        "line": 34,
+        "note": "bisect MCP timed out; culprit identified via root-cause analysis and confirmed by RED test"
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T02:45:15.666Z",
+      "agent": "lead",
+      "kind": "spawn",
+      "title": "spawning bugproof-fixer"
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T02:45:31.466Z",
+      "agent": "fixer",
+      "kind": "status",
+      "title": "Edit blocked by mode file restriction — cannot write src/delivery/estimate.ts in current mode"
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T02:57:47.209Z",
+      "agent": "fixer",
+      "kind": "milestone",
+      "title": "FIX_GREEN",
+      "data": {
+        "passed": 113,
+        "failed": 0,
+        "total": 113
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T03:11:33.923Z",
+      "agent": "lead",
+      "kind": "spawn",
+      "title": "spawning bugproof-critic"
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T03:12:03.887Z",
+      "agent": "critic",
+      "kind": "milestone",
+      "title": "APPROVED — fix correct, minimal, repro test sound, no regressions",
+      "data": {
+        "verdict": "APPROVE"
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T03:13:12.610Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "PUBLISHED",
+      "data": {
+        "proofUrl": "https://bugproof-web.vercel.app/cases/case_20260926_2c6c"
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "ts": "2026-09-26T04:42:07.540Z",
+      "agent": "lead",
+      "kind": "milestone",
+      "title": "BISECT_DONE",
+      "data": {
+        "sha": "b4369d97a0663fe9843099d55b2dd5d95a2728fe",
+        "subject": "perf(delivery): compute IST date without Intl.DateTimeFormat",
+        "author": "GegarinSagolsem",
+        "date": "2026-09-25 18:55:53 +0000",
+        "steps": 5
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "triage",
+      "data": {
+        "expected": "For an order placed at 21:00 IST (after the 20:00 IST cutoff), dispatch is the next day (Wed 11 Mar), and delivery is Sat 14 Mar 2026 (3 transit days, skipping Sunday).",
+        "actual": "Cart and order both show Fri 13 Mar 2026 — one day early. The 20:00 IST cutoff is never triggered because the code checks UTC hours (15) instead of IST hours (21).",
+        "stepsToReproduce": [
+          "Set clock to Tuesday 10 March 2026 21:00 IST (15:30 UTC)",
+          "Add any product to cart",
+          "Read 'Estimated delivery' line in cart totals — shows Fri 13 Mar instead of Sat 14 Mar",
+          "Place order and confirm 'arrives ...' in order history — same wrong date"
+        ],
+        "source": "intake/bug-03-qa-report.pdf (QA-2026-117)"
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "blast",
+      "data": {
+        "files": [
+          "src/delivery/estimate.ts",
+          "src/orders/service.ts",
+          "ui/src/cartView.ts"
+        ],
+        "callers": [
+          "src/orders/service.ts::placeOrder() — calls estimateDelivery(placedAt), stores wrong date on every evening order",
+          "ui/src/cartView.ts — calls estimateDelivery(new Date()) to display estimate in cart"
+        ],
+        "notes": "Root cause is line 34 of src/delivery/estimate.ts: `orderedAt.getUTCHours()` used instead of `ist.getUTCHours()`. The ist variable is already correctly shifted to IST on line 32 but not used in the cutoff comparison. Test suite has no evening-order (>=20:00 IST) test cases."
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "red",
+      "data": {
+        "passed": 0,
+        "failed": 1,
+        "total": 1,
+        "durationMs": 5467,
+        "failures": [
+          {
+            "name": "estimateDelivery dispatch cutoff uses IST hour order at 21:00 IST (15:30 UTC) on Tue 10 Mar 2026 delivers Sat 14 Mar 2026",
+            "message": "AssertionError: expected '2026-03-13' to be '2026-03-14' // Object.is equality\n    at C:/dev/bugproof-demo-shoplite/tests/bugproof/bug-03-delivery-estimate.test.ts:10:41\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///C:/dev/bugpro"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "triage",
+      "data": {
+        "expected": "Order placed at 21:00 IST (2026-03-10T15:30:00Z) dispatches next day (Wed 11 Mar) → delivers Sat 14 Mar 2026",
+        "actual": "Same order delivers Fri 13 Mar 2026 (one day early) because UTC hour 15 < 20 so cutoff is never triggered",
+        "stepsToReproduce": [
+          "Call estimateDelivery(new Date('2026-03-10T15:30:00Z'))",
+          "Observe return value '2026-03-13' instead of '2026-03-14'"
+        ],
+        "source": "issue"
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "blast",
+      "data": {
+        "files": [
+          "src/delivery/estimate.ts"
+        ],
+        "callers": [
+          "estimateDelivery() — exported, called from cart/checkout rendering"
+        ],
+        "notes": "Bug on line 34: orderedAt.getUTCHours() checks UTC hour (15) instead of ist.getUTCHours() (21). Only estimateDelivery() is affected; addDeliveryDays() and formatDeliveryDate() are correct. Fix is a one-character-scope change on line 34."
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "suite",
+      "data": {
+        "passed": 112,
+        "failed": 1,
+        "total": 113,
+        "durationMs": 22072,
+        "failures": [
+          {
+            "name": "estimateDelivery dispatch cutoff uses IST hour order at 21:00 IST (15:30 UTC) on Tue 10 Mar 2026 delivers Sat 14 Mar 2026",
+            "message": "AssertionError: expected '2026-03-13' to be '2026-03-14' // Object.is equality\n    at C:/dev/bugproof-demo-shoplite/tests/bugproof/bug-03-delivery-estimate.test.ts:10:41\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///C:/dev/bugpro"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "suite",
+      "data": {
+        "passed": 112,
+        "failed": 1,
+        "total": 113,
+        "durationMs": 22926,
+        "failures": [
+          {
+            "name": "estimateDelivery dispatch cutoff uses IST hour order at 21:00 IST (15:30 UTC) on Tue 10 Mar 2026 delivers Sat 14 Mar 2026",
+            "message": "AssertionError: expected '2026-03-13' to be '2026-03-14' // Object.is equality\n    at C:/dev/bugproof-demo-shoplite/tests/bugproof/bug-03-delivery-estimate.test.ts:10:41\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///C:/dev/bugproof-demo-shoplite/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///C:/dev/bugpro"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "green",
+      "data": {
+        "passed": 113,
+        "failed": 0,
+        "total": 113,
+        "durationMs": 22845,
+        "failures": []
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "diff",
+      "data": {
+        "diff": "--- a/src/delivery/estimate.ts\n+++ b/src/delivery/estimate.ts\n@@ -34 +34 @@\n-  if (orderedAt.getUTCHours() >= DISPATCH_CUTOFF_HOUR) dispatch += DAY_MS;\n+  if (ist.getUTCHours() >= DISPATCH_CUTOFF_HOUR) dispatch += DAY_MS;",
+        "filesChanged": 1,
+        "linesAdded": 1,
+        "linesRemoved": 1
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "critic",
+      "data": {
+        "verdict": "APPROVE",
+        "reasons": [
+          "Fix is correct: changes orderedAt.getUTCHours() to ist.getUTCHours() — directly addresses root cause",
+          "Fix is minimal: single one-word change on line 34, no unrelated modifications",
+          "Repro test is sound: correctly models 21:00 IST order, asserts 2026-03-14 delivery, would catch a regression",
+          "No existing tests weakened or removed; full suite 113/113 green"
+        ]
+      }
+    },
+    {
+      "caseId": "case_20260926_2c6c",
+      "kind": "culprit",
+      "data": {
+        "sha": "b4369d97a0663fe9843099d55b2dd5d95a2728fe",
+        "subject": "perf(delivery): compute IST date without Intl.DateTimeFormat",
+        "author": "GegarinSagolsem",
+        "date": "2026-09-25 18:55:53 +0000",
+        "diff": "commit b4369d97a0663fe9843099d55b2dd5d95a2728fe\nAuthor: GegarinSagolsem <176033453+GegarinSagolsem@users.noreply.github.com>\nDate:   Fri Sep 25 18:55:53 2026 +0000\n\n    perf(delivery): compute IST date without Intl.DateTimeFormat\n---\n src/delivery/estimate.ts | 29 ++++++-----------------------\n 1 file changed, 6 insertions(+), 23 deletions(-)\n\ndiff --git a/src/delivery/estimate.ts b/src/delivery/estimate.ts\nindex ff67f73..4a28bc9 100644\n--- a/src/delivery/estimate.ts\n+++ b/src/delivery/estimate.ts\n@@ -6,26 +6,9 @@ export const DEFAULT_TRANSIT_DAYS = 3;\n const DAY_MS = 24 * 60 * 60 * 1000;\n const SUNDAY = 0;\n \n-interface CalendarTime {\n-  year: number;\n-  month: number;\n-  day: number;\n-  hour: number;\n-}\n-\n-/** Wall-clock date and hour of an instant in India Standard Time. */\n-function istCalendar(instant: Date): CalendarTime {\n-  const parts = new Intl.DateTimeFormat(\"en-GB\", {\n-    timeZone: DELIVERY_TIME_ZONE,\n-    year: \"numeric\",\n-    month: \"2-digit\",\n-    day: \"2-digit\",\n-    hour: \"2-digit\",\n-    hourCycle: \"h23\",\n-  }).formatToParts(instant);\n-  const get = (type: Intl.DateTimeFormatPartTypes) => Number(parts.find((part) => part.type === type)?.value);\n-  return { year: get(\"year\"), month: get(\"month\"), day: get(\"day\"), hour: get(\"hour\") };\n-}\n+// India has no daylight saving, so IST is always UTC+05:30. Shifting the timestamp is much\n+// cheaper than building an Intl.DateTimeFormat on every cart render.\n+const IST_OFFSET_MS = (5 * 60 + 30) * 60 * 1000;\n \n /** Couriers do not deliver on Sundays, so Sundays are not counted as transit days. */\n function addDeliveryDays(start: number, days: number): number {\n@@ -46,9 +29,9 @@ function toIsoDate(epochMs: number): string {\n  * Dispatch happens on the IST order date, or the next day after the 8 PM cutoff.\n  */\n export function estimateDelivery(orderedAt: Date, transitDays: number = DEFAULT_TRANSIT_DAYS): string {\n-  const { year, month, day, hour } = istCalendar(orderedAt);\n-  let dispatch = Date.UTC(year, month - 1, day);\n-  if (hour >= DISPATCH_CUTOFF_HOUR) dispatch += DAY_MS;\n+  const ist = new Date(orderedAt.getTime() + IST_OFFSET_MS);\n+  let dispatch = Date.UTC(ist.getUTCFullYear(), ist.getUTCMonth(), ist.getUTCDate());\n+  if (orderedAt.getUTCHours() >= DISPATCH_CUTOFF_HOUR) dispatch += DAY_MS;\n   return toIsoDate(addDeliveryDays(dispatch, transitDays));\n }\n \n",
+        "steps": 5
+      }
+    }
+  ]
+}
