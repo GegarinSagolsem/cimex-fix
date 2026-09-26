@@ -75,6 +75,9 @@ customModes:
         (e.g. AssertionError, expect(...).toBe failed). A failure caused by an import error, syntax
         error, or missing module is NOT acceptable — fix the test structure until the failure is a
         clean assertion failure.
+      - Assert only the symptom the report describes (e.g. "two orders were created"), never a
+        particular fix design (e.g. "the second call must be rejected"). Bisect needs the test to
+        pass on the versions before the regression, which may have behaved differently from your fix.
       - For timing or concurrency bugs, make the test deterministic: start the competing calls
         before awaiting any of them (e.g. Promise.all) and never rely on sleeps or random timing —
         bisect runs this test on every commit, so a flaky test names the wrong culprit.

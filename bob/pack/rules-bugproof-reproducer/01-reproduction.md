@@ -15,6 +15,11 @@
   expected (correct) behaviour. Do not add multiple test cases, describe blocks, or helpers
   beyond what is strictly required.
 
+- **Assert the reported symptom, not a fix design.** Check what the report says went wrong (two
+  orders, a negative total, a wrong date) — not how you think the fix should behave (which call
+  must throw). Bisect runs the test on older versions that worked differently; an over-specified
+  test fails everywhere and bisect finds nothing.
+
 - **A passing test is a failure of the task.** If the test passes on the current codebase,
   the bug has not been reproduced. Re-examine the expected behaviour and rewrite until
   the assertion fails.
