@@ -16,9 +16,10 @@ _Last updated: Sat 26 Sep 2026 ~10:00 IST · Claude Opus 5.5 · bugs #3 and #8 p
 ## Where things are
 | Thing | Location |
 |---|---|
-| Web app (Next.js 16) | `apps/web` — pages `/cases`, `/cases/[id]` (live, polls 1 s), `/cases/[id]/proof`, `/triage` |
+| Web app (Next.js 16) | `apps/web` — pages `/cases`, `/cases/[id]` (live, polls 1 s), `/triage`, `/impact` (from `src/data/benchmark.json`). No `/cases/[id]/proof` page yet; landing `/` is a placeholder |
+| Benchmark | `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs` → `docs/benchmark.md` + `apps/web/src/data/benchmark.json`. Per-run Bob facts (coins, interventions, bisect) live in `docs/benchmark/bob-runs.json` — add a row after each new run (source: `~/.bob/db/bob.db`) |
 | API | `/api/ingest` (bearer `BUGPROOF_INGEST_TOKEN`), `/api/cases`, `/api/cases/[id]` (GET, DELETE w/ token), `/api/cases/[id]/publish`, `/api/triage` |
-| Storage | Upstash Redis on Vercel (KV_* env vars) + static replays `apps/web/data/cases/*.json` (currently empty) |
+| Storage | Upstash Redis on Vercel (KV_* env vars) + static replays `apps/web/data/cases/*.json` (6 proven cases exported 09-26) |
 | Shared types | `packages/shared` (zod: Case, Event, Evidence, TriageResult, plainSummary) |
 | MCP server | `packages/mcp` → `dist/index.js` · tools: open_case, record, evidence, run_tests, bisect, publish_proof |
 | Bob pack (source) | `bob/pack/` (4 modes, rules, 3 skills, mcp.json) → install: `node scripts/install-bob-pack.mjs C:/dev/bugproof-demo-shoplite` |
@@ -68,8 +69,11 @@ All five fixes are committed and pushed on demo repo `main` (bug #3 = `31835d5`,
 2. ✅ Re-bisected #3, #8 (task 10) and #4 (task 11) in Bob — culprit accuracy 5/5.
 3. ✅ #5 done (clean run, recorded). 🅱 #2 only if coins allow (keep ~10 in reserve). After each run, Claude: verify vs
    `docs/answer-key/bugs.md`, run `npx vitest run`, commit the fix in the demo repo, log coins here.
-4. 🅲 Export finished cases to `apps/web/data/cases/*.json` (replay safety net) + write `docs/benchmark.md` (times from case events, coins, culprit accuracy).
-5. 🅲 Build the Impact page from real data (root-cause accuracy X/N vs answer key = our headline metric) + landing page + proof page polish.
+4. ✅ Cases exported to `apps/web/data/cases/`; `docs/benchmark.md` generated (6/6 proven, culprits 6/6, median RED 4m 49s,
+   median proof 17m 52s, bug #5 clean run 7m 44s, 2.95 coins/fix median).
+5. ✅ Impact page live (`/impact`, checked at 1440 px and a true 390 px). 🅲 Still to do: landing page `/` (placeholder
+   today) and a Proof of Fix page. Optional 🅱 (~0.1 coin): re-bisect bug #1 in Bob (`tests/bugproof/bug-01-empty-coupon-nan.test.ts`,
+   `bad=6d6c87a^`, caseId `case_20260925_bf62`) so the hero's culprit is Bob-verified — dry run finds `c3f394a` ✅.
 6. 👤 Manual baseline: fix one bug by hand with a timer.
 7. 🅱 Bob Review task on the bugproof repo (more Bob evidence).
 8. Video + slides + texts + make repos public (Plan.md §12). Feature freeze Sun 14:00.
