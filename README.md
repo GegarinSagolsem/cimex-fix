@@ -11,6 +11,13 @@ while **Mission Control** shows the whole investigation live.
 - **Results:** https://cimex-fix.vercel.app/impact · raw numbers in [`docs/benchmark.md`](docs/benchmark.md)
 - **Demo target repo:** https://github.com/GegarinSagolsem/bugproof-demo-shoplite
 
+**Check it in 60 seconds**
+1. Open a real [Proof of Fix](https://cimex-fix.vercel.app/cases/case_20260926_7e5e/proof): the failing test, the
+   culprit commit, the diff, the Critic's verdict and a plain-English summary, all from recorded evidence.
+2. Run its "verify it yourself" commands ([below](#verify-it-yourself)): the test fails on the code before the fix and
+   passes on the fix — 28.8 s from a fresh clone.
+3. See all 8 cases and the model comparison on [/impact](https://cimex-fix.vercel.app/impact).
+
 Built for the IBM Bob 2.0 hackathon (lablab.ai). *Cimex* is the Latin genus of the bed bug. The project was first
 called BugProof, so the demo repo, the `bugproof` MCP server and the Bob mode IDs still use that name.
 
@@ -74,7 +81,7 @@ numbers that aren't there):
 | #6 Negative quantity accepted | server log | 7m 40s | `c3fb68f` refactor(cart): accept numeric strings for quantities |
 | #1 Empty coupon field → total shows ₹NaN | screenshot | 21m 06s | `c3f394a` refactor(coupons): extract coupon rule parser |
 | #3 Delivery date one day early after 8 PM IST | PDF (QA report) | 43m 49s | `b4369d9` perf(delivery): compute IST date without Intl.DateTimeFormat |
-| #8 Coupon applies twice → discount over 100% | screenshot | 34m 01s | `185f248` feat(cart): allow stacking multiple coupon codes |
+| #8 Coupon applies twice → discount over 100% | screenshot (logged as issue) | 34m 01s | `185f248` feat(cart): allow stacking multiple coupon codes |
 | #5 Search became case-sensitive | issue text | 7m 44s | `649b24a` perf(catalog): memoize search index |
 | #7 Double-click "Place order" → two orders | issue text + log | 8m 02s | `985e247` refactor(orders): derive duplicate-order check from order history |
 | #2 Totals off by ₹0.01 | issue text | 12m 51s | `98e2fce` feat(cart): sum multiple line items in cart totals |
@@ -100,8 +107,9 @@ with proof" also needs every existing test green and the contender's own test fa
 **This compares evidence, not model quality.** Bob worked inside the repo, could run its tests and produced a proof
 anyone can re-run; each model got the source in the prompt (no tests) and answered once, without running anything. All 56
 one-shot answers named a culprit and returned a fix and a test; 38 fixed the bug, 30 came with a test that proves it,
-and 5 broke existing tests. The other 18 looked just as finished: nothing in an answer shows which ones are wrong.
-gpt-oss-120b matched Cimex Fix's 8/8. Gemini's and Opus's one miss (#1) shows why: they changed the behaviour instead
+and 5 broke existing tests. The other 18 looked just as finished, and only running them showed which ones were
+wrong. **Cimex Fix is that run, automated for every fix.** gpt-oss-120b matched Cimex Fix's 8/8, and that is only known
+because the checks ran. Gemini's and Opus's one miss (#1) shows why: they changed the behaviour instead
 of restoring it (an empty coupon field meant "no coupon"); now an empty field shows an "invalid coupon" error. Users no longer
 see ₹NaN, but the behaviour changed. Their own tests passed because they asserted their own fix design, which is what
 the Reproducer's symptom-only rule forbids; only the answer key's probe (total unchanged) caught it. Each model gave one
@@ -211,7 +219,8 @@ no run ever opened it.
 - **As the runtime.** Every case is an IBM Bob run: permission-scoped custom modes, parallel subagents, hand-off
   subtasks, skills, the MCP server, and screenshot/PDF intake.
 - **To build the Bob-native parts.** Bob generated `AGENTS.md` (`/init`), the custom modes and rules, the skills and
-  the first version of the MCP server. Session screenshots are in [`bob_sessions/`](bob_sessions).
+  the first version of the MCP server. Session screenshots are in [`bob_sessions/`](bob_sessions) (its README maps each one
+  to its case and Bobcoins).
 - **Cost.** 32.64 Bobcoins across every Bob task, including runs, follow-up re-bisects and building the pack
   ([`docs/benchmark.md`](docs/benchmark.md)).
 - Claude Code helped build the web dashboard and the glue code.
