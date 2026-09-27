@@ -1,13 +1,22 @@
 import * as child_process from "node:child_process";
 import * as crypto from "node:crypto";
 import * as fs from "node:fs";
+import * as os from "node:os";
 import * as path from "node:path";
 
-// When the repro test goes RED, every file under tests/ is hashed into .bugproof/test-lock.json. publish_proof
-// re-hashes them and refuses "proven" if any changed, so a fix can't pass by editing a test — not even through the
-// shell (the Fixer and Critic modes have the execute group; only Bob's edit tool is limited by fileRegex).
+// When the repro test goes RED, every file under tests/ and the Vitest config is hashed into a lock file.
+// publish_proof re-hashes them and refuses "proven" if any changed or no lock exists, so a changed test blocks the
+// proof even when it was edited through the shell (the Fixer and Critic modes have the execute group; only Bob's
+// edit tool is limited by fileRegex). The lock lives in the OS temp folder, outside the repo and every mode's edit scope.
 
-const lockFile = (repoPath: string) => path.join(repoPath, ".bugproof", "test-lock.json");
+const LOCKED_PATHS = ["tests", "vitest.config.ts", "vitest.config.mts", "vitest.config.js", "vitest.config.mjs"];
+
+const lockFile = (repoPath: string, caseId: string) =>
+  path.join(
+    os.tmpdir(),
+    "cimex-fix-test-locks",
+    `${crypto.createHash("sha256").update(`${repoPath}\n${caseId}`).digest("hex").slice(0, 16)}.json`,
+  );
 
 interface Lock {
   caseId: string;
@@ -25,7 +34,7 @@ export interface TestCheck {
 }
 
 function testFiles(repoPath: string): string[] {
-  const r = child_process.spawnSync("git", ["ls-files", "-co", "--exclude-standard", "--", "tests"], {
+  const r = child_process.spawnSync("git", ["ls-files", "-co", "--exclude-standard", "--", ...LOCKED_PATHS], {
     cwd: repoPath,
     encoding: "utf8",
     windowsHide: true,
@@ -48,15 +57,15 @@ export function lockTests(repoPath: string, caseId: string): number {
     lockedAt: new Date().toISOString(),
     files: Object.fromEntries(files.map((f) => [f, hash(repoPath, f)])),
   };
-  fs.mkdirSync(path.dirname(lockFile(repoPath)), { recursive: true });
-  fs.writeFileSync(lockFile(repoPath), JSON.stringify(lock, null, 2));
+  fs.mkdirSync(path.dirname(lockFile(repoPath, caseId)), { recursive: true });
+  fs.writeFileSync(lockFile(repoPath, caseId), JSON.stringify(lock, null, 2));
   return files.length;
 }
 
 export function checkTests(repoPath: string, caseId: string): TestCheck {
   let lock: Lock;
   try {
-    lock = JSON.parse(fs.readFileSync(lockFile(repoPath), "utf8")) as Lock;
+    lock = JSON.parse(fs.readFileSync(lockFile(repoPath, caseId), "utf8")) as Lock;
   } catch {
     return { locked: false, files: 0, changed: [], removed: [], added: [] };
   }

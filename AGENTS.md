@@ -45,8 +45,9 @@ npm run lint                                        # ESLint (next/core-web-vita
   `text-[var(--accent)]` and the `--*-ink` tokens for text on tinted chips, not raw Tailwind colour names.
 - **Windows paths in the MCP server**: a lowercase drive letter (`c:\…`) makes Vitest load twice and every test
   error, so `resolveRepoPath` upper-cases it. Keep that when touching path handling.
-- **Test lock**: `run_tests` with `expect: "red"` hashes every file under `tests/`; `publish_proof` refuses a
-  `proven` status if any of them changed or disappeared since.
+- **Test lock**: `run_tests` with `expect: "red"` hashes every file under `tests/` plus the Vitest config into a lock
+  in the OS temp folder (outside the repo); `publish_proof` refuses a `proven` status if any of them changed or
+  disappeared since, or if no lock exists for the case.
 - **The demo target repo is separate** (`bugproof-demo-shoplite`): `git bisect` needs its clean, linear history.
 - **App pages scroll inside the shell**, not the window: the shell is `h-screen overflow-hidden` and its scroll
   areas are `relative`, so absolutely positioned children (e.g. `sr-only` labels) stay inside them.

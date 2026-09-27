@@ -46,12 +46,15 @@ export function AgentSwimlanes({
     const leftPct = (start / totalDuration) * 100;
     const widthPct = Math.max(((end - start) / totalDuration) * 100, 1.5);
 
-    return { agent, agentEvents, leftPct, widthPct };
+    // A single event has no duration; the bar keeps a minimum width only so it stays visible.
+    const duration = agentEvents.length > 1 ? formatDuration(end - start) : "—";
+
+    return { agent, agentEvents, leftPct, widthPct, duration };
   }).filter((lane): lane is NonNullable<typeof lane> => lane !== null);
 
   return (
     <div className="flex flex-col gap-2" role="list" aria-label="Agent swimlanes">
-      {lanes.map(({ agent, agentEvents, leftPct, widthPct }) => {
+      {lanes.map(({ agent, agentEvents, leftPct, widthPct, duration }) => {
         const isActive = !endedAt && agent === mostRecentAgent;
         return (
           <div key={agent} role="listitem" className="flex items-center gap-3">
@@ -72,7 +75,7 @@ export function AgentSwimlanes({
               />
             </div>
             <span className="w-24 shrink-0 text-right font-mono text-xs text-[var(--muted)]">
-              {formatDuration((widthPct / 100) * totalDuration)}
+              {duration}
             </span>
           </div>
         );

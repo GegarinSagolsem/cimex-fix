@@ -47,9 +47,10 @@ export function buildProof(d: Detail) {
   const bisectSteps = typeof culprit?.data.steps === "number" ? culprit.data.steps : undefined;
 
   // A run can record GREEN for the repro file alone and for the full suite; show the full suite (the larger).
+  // On a tie (the Fixer re-ran the suite until it passed), take the run with the most passing tests.
   const green = d.evidence
     .filter((e) => e.kind === "green" && Number(e.data.total) > 0)
-    .sort((a, b) => Number(b.data.total) - Number(a.data.total))[0];
+    .sort((a, b) => Number(b.data.total) - Number(a.data.total) || Number(b.data.passed) - Number(a.data.passed))[0];
   const fixGreen = milestone("FIX_GREEN")?.title.match(/(\d+)\/(\d+)/);
   const greenPassed = green ? Number(green.data.passed) : fixGreen ? Number(fixGreen[1]) : undefined;
   const greenTotal = green ? Number(green.data.total) : fixGreen ? Number(fixGreen[2]) : undefined;

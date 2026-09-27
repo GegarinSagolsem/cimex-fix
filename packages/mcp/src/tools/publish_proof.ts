@@ -29,7 +29,7 @@ export async function publishProof(cfg: Config, input: PublishProofInput) {
     testIntegrity = checkTests(repoPath, caseId);
     const tampered = [...testIntegrity.changed, ...testIntegrity.removed];
     const title = !testIntegrity.locked
-      ? "TESTS_UNCHECKED: no RED run was recorded by run_tests for this case"
+      ? "TESTS_UNCHECKED: no RED run was recorded by run_tests for this case; proof refused"
       : tampered.length
         ? `TESTS_CHANGED: ${tampered.join(", ")} changed after the RED run; proof refused`
         : `TESTS_UNCHANGED: all ${testIntegrity.files} test files match the RED run`;
@@ -38,6 +38,13 @@ export async function publishProof(cfg: Config, input: PublishProofInput) {
       caseId,
       event: { caseId, ts: new Date().toISOString(), agent: "lead", kind: "milestone", title, data: { ...testIntegrity } },
     });
+    if (!testIntegrity.locked) {
+      return {
+        ok: false,
+        warning: 'Refused to publish as proven: no RED run was recorded for this case. Run the repro test with run_tests expect="red" first, or publish as unproven.',
+        testIntegrity,
+      };
+    }
     if (tampered.length) {
       return {
         ok: false,
