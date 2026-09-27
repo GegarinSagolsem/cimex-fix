@@ -43,9 +43,10 @@ Drop a bug report into IBM Bob and pick the **🕵️ Cimex Lead** mode:
 
 Every step is recorded as evidence on the case, so the Proof of Fix page is built only from what actually happened.
 
-**Why the fix can't pass by weakening the test.** Bob's edit tool can't write outside a mode's files, but the
-Reproducer, Fixer and Critic can also run shell commands. So when the repro test goes RED, the MCP server hashes every
-file under `tests/`, and `publish_proof` refuses to mark a case proven if any of them changed or disappeared since then.
+**A changed test blocks the proof.** Bob's edit tool can't write outside a mode's files, but the Reproducer, Fixer
+and Critic can also run shell commands. So when the repro test goes RED, the MCP server hashes every file under
+`tests/` and the Vitest config into a lock kept outside the repo, and `publish_proof` refuses to mark a case proven if
+any of them changed or disappeared since then, or if no RED run was recorded.
 
 ## Results — 8 real bugs
 
@@ -56,7 +57,7 @@ numbers that aren't there):
 |---|---|
 | Bugs attempted / proven | **8 / 8**: every planted bug (0 unproven) |
 | Culprit commit matches the answer key | **8/8** — 7 pinned by `git bisect`, 1 named by the Historian from git history |
-| Culprit named correctly *during* the run | 4/8 — the rest were confirmed by a follow-up bisect (see below) |
+| Culprit named correctly *during* the run | 4/8 — the other 4 were found by a follow-up bisect: #1 and #8 were named wrongly during the run, #3 and #7 not at all (see below) |
 | Median time to a failing (RED) test | **4m 02s** |
 | Median time to proof | 13m 45s (fastest 7m 40s; includes time runs waited on a human) |
 | Run after the pipeline fixes (bug #5) | culprit by bisect at 4m 01s, **proven at 7m 44s**, 0 human prompts |
@@ -94,11 +95,14 @@ with proof" also needs every existing test green and the contender's own test fa
 | Llama 3.3 70B | 4/8 | 2/8 | 6/8 |
 | Granite 4 H Small | 2/8 | 1/8 | 0/8 |
 
-All 56 one-shot answers named a culprit and returned a fix and a test; 38 fixed the bug, 30 came with a test that
-proves it, and 5 broke existing tests. The best model matched Cimex Fix, but only running the checks tells you which
-answer that is: Gemini's and Opus's one miss (#1) made an empty coupon field throw an error, so their own tests passed
-while the independent probe (total unchanged) failed. The models were handed all the code, while Bob started from the report
-alone; each model gave one answer (watsonx.ai at temperature 0, Gemini and Opus at their default). Prompts, raw answers and caveats: [`docs/benchmark.md`](docs/benchmark.md#compared-with-one-shot-models).
+Bob started from the report alone and produced a proof anyone can re-run; the models were handed all the code. All 56
+one-shot answers named a culprit and returned a fix and a test; 38 fixed the bug, 30 came with a test that proves it,
+and 5 broke existing tests. The other 18 looked just as finished: nothing in an answer shows which ones are wrong.
+gpt-oss-120b matched Cimex Fix's 8/8. Gemini's and Opus's one miss (#1) shows why: they didn't restore the old
+behaviour (an empty coupon field meant "no coupon"); now an empty field shows an "invalid coupon" error. Users no longer
+see ₹NaN, but the behaviour changed. Their own tests passed because they asserted their own fix design, which is what
+the Reproducer's symptom-only rule forbids; only the answer key's probe (total unchanged) caught it. Each model gave one
+answer (watsonx.ai at temperature 0, Gemini and Opus at their default). Prompts, raw answers and caveats: [`docs/benchmark.md`](docs/benchmark.md#compared-with-one-shot-models).
 
 **Honesty notes**
 - Early runs (#4, #1, #3, #8) hit a bug in our bisect tool: Bob passed the repo path with a lowercase drive letter
@@ -152,7 +156,7 @@ flowchart LR
 
 ## Run it on your own repo
 
-Requirements: IBM Bob, Node 20+, a TypeScript repo tested with Vitest.
+Requirements: IBM Bob, Node 22.12+, a TypeScript repo tested with Vitest.
 
 ```bash
 npm install

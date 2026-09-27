@@ -94,14 +94,18 @@ export default function ImpactPage() {
           <CardHeader>
             <CardTitle>Compared with one-shot models</CardTitle>
             <p className="max-w-3xl text-sm text-[var(--muted)]">
+              Bob started from the report alone and produced a proof anyone can re-run.{" "}
               {comparison.contenders.length - 1} models (five on IBM watsonx.ai, plus Gemini 3.1 Pro and Claude Opus 4.6)
-              each answered every bug once, with all the source code handed to them. Every answer looked complete, but only {comparison.oneShotTotals.fixed} of{" "}
-              {comparison.oneShotTotals.answers} fixed the bug. The best model, {bestModel.name}, got{" "}
-              {bestModel.fixWithProof}/{comparison.bugs.length} fixes with proof,{" "}
+              each answered every bug once, with all the source code handed to them. Every answer came with a fix and a
+              test, yet {comparison.oneShotTotals.answers - comparison.oneShotTotals.fixed} of{" "}
+              {comparison.oneShotTotals.answers} did not fix the bug, and nothing in an answer shows which ones. The best
+              model, {bestModel.name}, got {bestModel.fixWithProof}/{comparison.bugs.length} fixes with proof,{" "}
               {bestModel.fixWithProof >= cimex.fixWithProof ? "matching" : "against"} Cimex Fix&apos;s {cimex.fixWithProof}/
-              {comparison.bugs.length}. One script scores every answer, Bob&apos;s included, and the answer key&apos;s
-              independent probe decides whether a bug is fixed. That is why Cimex Fix runs the checks instead of trusting
-              the answer.
+              {comparison.bugs.length}. Gemini&apos;s and Opus&apos;s one miss (#1) didn&apos;t restore the old behaviour:
+              an empty coupon field now shows an error instead of meaning &ldquo;no coupon&rdquo;. Their own tests passed
+              because they asserted their own fix design, which the Reproducer&apos;s symptom-only rule forbids. One script
+              scores every answer, Bob&apos;s included, and the answer key&apos;s independent probe decides whether a bug is
+              fixed.
             </p>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">

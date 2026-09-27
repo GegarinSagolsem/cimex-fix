@@ -41,6 +41,7 @@ Plan.md
 model.md
 Graphify.md
 .claude/agents/
+.claude/settings.json
 docs/specs/
 docs/video-script.md
 docs/submission.md
