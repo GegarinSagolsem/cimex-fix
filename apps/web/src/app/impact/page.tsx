@@ -94,15 +94,15 @@ export default function ImpactPage() {
           <CardHeader>
             <CardTitle>Compared with one-shot models</CardTitle>
             <p className="max-w-3xl text-sm text-[var(--muted)]">
-              Bob started from the report alone and produced a proof anyone can re-run.{" "}
-              {comparison.contenders.length - 1} models (five on IBM watsonx.ai, plus Gemini 3.1 Pro and Claude Opus 4.6)
-              each answered every bug once, with all the source code handed to them. Every answer came with a fix and a
-              test, yet {comparison.oneShotTotals.answers - comparison.oneShotTotals.fixed} of{" "}
+              This compares evidence, not model quality. Bob worked inside the repo, could run its tests and produced a
+              proof anyone can re-run; {comparison.contenders.length - 1} models (five on IBM watsonx.ai, plus Gemini 3.1 Pro
+              and Claude Opus 4.6) got the source in the prompt and answered each bug once, without running anything.
+              Every answer came with a fix and a test, yet {comparison.oneShotTotals.answers - comparison.oneShotTotals.fixed} of{" "}
               {comparison.oneShotTotals.answers} did not fix the bug, and nothing in an answer shows which ones. The best
               model, {bestModel.name}, got {bestModel.fixWithProof}/{comparison.bugs.length} fixes with proof,{" "}
               {bestModel.fixWithProof >= cimex.fixWithProof ? "matching" : "against"} Cimex Fix&apos;s {cimex.fixWithProof}/
-              {comparison.bugs.length}. Gemini&apos;s and Opus&apos;s one miss (#1) didn&apos;t restore the old behaviour:
-              an empty coupon field now shows an error instead of meaning &ldquo;no coupon&rdquo;. Their own tests passed
+              {comparison.bugs.length}. Gemini&apos;s and Opus&apos;s one miss (#1) changed the behaviour instead of
+              restoring it: an empty coupon field now shows an error instead of meaning &ldquo;no coupon&rdquo;. Their own tests passed
               because they asserted their own fix design, which the Reproducer&apos;s symptom-only rule forbids. One script
               scores every answer, Bob&apos;s included, and the answer key&apos;s independent probe decides whether a bug is
               fixed.
@@ -112,9 +112,9 @@ export default function ImpactPage() {
             <ModelComparison data={comparison} />
             <ul className="list-disc space-y-1.5 pl-5 text-xs text-[var(--muted)]">
               <li>
-                The models got every file under <span className="font-mono">src/</span> and the git history up front; Bob
-                started from the report and found the code itself. Bob read the screenshots as images; the models got their
-                visible text.
+                The models got every file under <span className="font-mono">src/</span> and the git history up front, but
+                not the tests and no way to run code; Bob started from the report, explored the repo itself and could run
+                its tests. Bob read the screenshots as images; the models got their visible text.
               </li>
               <li>
                 One answer per model, asked on {comparison.askedOn}: a single sample, not an average. watsonx.ai models ran
@@ -125,6 +125,9 @@ export default function ImpactPage() {
               <li>
                 Bob&apos;s culprit count is the final result, including follow-up bisects; {cimex.culpritDuringRun}/
                 {comparison.bugs.length} were named during the runs.
+              </li>
+              <li>
+                In Cimex Fix, Granite writes the plain-English summaries and powers /triage; it does not write the fixes.
               </li>
               {comparison.controlsOk && <li>Control: every probe fails on the unfixed code.</li>}
             </ul>

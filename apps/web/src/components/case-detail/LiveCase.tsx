@@ -89,6 +89,10 @@ export function LiveCase({ id, initial }: { id: string; initial: CaseDetail }) {
                 <h2 id="swimlanes-heading" className="text-sm font-semibold">
                   Agent trace
                 </h2>
+                <p className="text-xs text-[var(--muted)]">
+                  Only agents that recorded events on the case get a lane. Subagents that reported straight to the Lead
+                  have none, and a lane with a single event shows no duration.
+                </p>
                 <AgentSwimlanes events={events} startedAt={c.startedAt} endedAt={c.provenAt} />
               </section>
 

@@ -173,7 +173,7 @@ export default async function Home() {
             <div>
               <p className={LABEL}>Measured, not claimed</p>
               <h2 id="results-title" className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-                {s.bugsAttempted} real bugs. {s.proven} proven.
+                {s.bugsAttempted} planted bugs. {s.proven} proven.
               </h2>
             </div>
             <Link href="/impact" className="text-sm text-[var(--accent)] underline-offset-2 hover:underline">
