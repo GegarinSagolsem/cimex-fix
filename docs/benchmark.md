@@ -1,6 +1,6 @@
 # Benchmark — Cimex Fix on the ShopLite demo repo
 
-_Generated 2026-09-27 06:57 UTC by `scripts/build-benchmark.mjs` from the exported case events
+_Generated 2026-09-27 07:35 UTC by `scripts/build-benchmark.mjs` from the exported case events
 (`apps/web/data/cases/*.json`), IBM Bob's task log (`docs/benchmark/bob-runs.json`) and the answer key
 (`docs/answer-key/bugs.md`). Do not edit by hand: re-run `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs`._
 
@@ -145,6 +145,7 @@ fixed the bug, 30 came with a test that proves it, 5 broke existing tests, and 3
 - The answer key's commit hashes predate a history rewrite of the demo repo, so culprits are matched by **commit subject**.
 - Bob passed repoPath as c:\dev\... (lowercase drive); Vitest loaded twice and every bisect step was skipped, overrunning Bob's ~60 s MCP call limit. Fixed 2026-09-26 in packages/mcp/src/session.ts (commit 4563a3d). This is why bisect timed out in runs #4, #1, #3 and #8, why #3 and #8 needed human prompts,
   and why their culprits were attached by a follow-up bisect task.
+- Bug #8 arrived as a screenshot, but the Lead opened its case with source "issue", so the live site labels that case Issue.
 - Bug #8's RED/GREEN evidence recorded 0 tests (`run_tests` hit the same bug); its tests-after comes from the FIX_GREEN milestone.
   Bug #4's early run attached no RED/GREEN evidence (early MCP version); same fallback.
 - **Manual baseline: not measured yet** — no human-vs-Bob time comparison is claimed.

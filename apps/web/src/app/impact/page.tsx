@@ -97,11 +97,12 @@ export default function ImpactPage() {
               This compares evidence, not model quality. Bob worked inside the repo, could run its tests and produced a
               proof anyone can re-run; {comparison.contenders.length - 1} models (five on IBM watsonx.ai, plus Gemini 3.1 Pro
               and Claude Opus 4.6) got the source in the prompt and answered each bug once, without running anything.
-              Every answer came with a fix and a test, yet {comparison.oneShotTotals.answers - comparison.oneShotTotals.fixed} of{" "}
-              {comparison.oneShotTotals.answers} did not fix the bug, and nothing in an answer shows which ones. The best
+              Every answer looked finished, with a fix and a test, yet{" "}
+              {comparison.oneShotTotals.answers - comparison.oneShotTotals.fixed} of {comparison.oneShotTotals.answers} did
+              not fix the bug, and only running them showed which. Cimex Fix is that run, automated for every fix. The best
               model, {bestModel.name}, got {bestModel.fixWithProof}/{comparison.bugs.length} fixes with proof,{" "}
               {bestModel.fixWithProof >= cimex.fixWithProof ? "matching" : "against"} Cimex Fix&apos;s {cimex.fixWithProof}/
-              {comparison.bugs.length}. Gemini&apos;s and Opus&apos;s one miss (#1) changed the behaviour instead of
+              {comparison.bugs.length}, and that is only known because the checks ran. Gemini&apos;s and Opus&apos;s one miss (#1) changed the behaviour instead of
               restoring it: an empty coupon field now shows an error instead of meaning &ldquo;no coupon&rdquo;. Their own tests passed
               because they asserted their own fix design, which the Reproducer&apos;s symptom-only rule forbids. One script
               scores every answer, Bob&apos;s included, and the answer key&apos;s independent probe decides whether a bug is

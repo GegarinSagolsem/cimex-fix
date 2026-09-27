@@ -382,6 +382,7 @@ const md = [
   "- The answer key's commit hashes predate a history rewrite of the demo repo, so culprits are matched by **commit subject**.",
   `- ${bob.rootCauseOfEarlyBisectFailures} This is why bisect timed out in runs #4, #1, #3 and #8, why #3 and #8 needed human prompts,`,
   "  and why their culprits were attached by a follow-up bisect task.",
+  "- Bug #8 arrived as a screenshot, but the Lead opened its case with source \"issue\", so the live site labels that case Issue.",
   "- Bug #8's RED/GREEN evidence recorded 0 tests (`run_tests` hit the same bug); its tests-after comes from the FIX_GREEN milestone.",
   "  Bug #4's early run attached no RED/GREEN evidence (early MCP version); same fallback.",
   "- **Manual baseline: not measured yet** — no human-vs-Bob time comparison is claimed.",
