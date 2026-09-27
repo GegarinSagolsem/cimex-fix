@@ -47,7 +47,8 @@ npm run lint                                        # ESLint (next/core-web-vita
   error, so `resolveRepoPath` upper-cases it. Keep that when touching path handling.
 - **Test lock**: `run_tests` with `expect: "red"` hashes every file under `tests/` plus the Vitest config into a lock
   in the OS temp folder (outside the repo); `publish_proof` refuses a `proven` status if any of them changed or
-  disappeared since, or if no lock exists for the case.
+  disappeared since, if no lock exists for the case, or if a test that existed in the commit at the first RED run was
+  modified or deleted. Re-locks (later RED runs) are counted and reported, not hidden.
 - **The demo target repo is separate** (`bugproof-demo-shoplite`): `git bisect` needs its clean, linear history.
 - **App pages scroll inside the shell**, not the window: the shell is `h-screen overflow-hidden` and its scroll
   areas are `relative`, so absolutely positioned children (e.g. `sr-only` labels) stay inside them.

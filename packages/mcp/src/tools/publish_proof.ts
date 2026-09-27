@@ -27,12 +27,17 @@ export async function publishProof(cfg: Config, input: PublishProofInput) {
   let testIntegrity: TestCheck | undefined;
   if (input.status === "proven") {
     testIntegrity = checkTests(repoPath, caseId);
-    const tampered = [...testIntegrity.changed, ...testIntegrity.removed];
+    const tampered = [...new Set([...testIntegrity.changed, ...testIntegrity.removed, ...testIntegrity.existingChanged])];
+    const base = testIntegrity.baseCommit?.slice(0, 7);
+    const relocked = testIntegrity.relocks
+      ? `; re-locked ${testIntegrity.relocks}× after the first RED run` +
+        (testIntegrity.relockChanged.length ? ` (changed between locks: ${testIntegrity.relockChanged.join(", ")})` : "")
+      : "";
     const title = !testIntegrity.locked
       ? "TESTS_UNCHECKED: no RED run was recorded by run_tests for this case; proof refused"
       : tampered.length
-        ? `TESTS_CHANGED: ${tampered.join(", ")} changed after the RED run; proof refused`
-        : `TESTS_UNCHANGED: all ${testIntegrity.files} test files match the RED run`;
+        ? `TESTS_CHANGED: ${tampered.join(", ")} changed after the RED run${base ? ` or differs from ${base}` : ""}; proof refused`
+        : `TESTS_UNCHANGED: all ${testIntegrity.files} test files match the RED run${base ? `; no existing test differs from ${base}` : ""}${relocked}`;
     await postIngest(cfg, {
       type: "event",
       caseId,
@@ -48,7 +53,7 @@ export async function publishProof(cfg: Config, input: PublishProofInput) {
     if (tampered.length) {
       return {
         ok: false,
-        warning: `Refused to publish as proven: ${tampered.join(", ")} changed after the RED run. Restore the tests or publish as unproven.`,
+        warning: `Refused to publish as proven: ${tampered.join(", ")} changed after the RED run or differs from the commit the case started on. Restore the tests or publish as unproven.`,
         testIntegrity,
       };
     }

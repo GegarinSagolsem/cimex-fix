@@ -104,7 +104,13 @@ export function buildProof(d: Detail) {
       state: testsEvent ? (testsOk ? "pass" : "fail") : guard ? (guard.existingTestsChanged.length ? "fail" : "pass") : "missing",
       detail: testsEvent
         ? testsOk
-          ? `Every test file matched the RED run when the proof was published (checked by the MCP server, ${Number(testsEvent.data?.files ?? 0)} files)`
+          ? `Every test file matched the RED run when the proof was published (checked by the MCP server, ${Number(testsEvent.data?.files ?? 0)} files)` +
+            (Number(testsEvent.data?.relocks) > 0
+              ? `; the tests were re-locked ${Number(testsEvent.data?.relocks)}× after the first RED run` +
+                (Array.isArray(testsEvent.data?.relockChanged) && testsEvent.data.relockChanged.length
+                  ? ` (changed between locks: ${(testsEvent.data.relockChanged as unknown[]).join(", ")})`
+                  : "")
+              : "")
           : testsEvent.title
         : guard
           ? guard.existingTestsChanged.length

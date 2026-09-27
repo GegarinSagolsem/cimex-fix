@@ -85,8 +85,13 @@ confirms RED, the server hashes every file under `tests/` plus the Vitest config
 folder (outside the repo and every mode's edit scope), keyed by repo and case. `publish_proof` with `status: "proven"`
 re-hashes them and records a milestone on the case:
 
-- `TESTS_UNCHANGED` — every locked file matches the RED run; the proof is published.
+- `TESTS_UNCHANGED` — every locked file matches the RED run and no test that existed in the commit the case started
+  on was modified or deleted; the proof is published.
 - `TESTS_CHANGED` — a test (or the config) changed or disappeared; the proof is refused.
 - `TESTS_UNCHECKED` — no RED run was recorded for this case; the proof is refused.
+
+A later RED run re-takes the lock (the Reproducer may refine its new test), so the lock also keeps the commit from the
+first RED run: an existing test that differs from that commit blocks the proof even after a re-lock, committed or not.
+Every re-lock and the files that changed between locks are reported in the milestone, so they show on the Proof page.
 
 `status: "unproven"` is always accepted.
