@@ -1,6 +1,6 @@
 # Benchmark — Cimex Fix on the ShopLite demo repo
 
-_Generated 2026-09-26 21:16 UTC by `scripts/build-benchmark.mjs` from the exported case events
+_Generated 2026-09-27 06:57 UTC by `scripts/build-benchmark.mjs` from the exported case events
 (`apps/web/data/cases/*.json`), IBM Bob's task log (`docs/benchmark/bob-runs.json`) and the answer key
 (`docs/answer-key/bugs.md`). Do not edit by hand: re-run `node scripts/export-cases.mjs && node scripts/build-benchmark.mjs`._
 
@@ -13,6 +13,8 @@ _Generated 2026-09-26 21:16 UTC by `scripts/build-benchmark.mjs` from the export
 - **Median time to proof:** 13m 45s (fastest 7m 40s; includes time runs waited on a human)
 - **Run after the pipeline fixes (bug #5):** culprit by bisect at 4m 01s, proven at 7m 44s, 0 human interventions, 3.06 Bobcoins
 - **Runs with zero human interventions:** 6/8
+- **Runs where the Lead handed off to the Reproducer, Fixer and Critic as Bob subtasks:** 4/8 (#1, #5, #7, #2); #3: 1 subtask, 6 subagents · #4: 0 subtasks, 2 subagents · #6: 0 subtasks, 0 subagents · #8: 1 subtask, 5 subagents — in those early runs the remaining steps ran in one chat or as generic subagents, because the worker modes could not hand back until the pack was fixed
+- **Re-checking a proof from scratch (bug #5, the "verify it yourself" commands):** 28.8 s — fresh clone 2.7 s, `npm ci` 6.5 s, repro test on the code before the fix 10.7 s (3 failed), on the fix 8.9 s (3 passed); measured 2026-09-27 on Windows_NT 10.0.26200, 13th Gen Intel(R) Core(TM) i7-13620H, Node v24.19.0 by `scripts/measure-recheck.mjs`
 - **Bobcoins per run:** median 2.93 (range 2.39–5.36) · all 8 runs 26.91 · follow-up re-bisects 0.9 · building the Bob pack 4.83 · every Bob task 32.64
 - **Largest suite in a run's GREEN evidence:** 120 tests, all passing (each proven bug added its repro test)
 - **Fixes that changed an existing test:** 0/8 (`git diff --name-status <fix>~1 <fix> -- tests` in the demo repo: each fix commit only adds its repro test)

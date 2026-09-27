@@ -48,7 +48,7 @@ and Critic can also run shell commands. So when the repro test goes RED, the MCP
 `tests/` and the Vitest config into a lock kept outside the repo, and `publish_proof` refuses to mark a case proven if
 any of them changed or disappeared since then, or if no RED run was recorded.
 
-## Results — 8 real bugs
+## Results — 8 planted bugs
 
 From [`docs/benchmark.md`](docs/benchmark.md) (generated from the case events and Bob's task log; do not quote
 numbers that aren't there):
@@ -62,6 +62,8 @@ numbers that aren't there):
 | Median time to proof | 13m 45s (fastest 7m 40s; includes time runs waited on a human) |
 | Run after the pipeline fixes (bug #5) | culprit by bisect at 4m 01s, **proven at 7m 44s**, 0 human prompts |
 | Runs with zero human prompts | 6/8 |
+| Runs where the Lead handed off to Reproducer → Fixer → Critic as Bob subtasks | 4/8 (#1, #5, #7, #2) — see the honesty notes |
+| Time for a reviewer to re-check a proof from scratch | **28.8 s** (bug #5: fresh clone, `npm ci`, repro test fails before the fix and passes after; [`scripts/measure-recheck.mjs`](scripts/measure-recheck.mjs)) |
 | Bobcoins per fix | median 2.93 (range 2.39–5.36) |
 | Largest test suite in a run | 120 tests, all passing |
 | Fixes that changed an existing test | **0/8**: each fix commit only adds its repro test (`git diff` of the fix commit) |
@@ -95,16 +97,22 @@ with proof" also needs every existing test green and the contender's own test fa
 | Llama 3.3 70B | 4/8 | 2/8 | 6/8 |
 | Granite 4 H Small | 2/8 | 1/8 | 0/8 |
 
-Bob started from the report alone and produced a proof anyone can re-run; the models were handed all the code. All 56
+**This compares evidence, not model quality.** Bob worked inside the repo, could run its tests and produced a proof
+anyone can re-run; each model got the source in the prompt (no tests) and answered once, without running anything. All 56
 one-shot answers named a culprit and returned a fix and a test; 38 fixed the bug, 30 came with a test that proves it,
 and 5 broke existing tests. The other 18 looked just as finished: nothing in an answer shows which ones are wrong.
-gpt-oss-120b matched Cimex Fix's 8/8. Gemini's and Opus's one miss (#1) shows why: they didn't restore the old
-behaviour (an empty coupon field meant "no coupon"); now an empty field shows an "invalid coupon" error. Users no longer
+gpt-oss-120b matched Cimex Fix's 8/8. Gemini's and Opus's one miss (#1) shows why: they changed the behaviour instead
+of restoring it (an empty coupon field meant "no coupon"); now an empty field shows an "invalid coupon" error. Users no longer
 see ₹NaN, but the behaviour changed. Their own tests passed because they asserted their own fix design, which is what
 the Reproducer's symptom-only rule forbids; only the answer key's probe (total unchanged) caught it. Each model gave one
 answer (watsonx.ai at temperature 0, Gemini and Opus at their default). Prompts, raw answers and caveats: [`docs/benchmark.md`](docs/benchmark.md#compared-with-one-shot-models).
 
 **Honesty notes**
+- The full hand-off (Lead → Reproducer → Fixer → Critic as Bob subtasks, each mode under its own edit limits) ran in
+  4 of 8 runs: #1, #5, #7 and #2. In the early runs #4 and #6 the Lead used no subtasks (#6 no subagents either), and in
+  #3 and #8 the first worker mode couldn't hand back, so the remaining steps ran in one chat or as generic subagents.
+  We fixed the pack (worker modes got the `subtask` group) and every run since used the full hand-off. The agent names
+  on each case timeline are the ones the agents recorded themselves.
 - Early runs (#4, #1, #3, #8) hit a bug in our bisect tool: Bob passed the repo path with a lowercase drive letter
   (`c:\…`), Vitest loaded twice, and every bisect step was skipped. We fixed it, then re-ran bisect in Bob for those
   cases; #5 and #2 ran after the fix and found their culprits live. Runs #3 and #8 also needed human prompts because of it.
@@ -116,7 +124,16 @@ answer (watsonx.ai at temperature 0, Gemini and Opus at their default). Prompts,
 - The test lock in the MCP server was added after these 8 runs. For them, the evidence is git: each committed fix only
   adds its repro test and changes no existing test.
 - The Critic approved all 8 fixes on its first review, so its send-back path was never exercised in these runs.
-- There is **no manual human baseline**, so we claim no "N× faster than a developer" number.
+- There is **no manual human baseline**, so we claim no "N× faster than a developer" number. What we do measure is how
+  long checking a proof takes a reviewer: 28.8 s from a fresh clone.
+
+**Limits**
+- The bugs are planted: the author built ShopLite and its 8 regressions (see [About the demo repo](#about-the-demo-repo)).
+  The answer key is kept out of Bob with `.bobignore`, and the probes that score fixes are independent of Bob and the models.
+- TypeScript repos tested with Vitest only. `bisect` needs a linear history, always treats the root commit as good and
+  stops after 45 s or 8 untestable commits.
+- The test lock is enforced by our MCP server, not by Bob: an agent with shell access could still work around it
+  (for example by deleting the lock, which then blocks the proof). That is why every step is also recorded as evidence.
 
 ## Verify it yourself
 

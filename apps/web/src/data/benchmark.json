@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T21:16:08.634Z",
+  "generatedAt": "2026-09-27T06:57:42.960Z",
   "summary": {
     "bugsAttempted": 8,
     "proven": 8,
@@ -31,7 +31,63 @@
     "testsInSuiteAtEnd": 120,
     "fixesCheckedForTestChanges": 8,
     "fixesChangingExistingTests": 0,
-    "coinsAllTasks": 32.64
+    "coinsAllTasks": 32.64,
+    "fullHandoffBugs": [
+      1,
+      5,
+      7,
+      2
+    ],
+    "handoffsByBug": {
+      "1": {
+        "startSubtask": 3,
+        "spawnSubagent": 5
+      },
+      "2": {
+        "startSubtask": 3,
+        "spawnSubagent": 3
+      },
+      "3": {
+        "startSubtask": 1,
+        "spawnSubagent": 6
+      },
+      "4": {
+        "startSubtask": 0,
+        "spawnSubagent": 2
+      },
+      "5": {
+        "startSubtask": 3,
+        "spawnSubagent": 4
+      },
+      "6": {
+        "startSubtask": 0,
+        "spawnSubagent": 0
+      },
+      "7": {
+        "startSubtask": 3,
+        "spawnSubagent": 3
+      },
+      "8": {
+        "startSubtask": 1,
+        "spawnSubagent": 5
+      }
+    },
+    "recheck": {
+      "measuredAt": "2026-09-27T06:56:50.043Z",
+      "bug": 5,
+      "fixCommit": "6ff3e78",
+      "commands": "README → Verify it yourself",
+      "machine": "Windows_NT 10.0.26200, 13th Gen Intel(R) Core(TM) i7-13620H, Node v24.19.0",
+      "seconds": {
+        "clone": 2.7,
+        "npmCi": 6.5,
+        "redRun": 10.7,
+        "greenRun": 8.9,
+        "total": 28.8
+      },
+      "redFailed": 3,
+      "greenPassed": 3
+    }
   },
   "cases": [
     {

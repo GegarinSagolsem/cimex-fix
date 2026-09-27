@@ -145,6 +145,12 @@ const summary = {
   fixesChangingExistingTests: cases.filter((c) => c.testGuard?.existingTestsChanged.length).length,
 };
 summary.coinsAllTasks = round2(summary.coinsRuns + summary.coinsFollowUps + summary.coinsSetup);
+// The Lead hands off to the Reproducer, Fixer and Critic with start_subtask; count runs where all three hand-offs ran.
+summary.fullHandoffBugs = bob.runs.filter((r) => r.startSubtask >= 3).map((r) => r.bug);
+summary.handoffsByBug = Object.fromEntries(bob.runs.map((r) => [r.bug, { startSubtask: r.startSubtask, spawnSubagent: r.spawnSubagent }]));
+// Time to re-check a proof from scratch (scripts/measure-recheck.mjs).
+const recheckFile = path.join(root, "docs/benchmark/recheck.json");
+summary.recheck = existsSync(recheckFile) ? JSON.parse(readFileSync(recheckFile, "utf8")) : null;
 
 // One-shot models vs Bob's fixes, scored by the same checks, on the bugs Bob attempted.
 const MODEL_LABELS = {
@@ -326,6 +332,12 @@ const md = [
     ? `- **Run after the pipeline fixes (bug #${s.liveBisectRun.bug}):** culprit by bisect at ${mmss(s.liveBisectRun.minutesToCulprit)}, proven at ${mmss(s.liveBisectRun.minutesToProof)}, ${s.liveBisectRun.humanInterventions} human interventions, ${s.liveBisectRun.coins} Bobcoins`
     : "",
   `- **Runs with zero human interventions:** ${s.runsWithoutHumanIntervention}/${s.bugsAttempted}`,
+  `- **Runs where the Lead handed off to the Reproducer, Fixer and Critic as Bob subtasks:** ${s.fullHandoffBugs.length}/${s.bugsAttempted} (${s.fullHandoffBugs.map((b) => `#${b}`).join(", ")}); ` +
+    Object.entries(s.handoffsByBug).filter(([, h]) => h.startSubtask < 3).map(([b, h]) => `#${b}: ${h.startSubtask} subtask${h.startSubtask === 1 ? "" : "s"}, ${h.spawnSubagent} subagents`).join(" · ") +
+    " — in those early runs the remaining steps ran in one chat or as generic subagents, because the worker modes could not hand back until the pack was fixed",
+  s.recheck
+    ? `- **Re-checking a proof from scratch (bug #${s.recheck.bug}, the "verify it yourself" commands):** ${s.recheck.seconds.total} s — fresh clone ${s.recheck.seconds.clone} s, \`npm ci\` ${s.recheck.seconds.npmCi} s, repro test on the code before the fix ${s.recheck.seconds.redRun} s (${s.recheck.redFailed} failed), on the fix ${s.recheck.seconds.greenRun} s (${s.recheck.greenPassed} passed); measured ${s.recheck.measuredAt.slice(0, 10)} on ${s.recheck.machine} by \`scripts/measure-recheck.mjs\``
+    : "",
   `- **Bobcoins per run:** median ${s.coinsPerRunMedian} (range ${s.coinsPerRunMin}–${s.coinsPerRunMax}) · all ${s.bugsAttempted} runs ${s.coinsRuns} · follow-up re-bisects ${s.coinsFollowUps} · building the Bob pack ${s.coinsSetup} · every Bob task ${s.coinsAllTasks}`,
   `- **Largest suite in a run's GREEN evidence:** ${s.testsInSuiteAtEnd} tests, all passing (each proven bug added its repro test)`,
   `- **Fixes that changed an existing test:** ${s.fixesChangingExistingTests}/${s.fixesCheckedForTestChanges} (\`git diff --name-status <fix>~1 <fix> -- tests\` in the demo repo${s.fixesChangingExistingTests === 0 ? ": each fix commit only adds its repro test" : ""})`,

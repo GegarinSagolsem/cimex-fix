@@ -1,0 +1,16 @@
+{
+  "measuredAt": "2026-09-27T06:56:50.043Z",
+  "bug": 5,
+  "fixCommit": "6ff3e78",
+  "commands": "README → Verify it yourself",
+  "machine": "Windows_NT 10.0.26200, 13th Gen Intel(R) Core(TM) i7-13620H, Node v24.19.0",
+  "seconds": {
+    "clone": 2.7,
+    "npmCi": 6.5,
+    "redRun": 10.7,
+    "greenRun": 8.9,
+    "total": 28.8
+  },
+  "redFailed": 3,
+  "greenPassed": 3
+}
